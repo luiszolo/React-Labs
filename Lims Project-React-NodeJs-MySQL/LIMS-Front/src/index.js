@@ -26,16 +26,16 @@ class App extends React.Component {
    }
 
   render() {
-        const title = (<div className="container-fluid text-center bg-info text-white"><h2>LIMS</h2></div>)
+        const title = (<div className="container-fluid position-fixed text-center bg-info text-white "><h1>LIMS</h1></div>)
         const app =["Home"]
         
         const tests = this.state.tests.map((e)=>{
             return e["name"]
         })
         const menu = app.concat(tests)
-        const comp =[<ElectricityTest/>,<Home/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
+        const comp =[<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
 
-        return(<div>
+        return(<div className="root">
             {title}
             <Tests>
                     {menu.map((t, keyT)=>{

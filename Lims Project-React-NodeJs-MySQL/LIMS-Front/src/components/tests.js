@@ -26,8 +26,8 @@ export default class Tests extends React.Component {
       }
     } = this;
 
-    return (<div className="row">
-      <div className="bg-info">
+    return (<div className="row root pt-5">
+      <div className="bg-info col col-sm-2 p-0">
         <nav className="nav flex-column border-right">
           {children.map((child) => {
             const { label } = child.props;
@@ -39,11 +39,10 @@ export default class Tests extends React.Component {
                 label={label}
                 onClick={onClickTest}
               />
-            );
-          })}
+            );})}
         </nav>
       </div>
-      <div className="container">
+      <div className="col-sm-10 p-0 logo">
           {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;
