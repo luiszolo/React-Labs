@@ -1,0 +1,15 @@
+h1,h2,h3 {
+    margin: 0;
+}
+
+img{
+    width: 100%;
+}
+
+nav{
+    margin-left: 1rem;
+}
+
+.logo{
+    margin: 25rem 0;
+}
