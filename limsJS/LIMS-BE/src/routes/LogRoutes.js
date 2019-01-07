@@ -5,7 +5,7 @@ const LogController = require('../controllers/LogController');
 router.delete('/:id', LogController.deleteLog);
 router.get('/', LogController.getLogs);
 router.get('/:id', LogController.getLogById);
-router.post('/insert', LogController.addLog);
+router.post('/add', LogController.addLog);
 router.put('/:id', LogController.updateLog);
 
 

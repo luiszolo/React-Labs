@@ -1,16 +1,11 @@
-const pool = require('../config/database');
-
-// Miscs
-const validateName = name => {
-	const regex = /SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/;
-	return regex.test(String(name).toUpperCase());
-};
+const pool = require('./../config/database');
+const regex = require('./../middlewares/regex');
 
 // CRUD
 async function addSample (req, res) {
 	let params  = req.body;
 	console.log(params);
-	if(!validateName(params.name)) return;
+	if(!regex.validateSampleName(params.name)) return;
 	if(await getSampleByName(req, res)) {
 		res.send({
 			message: "The sample already exists"
