@@ -11,7 +11,7 @@ export default class Test extends React.Component{
     }
 
     render(){
-        const messages=["Required","Correct"]
+        const messages=["Required","Incorrect sintax"]
         return(<div className="col offset-sm-3 col-md-6 col-">
             <h1>Electricity test</h1>
             <form>
