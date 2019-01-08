@@ -1,5 +1,9 @@
+html{
+    height: 100%;
+}
+
 body{
-    height: 100vh;
+    height: 100%;
 }
 
 .root{
@@ -12,10 +16,6 @@ h1,h2,h3 {
 
 img{
     width: 100%;
-}
-
-nav{
-    margin-left: 1rem;
 }
 
 .logo{
