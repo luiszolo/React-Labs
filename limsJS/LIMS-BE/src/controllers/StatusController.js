@@ -4,7 +4,7 @@ async function addStatus (req, res) {
 	let params  = req.body;
 	console.log(params);
 	const newStatus = {
-		name: params.name
+		name: params.name.toUpperCase()
 	};
 	await pool.query('INSERT INTO Status SET ?', [newStatus]);
 	console.log(`Saved Status: ${newStatus.name}`);

@@ -38,9 +38,9 @@ async function getSampleByName (req, res) {
 	let params = req.body;
 	const name = params.name;
 	const value = await pool.query('SELECT * FROM Sample WHERE name = ?', [name]);
-	console.log(value);
 
 	if(value.length == 1) return true;
+	
 	res.send({
 		Sample : value[0]
 	});
