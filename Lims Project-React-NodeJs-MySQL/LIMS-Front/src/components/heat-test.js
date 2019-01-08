@@ -15,10 +15,8 @@ export default class HeatTest extends React.Component{
   handleSubmit = event => {
     event.preventDefault();
 
-    const name = {
-        name2: this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //Ok al parecer solo es quitar este name 2 e imprmirmi el puro state.name y deberia de jalar 
-        
-    };
+    const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //Ok al parecer solo es quitar este name 2 e imprmirmi el puro state.name y deberia de jalar 
+    
 
     axios.post(`http://localhost:4000/api/tests/insert`, {name})// al  parecer este name tiene que ser el nombre de la columna
       .then(res => {
