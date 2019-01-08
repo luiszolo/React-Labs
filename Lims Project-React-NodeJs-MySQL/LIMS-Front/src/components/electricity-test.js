@@ -21,6 +21,7 @@ export default class Test extends React.Component{
                     <input type="text" className="form-control m-1" name="operator" placeholder="#####"/>
                     </label>
                 </div>
+                <h5>Sample Barcodes</h5>
                 <div className="form-group">
                     <Sample
                         number={1}
@@ -43,7 +44,7 @@ export default class Test extends React.Component{
                         format={"SA-##-#####"}
                     />
                 </div>
-            <input type="submit" className="btn btn-primary" value="Save data"/>
+            <input type="submit"  className="btn btn-primary col-6" value="Save data"/>
             </form>
         </div>)
     }
