@@ -60,6 +60,7 @@ export default class HeatTest extends React.Component{
                         number={1}
                         message={""}
                         format={"SA-##-#####"}
+                        onChange={this.handleChange}
                     />
                     <Sample
                         number={2}

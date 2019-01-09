@@ -31,7 +31,7 @@ export default class ChemistryTest extends React.Component{
           .then(res => {
             console.log(res);
             console.log(res.data);
-          })
+          });
       }
         render(){
             return(
