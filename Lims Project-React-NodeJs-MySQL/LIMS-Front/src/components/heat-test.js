@@ -50,12 +50,8 @@ export default class HeatTest extends React.Component{
                 Time elapse (sec):
                 <input type="text" className="form-control m-1" name="Time" onChange={this.handleChange} />
               </label>
-
-              <h1>Sample Barcodes</h1>
-
-
-
                 <div className="form-group">
+                    <h5>Sample Barcodes</h5>
                     <Sample
                         number={1}
                         message={""}
