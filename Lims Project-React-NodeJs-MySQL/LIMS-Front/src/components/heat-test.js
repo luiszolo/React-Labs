@@ -26,7 +26,6 @@ export default class HeatTest extends React.Component{
     const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
     const id = this.state.id;
     const value = this.state.value;
-
     axios.post(`http://localhost:4000/api/Samples/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
       .then(res => {
         console.log(res);
@@ -40,7 +39,7 @@ export default class HeatTest extends React.Component{
             <form onSubmit={this.handleSubmit}>
               <label className="pr-1 form-inline">
                 Operator ID:
-                <input type="text" className="form-control m-1" name="id" onChange={this.handleChange} />
+                <input type="text" className="form-control m-1" name="name" onChange={this.handleChange} />
               </label>
               <label className="pr-1 form-inline">
                 Tempature (C):
@@ -52,15 +51,14 @@ export default class HeatTest extends React.Component{
               </label>
 
               <h1>Sample Barcodes</h1>
-
-
-
                 <div className="form-group">
                     <Sample
                         number={1}
                         message={""}
                         format={"SA-##-#####"}
+                        name="name"
                         onChange={this.handleChange}
+
                     />
                     <Sample
                         number={2}
