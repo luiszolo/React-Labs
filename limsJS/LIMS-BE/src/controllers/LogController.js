@@ -1,13 +1,33 @@
-const pool = require('../config/database');
+const pool = require('./../config/database');
+const dbInteract = require('./../middlewares/db-interact');
 
 async function addLog (req, res) {
-	let params  = req.body;
-	console.log(params);
-	const newLog = {
-		name: params.name
-	};
-	await pool.query('INSERT INTO Log SET ?', [newLog]);
-	console.log(`Saved Log: ${newLog.name}`);
+	let body  = req.body;
+	
+	if (dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.sample.toUpperCase()}'`)) {
+		res.send({
+			message: 'The sample doesn\'t exists'
+		});
+		return;
+	}
+	if (dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`)) {
+		res.send({
+			message: 'The operator doesn\'t exists'
+		});
+		return;
+	}
+	if(dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test.toUpperCase()}'`)) { 
+		res.send({
+			message: 'The test doesn\'t exists'
+		});
+		return;
+	}
+	if(dbInteract.isExists(`SELECT * FROM Status WHERE name='${body.status.toUpperCase()}'`)) {
+		res.send({
+			message: 'The status doesn\'t exists'
+		});
+		return;
+	}
 };
 
 async function deleteLog (req, res) {
