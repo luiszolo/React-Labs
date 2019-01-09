@@ -11,7 +11,7 @@ export default class HeatTest extends React.Component{
         name:'', //Table Sample
 
       }
-        
+ 
   handleChange = event => {
     this.setState({ 
       id: event.target.value,
