@@ -1,11 +1,10 @@
 const pool = require('./../config/database');
 const regex = require('./../middlewares/regex');
 
-// CRUD
+// Finish
 async function addSample (req, res) {
-	let params  = req.body;
-	console.log(params);
-	if(!regex.validateSampleName(params.name)) return;
+	let body  = req.body;
+	if(!regex.validateSampleName(body.name.toUpperCase())) return;
 	if(await getSampleByName(req, res)) {
 		res.send({
 			message: "The sample already exists"
@@ -13,46 +12,61 @@ async function addSample (req, res) {
 		return;
 	}
 	const newSample = {
-		name: params.name.toUpperCase()
+		name: body.name.toUpperCase()
 	};
 	await pool.query('INSERT INTO Sample SET ?', [newSample]);
-	console.log(`Saved Sample: ${newSample.name}`);
-	res.redirect('/api/Samples/');
+	res.send({
+		message: 'Insertion successfull'
+	});
 };
 
+// Finish
 async function deleteSample (req, res) {
 	let params = req.params;
-	const deleteRow = await pool.query('DELETE FROM Sample WHERE id= ?', [params.id]);
-	res.redirect('/api/Samples/');
+	await pool.query('DELETE FROM Sample WHERE name= ?', [params.name]);
+	res.send({
+		message: 'Delete successfull'
+	});
 };
 
+// Finis
 async function getSamples (req, res) {
-	const value = await pool.query('SELECT * FROM Sample ORDER BY name DESC');
+	const value = await pool.query('SELECT * FROM Sample ORDER BY name ASC');
 	console.log(value);
 	res.send({
 		Samples : value
 	});
 };
 
+// Finish
 async function getSampleByName (req, res) {
 	let params = req.body;
 	const name = params.name;
 	const value = await pool.query('SELECT * FROM Sample WHERE name = ?', [name]);
-
-	if(value.length == 1) return true;
 	
 	res.send({
 		Sample : value[0]
 	});
+
+	if(value.length == 1) return true;
 	return false;
 };
 
+// Finish
 async function updateSample (req, res) {
 	let params = req.params;
 	let body = req.body;
-	const select = await pool.query('SELECT * FROM Sample WHERE id = ?', [params.id]);
-	const update = await pool.query(`UPDATE Sample SET name='${body.name}' WHERE name='${select[0].name}'`);
-	res.redirect('/api/Samples/' + params.id);
+	if(!regex.validateSampleName(body.name.toUpperCase())) return;
+	if(await getSampleByName(req, res)) {
+		res.send({
+			message: "The sample already exists"
+		});
+		return;
+	}
+	await pool.query(`UPDATE Sample SET name='${body.name.toUpperCase()}' WHERE name=${params.name}`);
+	res.send({
+		message: 'Update successfull'
+	});
 }
 
 module.exports = {

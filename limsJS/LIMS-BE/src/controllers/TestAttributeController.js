@@ -1,3 +1,5 @@
+// Unnecessary Controller
+
 const pool = require('../config/database');
 
 async function addTestAttribute (req, res) {

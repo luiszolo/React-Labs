@@ -3,6 +3,9 @@ async function asyncForEach(arr, callback) {
 		await callback(arr[index], index, arr);
 }
 
+const capitalizeWord = (s) => s.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+
 module.exports = {
-	asyncForEach: asyncForEach
-}
+	asyncForEach: asyncForEach,
+	capitalizeWord: capitalizeWord
+};
