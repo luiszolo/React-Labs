@@ -33,7 +33,7 @@ export default class Tests extends React.Component {
 
             return (
               <NavItem
-                activeTab={activeTest}
+                activeTest={activeTest}
                 key={label}
                 label={label}
                 onClick={onClickTest}

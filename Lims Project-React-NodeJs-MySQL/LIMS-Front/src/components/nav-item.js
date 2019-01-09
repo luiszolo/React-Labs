@@ -17,10 +17,10 @@ export default class NavItem extends React.Component {
       },
     } = this;
 
-    let className = 'nav-link btn btn-light w-100 text-left rounded-0';
+    let className = 'btn btn-light w-100 text-left rounded-0 shadow-none';
 
     if (activeTest === label) {
-      className += ' tab-list-active';
+      className = 'btn btn-secondary w-100 text-left rounded-0 shadow-none';
     }
 
     return (
