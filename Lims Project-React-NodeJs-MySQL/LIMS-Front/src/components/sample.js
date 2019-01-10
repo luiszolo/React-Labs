@@ -53,13 +53,14 @@ export default class Sample extends React.Component{
         }
 
         return (<div className="row m-1 form-inline">
-                    <label className="col col-1 mr-1">{"#"+number}</label>
+                    <label className="col col-4 text-right d-block mr-1">{"#"+number}</label>
                     <input 
                         type="text" 
                         className={inputClassName}
                         name={"sample"+number} 
                         placeholder={format}
                         onBlur={handleOnBlur}
+                        required
                     />
                     <label className="col col-4 mr-1">{message}</label>
         </div>)
