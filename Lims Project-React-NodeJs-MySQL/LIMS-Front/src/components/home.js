@@ -7,26 +7,38 @@ export default class Home extends React.Component{
 
     
     state = {
-        id: '', // Table Operator
-        value: '', //Table SampleValue
-        name:'', //Table Sample
+        status: '', 
+        samplesLength: '', 
+        name:'', 
 
       }
  
-  handleChange = event => {
+  handleChangeName = event => {
     this.setState({ 
-   
       name: event.target.value,
+    } );// este name es el de la variable
+  }
 
+  handleChangeSampleLenght = event => {
+    this.setState({
+      samplesLength: event.target.value,
+    } );// este name es el de la variable
+  }
+
+  handleChangeStatus = event => {
+    this.setState({
+      status: event.target.value,
     } );// este name es el de la variable
   }
 
   handleSubmit = event => {
     event.preventDefault();
 
-    const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
+    const name =  this.state.name 
+    const samplesLength=this.state.samplesLength
+    const status = this.state.status
 
-    axios.post(`http://localhost:4000/api/tests/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
+    axios.post(`http://localhost:4000/api/tests/add`, {name, samplesLength,status})// al  parecer este name tiene que ser el nombre de la columna
       .then(res => {
         console.log(res);
         console.log(res.data);
@@ -49,16 +61,21 @@ export default class Home extends React.Component{
             <form onSubmit={this.handleSubmit}>
               <label className="pr-1 form-inline">
                 Name of the Test:
-                <input type="text" className="form-control m-1" name="name" onChange={this.handleChange} />
+                <input type="text" className="form-control m-1" name="name" onChange={this.handleChangeName} />
                 Remember to refresh the page to see the results in the menu
               </label>
+              <label className="pr-1 form-inline">
+                How many attributes:
+                <input type="text" className="form-control m-1" name="samplesLength" onChange={this.handleChangeSampleLenght} />
+              </label>
            
+              <label className="pr-1 form-inline">
+                status (1 or 0):
+                <input type="text" className="form-control m-1" name="status" onChange={this.handleChangeStatus} />
+              </label>
 
-
-
-
-                        <button type="submit" className="btn btn-primary col-6"  onClick={() => { 
-            window.alert('You Added a Sample')} 
+            <button type="submit" className="btn btn-primary col-6"  onClick={() => { 
+            window.alert('You Added a Test (Please Reload page();)')} 
             }>Save Data</button>
 
               

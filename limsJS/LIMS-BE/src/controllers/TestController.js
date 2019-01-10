@@ -10,6 +10,8 @@ async function addTest (req, res) {
 		samplesLength: body.samplesLength,
 		attributes: body.attributes
 	};
+
+	console.log(body)
 	const validateTest = await pool.query(`SELECT * FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
 	if (validateTest.length == 1) {
 		res.send({

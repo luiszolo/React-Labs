@@ -22,7 +22,7 @@ class App extends React.Component {
   }
 
    componentWillMount() {
-       fetch("http://10.2.1.94:4000/api/tests/")
+       fetch("http://10.2.1.94:4000/api/tests/?actived=true")
            .then(res => res.json())
            .then(data=> this.setState({tests: data.Tests}));
    }
@@ -35,7 +35,7 @@ class App extends React.Component {
             return e["name"]
         })
         const menu = app.concat(tests)
-        const comp =[<ElectricityTest/>,<Home/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
+        const comp =[<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
 
         return(<div className="root">
             {title}
