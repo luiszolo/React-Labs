@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
 
@@ -9,11 +10,13 @@ const { database, Ip } = require('./config/keys');
 // Initializations
 const app = express();
 
+
 // Settings
 app.set('port', process.env.PORT || 4000);
 
 // Middlewares
-app.use(morgan('dev'));
+app.use(morgan('combined'));
+
 app.use(express.urlencoded({
 	extended: false
 }));
