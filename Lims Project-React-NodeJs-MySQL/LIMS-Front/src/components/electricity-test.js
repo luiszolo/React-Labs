@@ -2,8 +2,6 @@ import React from 'react';
 
 import Sample from './sample.js'
 
-
-
 export default class Test extends React.Component{
     constructor(props){
         super(props);
@@ -55,13 +53,13 @@ export default class Test extends React.Component{
         }
 
         return(<div className="col col-8 offset-2">
-            <div className="col col-10 offset-1 pb-3">
+            <div className="col col-12 pb-3">
                 <h1 className="text-center">{name}</h1>
             </div>
-            <div className="col col-10 offset-1">
+            <div className="col col-12">
                 <form>
-                    <div className="row form-inline pb-3">
-                        <label className="pr-1 col col-3">Operator ID:</label>
+                    <div className="form-inline pb-3">
+                        <label className="col col-4 text-right d-block mr-1">Operator ID:</label>
                         <input
                             type="text" 
                             className={operatorClassName}
@@ -113,14 +111,14 @@ export default class Test extends React.Component{
                             number={10}
                             format={format}
                         />
+                        <button
+                            type="submit"
+                            className="btn btn-primary offset-5 col-2"
+                            onClick={() => {window.alert('You Added a Sample')}}
+                        >
+                        Save Data
+                        </button>
                     </div>
-                    <button 
-                        type="submit" 
-                        className="btn btn-primary"  
-                        onClick={() => {window.alert('You Added a Sample')}}
-                    >
-                    Save Data
-                    </button>
                 </form>
             </div>
         </div>)
