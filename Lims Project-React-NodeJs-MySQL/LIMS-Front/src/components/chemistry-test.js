@@ -10,6 +10,7 @@ export default class ChemistryTest extends React.Component{
     super(props);
     this.state={
         validateOp: undefined,
+        isSubmitDisabled: true,
     }}
 
         state = {
@@ -23,6 +24,7 @@ export default class ChemistryTest extends React.Component{
             if(/\d\d\d\d\d/.test(e.target.value)){
                 this.setState({
                     validateOp: true,
+                    isSubmitDisabled: false
                     
                 })
             }else if(e.target.value===""){
@@ -32,24 +34,49 @@ export default class ChemistryTest extends React.Component{
             }else{
                 this.setState({
                     validateOp: false,
+                    isSubmitDisabled: true
                 })
             }
         }
 
-      handleChange = event => {
-        this.setState({ 
-          id: event.target.value,
-          name: event.target.value,
-          value: event.target.value
-        } );// este name es el de la variable
+
+
+        handleChange(event) {
+          this.setState({
+            // use dynamic name value to set our state object property
+            name: event.target.value,
+          }, function(){ this.canSubmit()})
+      
+        }
+
+
+
+
+
+
+
+
+
+
+      canSubmit() {
+        const { name } = this.state
+        if (name.length >= 5) {
+          this.setState({
+            isSubmitDisabled: false
+          })
+        }
+        else {
+          this.setState({
+            isSubmitDisabled: true
+          })
+        }
       }
     
       handleSubmit = event => {
         event.preventDefault();
     
         const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
-        const id = this.state.id;
-        const value = this.state.value;
+  
     
         axios.post(`http://localhost:4000/api/tests/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
@@ -119,9 +146,10 @@ export default class ChemistryTest extends React.Component{
     
     
     
-                    <button type="submit" className="btn btn-primary col-6"  onClick={() => { 
+                    <button type="submit" className="btn btn-primary col-6"  disabled={this.state.isSubmitDisabled} onClick={() => { 
             window.alert('You Added a Sample')} 
             }>Save Data</button>
+           
     
                   
               </form>
