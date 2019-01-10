@@ -32,8 +32,21 @@ async function addTest (req, res) {
 			if(auxAttribute != null || auxAttribute != [{  }]) {
 				const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
 				await pool.query(`INSERT INTO TestAttributes SET test_Id=${id[0].id}, attribute_Id=${auxAttribute[0].id}`);
+			} else {
+				const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
+				await pool.query(`DELETE * FROM TestAttributes WHERE test_Id=${id}`);
+				await pool.query(`DELETE * FROM Test WHERE id=${id}`);
+				newTest.attributes = null;
+				break;
 			}
 		}
+	}
+
+	if (newTest.attributes == null) {
+		res.send({
+			message: 'The Test can\'t be saved!'
+		});
+		return;
 	}
 	res.send({
 		message: "Insertion successfull"

@@ -9,6 +9,5 @@ async function insertData(req, res) {
 		});
 		return;
 	}
-
-	const attributes;
+	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name=${body.test.toUpperCase()}`);
 }
