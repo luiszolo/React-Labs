@@ -48,16 +48,6 @@ export default class ChemistryTest extends React.Component{
           }, function(){ this.canSubmit()})
       
         }
-
-
-
-
-
-
-
-
-
-
       canSubmit() {
         const { name } = this.state
         if (name.length >= 5) {
@@ -77,7 +67,7 @@ export default class ChemistryTest extends React.Component{
     
         const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
     
-        axios.post(`http://localhost:4000/api/tests/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/samplevalue/add`, {name,})// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
@@ -126,7 +116,7 @@ export default class ChemistryTest extends React.Component{
                   </label>
                   <label className="pr-1 form-inline">
                     Chemistry:
-                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChange} />
+                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeAtrtribute} />
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
@@ -139,6 +129,7 @@ export default class ChemistryTest extends React.Component{
                     <button 
                         type="submit" 
                         className="btn btn-primary col-6"  
+                        disabled={this.state.isSubmitDisabled}
                         onClick={() => {window.alert('You Added a Sample')}}
                     >
                     Save Data

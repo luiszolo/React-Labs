@@ -48,21 +48,8 @@ export default class Home extends React.Component{
             <div className="col mx-auto d-block component ">
                 <img src="images/logo.png" className="logo pb-3"alt="BSI logo"/>
             
-                <h1 className="text-center">Add Test</h1>
-                <form onSubmit={this.handleSubmit}>
-                    <label className="pr-1 form-inline">
-                        Name of the Test:
-                        <input type="text" className="form-control m-1" name="name" onChange={this.handleChange} />
-                        Remember to refresh the page to see the results in the menu
-                    </label>
-                <button
-                    type="submit"
-                    className="btn btn-primary col-6"
-                    onClick={() => {window.alert('You Added a Sample')}}
-                >
-                Save Data
-                </button>
-            </form>
+
+        
             </div>
           <h1>ADD Test</h1>
             <form onSubmit={this.handleSubmit}>

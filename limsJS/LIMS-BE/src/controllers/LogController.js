@@ -1,6 +1,7 @@
 const pool = require('./../config/database');
 const dbInteract = require('./../middlewares/db-interact');
 
+// Testing
 async function addLog (req, res) {
 	let body  = req.body;
 	
@@ -46,42 +47,55 @@ async function addLog (req, res) {
 	});
 };
 
+// Unnecessary
 async function deleteLog (req, res) {
 	let params = req.params;
-	const deleteRow = await pool.query(`DELETE FROM Log WHERE id= ?`, [params.id]);
-	res.redirect('/api/Logs/');
+	await pool.query(`DELETE FROM Log WHERE id= ?`, [params.id]);
 };
 
+// Finish
 async function getLogs (req, res) {
-	const value = await pool.query('SELECT * FROM Log ORDER BY name DESC');
-	console.log(value);
+	const value = await pool.query('SELECT * FROM Log ORDER BY onCreated DESC');
+	if (value == undefined) {
+		res.send({
+			message: "No logs founds"
+		});
+		return;
+	}
 	res.send({
 		Logs : value
 	});
 };
 
-async function getLogById (req, res) {
+// Finish
+async function getLogBySample (req, res) {
 	let params = req.params;
-	const id = params.id;
-	const value = await pool.query('SELECT * FROM Log WHERE id = ?', [id]);
-	console.log(value);
+	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.sample.toUpperCase()}'`);
+	if (sample == false) {
+		res.send({
+			message: 'The sample doesn\'t exists'
+		});
+		return;
+	}
+
+	const value = await pool.query('SELECT * FROM Log WHERE sample_Id = ?', [sample.result.id]);
 	res.send({
-		Log : value
+		Logs : value
 	});
 };
 
+// Unnecessary
 async function updateLog (req, res) {
 	let params = req.params;
 	let body = req.body;
 	const select = await pool.query('SELECT * FROM Log WHERE id = ?', [params.id]);
 	const update = await pool.query(`UPDATE Log SET name='${body.name}' WHERE name='${select[0].name}'`);
-	res.redirect('/api/Logs/' + params.id);
 }
 
 module.exports = {
 	addLog: addLog,
 	deleteLog: deleteLog,
-	getLogById: getLogById,
+	getLogBySample: getLogBySample,
 	getLogs: getLogs,
 	updateLog: updateLog
 };
