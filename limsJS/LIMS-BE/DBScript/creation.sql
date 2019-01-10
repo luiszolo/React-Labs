@@ -60,3 +60,12 @@ CREATE TABLE IF NOT EXISTS `TestAttributes` (
 	CONSTRAINT `fk_TestAttributes_test_id` FOREIGN KEY (test_Id) REFERENCES `Test`(id),
 	CONSTRAINT `fk_TestAttributes_attribute_id` FOREIGN KEY (attribute_Id) REFERENCES `Attribute`(id)
 );
+
+CREATE TABLE IF NOT EXISTS `TestStatus` (
+	test_Id INT NOT NULL,
+	prev_State INT NULL,
+	post_State INT NOT NULL,
+	CONSTRAINT `fk_TestStatus_test_id` FOREIGN KEY (test_Id) REFERENCES `Test`(id),
+	CONSTRAINT `fk_TestStatus_prev_state` FOREIGN KEY (prev_State) REFERENCES `Status`(id),
+	CONSTRAINT `fk_TestStatus_post_state` FOREIGN KEY (prev_State) REFERENCES `Status`(id)
+);

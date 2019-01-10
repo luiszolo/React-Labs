@@ -7,7 +7,5 @@ router.use('/logs', require('./LogRoutes'));
 router.use('/attributes', require('./AttributeRoutes'));
 router.use('/sample-values', require('./SampleValueRoutes'));
 router.use('/status', require('./StatusRoutes'));
-// Unnecessary Route
-router.use('/test-attributes', require('./TestAttributeRoutes'));
 
 module.exports = router;
