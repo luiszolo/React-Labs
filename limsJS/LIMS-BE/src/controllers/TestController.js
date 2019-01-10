@@ -33,6 +33,9 @@ async function addTest (req, res) {
 			}
 		}
 	}
+	res.send({
+		message: "Insertion successfull"
+	});
 };
 
 // Finish
@@ -46,7 +49,10 @@ async function getTests (req, res) {
 	// let value;
 	// if (req.params == null)
 	let Tests = [];
-	const value = await pool.query('SELECT * FROM Test ORDER BY id ASC');
+	let value;
+	if (req.query.actived == 'true') value = await pool.query('SELECT * FROM Test WHERE status=true ORDER BY id ASC');
+	else if (req.query.actived == 'false') value = await pool.query('SELECT * FROM Test WHERE status=false ORDER BY id ASC');
+	else value = await pool.query('SELECT * FROM Test ORDER BY id ASC');
 	for await ( const element of value ) {
 		element.name = miscs.capitalizeWord(element.name);
 		let attributes = await pool.query(`SELECT Attribute.name FROM Attribute, 
