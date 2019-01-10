@@ -48,8 +48,6 @@ export default class HeatTest extends React.Component{
     event.preventDefault();
 
     const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
-    const id = this.state.id;
-    const value = this.state.value;
     axios.post(`http://localhost:4000/api/Samples/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
       .then(res => {
         
@@ -111,7 +109,7 @@ export default class HeatTest extends React.Component{
                     <Sample
                         number={1}
                         message={""}
-                        format={"SA-##-#####"}
+                        format={format}
                         name="name"
                         onChange={this.handleChange}
 
@@ -119,22 +117,22 @@ export default class HeatTest extends React.Component{
                     <Sample
                         number={2}
                         message={""}
-                        format={"SA-##-#####"}
+                        format={format}
                     />
                     <Sample
                         number={3}
                         message={""}
-                        format={"SA-##-#####"}
+                        format={format}
                     />
                     <Sample
                         number={4}
                         message={""}
-                        format={"SA-##-#####"}
+                        format={format}
                     />
                     <Sample
                         number={5}
                         message={""}
-                        format={"SA-##-#####"}
+                        format={format}
                     />
                     
                 </div>

@@ -48,8 +48,6 @@ export default class ChemistryTest extends React.Component{
         event.preventDefault();
     
         const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
-        const id = this.state.id;
-        const value = this.state.value;
     
         axios.post(`http://localhost:4000/api/tests/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
@@ -102,28 +100,21 @@ export default class ChemistryTest extends React.Component{
                     Chemistry:
                     <input type="text" className="form-control m-1" name="value" onChange={this.handleChange} />
                   </label>
-
-    
                   <h1>Sample Barcodes</h1>
-    
-    
-    
                     <div className="form-group">
                         <Sample
                             number={1}
                             message={""}
-                            format={"SA-##-#####"}
+                            format={format}
                         />
                     </div>
-    
-    
-    
-    
-                    <button type="submit" className="btn btn-primary col-6"  onClick={() => { 
-            window.alert('You Added a Sample')} 
-            }>Save Data</button>
-    
-                  
+                    <button 
+                        type="submit" 
+                        className="btn btn-primary col-6"  
+                        onClick={() => {window.alert('You Added a Sample')}}
+                    >
+                    Save Data
+                    </button>
               </form>
             </div>
             )

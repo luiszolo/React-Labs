@@ -35,7 +35,7 @@ class App extends React.Component {
             return e["name"]
         })
         const menu = app.concat(tests)
-        const comp =[<ElectricityTest/>,<Home/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
+        const comp =[<ElectricityTest/>,<Home/>,<ChemistryTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
 
         return(<div className="root">
             {title}

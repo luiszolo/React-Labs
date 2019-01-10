@@ -9,6 +9,9 @@ export default class SpinnerTest extends React.Component {
     super(props);
     this.state={
         validateOp: undefined,
+        id: '', // Table Operator
+        value: '', //Table SampleValue
+        name:'', //Table Sample
     }
 }
 
@@ -28,15 +31,6 @@ handleOnBlur=(e)=>{
     }
 }
 
-
-    
-  state = {
-    id: '', // Table Operator
-    value: '', //Table SampleValue
-    name:'', //Table Sample
-
-  }
-
 handleChange = event => {
 this.setState({ 
   id: event.target.value,
@@ -45,7 +39,7 @@ this.setState({
 } );// este name es el de la variable
 }
 
-handleChangeclear = event => {
+handleChangeclear = () => {
   this.setState(
     {name : ''},
     {value : ''},
@@ -57,8 +51,6 @@ handleSubmit = event => {
 event.preventDefault();
 
 const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
-const id = this.state.id;
-const value = this.state.value;
 axios.post(`http://localhost:4000/api/Samples/add`, {name})// al  parecer este name tiene que ser el nombre de la columna
   .then(res => {
     console.log(res);
@@ -89,34 +81,39 @@ render(){
           operatorClassName="sample form-control"
       }
 
-
-
-
-
-
-
     return(
       <div className="col col-sm-6 offset-sm-4">
       <h1>Spinner Test</h1>
         <form onSubmit={this.handleSubmit}>
           <label className="pr-1 form-inline">
             Operator ID:
-            <input type="text" className="form-control m-1" name="name"
-            type="text" 
-            className={operatorClassName}
-            name="operator" 
-            placeholder="#####"
-            onBlur={handleOnBlur}
-            onChange={this.handleChange} />
+            <input 
+                type="text" 
+                className={operatorClassName}
+                name="operator" 
+                placeholder="#####"
+                onBlur={handleOnBlur}
+                onChange={this.handleChange}
+            />
              <label className="col col-4 mr-1">{message}</label>
           </label>
           <label className="pr-1 form-inline">
             Tempature (C):
-            <input type="text" className="form-control m-1" name="value" onChange={this.handleChange} />
+            <input 
+                type="text" 
+                className="form-control m-1" 
+                name="value" 
+                onChange={this.handleChange}
+            />
           </label>
           <label className="pr-1 form-inline">
             Time elapse (sec):
-            <input type="text" className="form-control m-1" name="Time" onChange={this.handleChange} />
+            <input 
+                type="text" 
+                className="form-control m-1" 
+                name="Time" 
+                onChange={this.handleChange}
+            />
           </label>
 
           <h1>Sample Barcodes</h1>
@@ -124,7 +121,7 @@ render(){
                 <Sample
                     number={1}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                     name="name"
                     onChange={this.handleChange}
 
@@ -132,27 +129,27 @@ render(){
                 <Sample
                     number={2}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={3}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={4}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={5}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
-                            <Sample
+                <Sample
                     number={6}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                     name="name"
                     onChange={this.handleChange}
 
@@ -160,22 +157,22 @@ render(){
                 <Sample
                     number={7}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={8}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={9}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />
                 <Sample
                     number={10}
                     message={""}
-                    format={"SA-##-#####"}
+                    format={format}
                 />    
 
 
