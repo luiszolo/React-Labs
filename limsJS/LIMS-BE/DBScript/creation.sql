@@ -45,8 +45,10 @@ CREATE TABLE IF NOT EXISTS `Log` (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	operator_Id INT NOT NULL,
 	sample_Id INT NOT NULL,
+	test_Id INT NOT NULL,
 	status_Id INT NOT NULL,
 	onCreated DATETIME NOT NULL,
+	CONSTRAINT `fk_Log_test_id` FOREIGN KEY (test_Id) REFERENCES `Test`(id),
 	CONSTRAINT `fk_Log_operator_id` FOREIGN KEY (operator_Id) REFERENCES `Operator`(id),
 	CONSTRAINT `fk_Log_sample_id` FOREIGN KEY (sample_Id) REFERENCES `Sample`(id),
 	CONSTRAINT `fk_Log_status_id` FOREIGN KEY (status_Id) REFERENCES `Status`(id)

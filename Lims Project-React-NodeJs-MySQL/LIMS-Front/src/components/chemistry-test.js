@@ -10,6 +10,7 @@ export default class ChemistryTest extends React.Component{
     super(props);
     this.state={
         validateOp: undefined,
+        isSubmitDisabled: true,
     }}
 
         state = {
@@ -23,6 +24,7 @@ export default class ChemistryTest extends React.Component{
             if(/\d\d\d\d\d/.test(e.target.value)){
                 this.setState({
                     validateOp: true,
+                    isSubmitDisabled: false
                     
                 })
             }else if(e.target.value===""){
@@ -32,16 +34,42 @@ export default class ChemistryTest extends React.Component{
             }else{
                 this.setState({
                     validateOp: false,
+                    isSubmitDisabled: true
                 })
             }
         }
 
-      handleChange = event => {
-        this.setState({ 
-          id: event.target.value,
-          name: event.target.value,
-          value: event.target.value
-        } );// este name es el de la variable
+
+
+        handleChange(event) {
+          this.setState({
+            // use dynamic name value to set our state object property
+            name: event.target.value,
+          }, function(){ this.canSubmit()})
+      
+        }
+
+
+
+
+
+
+
+
+
+
+      canSubmit() {
+        const { name } = this.state
+        if (name.length >= 5) {
+          this.setState({
+            isSubmitDisabled: false
+          })
+        }
+        else {
+          this.setState({
+            isSubmitDisabled: true
+          })
+        }
       }
     
       handleSubmit = event => {
