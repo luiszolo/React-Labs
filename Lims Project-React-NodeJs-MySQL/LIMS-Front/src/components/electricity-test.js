@@ -8,21 +8,26 @@ export default class Test extends React.Component{
         this.state={
             name: "Electricity test",
             validateOp: undefined,
+            isSubmitDisabled: true,
         }
     }
 
     handleOnBlur=(e)=>{
-        if(/\d\d\d\d\d/.test(e.target.value)){
+        if(/\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===5){
             this.setState({
                 validateOp: true,
+                isSubmitDisabled: false
+                
             })
         }else if(e.target.value===""){
             this.setState({
                 validateOp: undefined,
+                isSubmitDisabled: true
             })
         }else{
             this.setState({
                 validateOp: false,
+                isSubmitDisabled: true
             })
         }
     }
@@ -59,7 +64,7 @@ export default class Test extends React.Component{
             <div className="col col-12">
                 <form>
                     <div className="form-inline pb-3">
-                        <label className="col col-lg-5 col-3 text-right d-block mr-1">Operator ID:</label>
+                        <label className="col col-lg-5 col-3 text-right d-block">Operator ID:</label>
                         <input
                             type="text" 
                             className={operatorClassName}
@@ -67,7 +72,7 @@ export default class Test extends React.Component{
                             placeholder="#####"
                             onBlur={handleOnBlur}
                             />
-                        <label className="col col-lg-4 col-4 mr-1">{message}</label>
+                        <label className="col col-lg-4 col-4">{message}</label>
                     </div>
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
@@ -114,6 +119,7 @@ export default class Test extends React.Component{
                         <button
                             type="submit"
                             className="btn btn-primary col-4 offset-4 col-lg-2 offset-lg-5 mt-5"
+                            disabled={this.state.isSubmitDisabled}
                             onClick={() => {window.alert('You Added a Sample')}}
                         >
                         Save Data

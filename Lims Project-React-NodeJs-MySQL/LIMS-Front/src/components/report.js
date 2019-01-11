@@ -1,7 +1,21 @@
 import React from 'react';
 
 export default class SampleSearch extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            logs: []
+        }
+    }
+
+    componentWillMount() {
+        fetch("http://10.2.1.94:4000/api/logs")
+            .then(res => res.json())
+            .then(data=> this.setState({logs: data.Tests}));
+    }
+
     render(){
+        console.log()
         return(
             <div className="col col-sm-6 offset-sm-4">
                 <h1>

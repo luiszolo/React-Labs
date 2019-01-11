@@ -30,6 +30,7 @@ export default class ChemistryTest extends React.Component{
             }else if(e.target.value===""){
                 this.setState({
                     validateOp: undefined,
+                    isSubmitDisabled: true
                 })
             }else{
                 this.setState({
@@ -48,19 +49,19 @@ export default class ChemistryTest extends React.Component{
           }, function(){ this.canSubmit()})
       
         }
-      canSubmit() {
-        const { name } = this.state
-        if (name.length >= 5) {
-          this.setState({
-            isSubmitDisabled: false
-          })
-        }
-        else {
-          this.setState({
-            isSubmitDisabled: true
-          })
-        }
-      }
+    //   canSubmit() {
+    //     const { name } = this.state
+    //     if (name.length >= 5) {
+    //       this.setState({
+    //         isSubmitDisabled: false
+    //       })
+    //     }
+    //     else {
+    //       this.setState({
+    //         isSubmitDisabled: true
+    //       })
+    //     }
+    //   }
     
       handleSubmit = event => {
         event.preventDefault();
@@ -122,11 +123,10 @@ export default class ChemistryTest extends React.Component{
                     <div className="form-group">
                         <Sample
                             number={1}
-                            message={""}
                             format={format}
                         />
                     </div>
-                    <button 
+                    <button
                         type="submit" 
                         className="btn btn-primary col-6"  
                         disabled={this.state.isSubmitDisabled}

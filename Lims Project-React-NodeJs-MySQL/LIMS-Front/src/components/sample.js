@@ -10,7 +10,8 @@ export default class Sample extends React.Component{
       }
 
     handleOnBlur=(e)=>{
-        if(/SA-\d\d-\d\d\d\d\d/.test(e.target.value)){
+        console.log(e.target.value.length)
+        if(/SA-\d\d-\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===11){
             this.setState({
                 validated: true,
             })
@@ -52,8 +53,8 @@ export default class Sample extends React.Component{
             inputClassName="sample col-lg-3 col-6 form-control"
         }
 
-        return (<div className="row m-1 form-inline">
-                    <label className="col col-lg-5 col-sm-2 text-right d-block mr-1">{"#"+number}</label>
+        return (<div className="row mb-1 form-inline">
+                    <label className="col col-lg-5 col-sm-2 text-right d-block">{"#"+number}</label>
                     <input 
                         type="text" 
                         className={inputClassName}
@@ -62,7 +63,7 @@ export default class Sample extends React.Component{
                         onBlur={handleOnBlur}
                         required
                     />
-                    <label className="col col-lg-4 col-sm-4 mr-1">{message}</label>
+                    <label className="col col-lg-4 col-sm-4">{message}</label>
         </div>)
     }
 }
