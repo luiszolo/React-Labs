@@ -39,21 +39,21 @@ export default class Sample extends React.Component{
 
         let message=" ";
 
-        let inputClassName="sample form-control";
+        let inputClassName="sample col-lg-3 col-6 form-control";
 
         if(validated===false){
-            inputClassName= "sample form-control border-danger"
+            inputClassName= "sample col-lg-3 col-6 form-control border-danger"
             message="Incorret syntax"
         }else if(validated===true){
-            inputClassName= "sample form-control border-success"
+            inputClassName= "sample col-lg-3 col-6 form-control border-success"
             message=" "
         }
         else{
-            inputClassName="sample form-control"
+            inputClassName="sample col-lg-3 col-6 form-control"
         }
 
         return (<div className="row m-1 form-inline">
-                    <label className="col col-4 text-right d-block mr-1">{"#"+number}</label>
+                    <label className="col col-lg-5 col-sm-2 text-right d-block mr-1">{"#"+number}</label>
                     <input 
                         type="text" 
                         className={inputClassName}
@@ -62,7 +62,7 @@ export default class Sample extends React.Component{
                         onBlur={handleOnBlur}
                         required
                     />
-                    <label className="col col-4 mr-1">{message}</label>
+                    <label className="col col-lg-4 col-sm-4 mr-1">{message}</label>
         </div>)
     }
 }
