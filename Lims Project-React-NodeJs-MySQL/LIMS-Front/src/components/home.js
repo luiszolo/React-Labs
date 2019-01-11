@@ -17,7 +17,11 @@ export default class Home extends React.Component{
         samplesLength: '', 
         name:'', 
       }
- 
+      handleChangeName = event => {
+        this.setState({ 
+          name: event.target.value,
+        } );// este name es el de la variable
+      }
 
       handleOnBlur=(e)=>{
         if(/[a-zA-Z]/.test(e.target.value)){
@@ -29,34 +33,36 @@ export default class Home extends React.Component{
         }else if(e.target.value===""){
             this.setState({
                 validateOp: undefined,
+                isSubmitDisabled: true
             })
+        }else if(e.target.value===""){
+            this.setState({
+              validateOp: undefined,
+          })
         }else{
             this.setState({
                 validateOp: false,
                 isSubmitDisabled: true
             })
         }
+
     }
 
-  handleChangeName = event => {
-    this.setState({ 
-      name: event.target.value,
-    } );// este name es el de la variable
-  }
 
-  canSubmit() {
-    const { name } = this.state
-    if (name.length >= 5) {
-      this.setState({
-        isSubmitDisabled: false
-      })
-    }
-    else {
-      this.setState({
-        isSubmitDisabled: true
-      })
-    }
-  }
+
+  // canSubmit() {
+  //   const { name } = this.state
+  //   if (name.length >= 5) {
+  //     this.setState({
+  //       isSubmitDisabled: false
+  //     })
+  //   }
+  //   else {
+  //     this.setState({
+  //       isSubmitDisabled: true
+  //     })
+  //   }
+  // }
 
   handleChangeSampleLenght = event => {
     this.setState({
