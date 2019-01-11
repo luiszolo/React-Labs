@@ -24,21 +24,13 @@ export default class Home extends React.Component{
       }
 
       handleOnBlur=(e)=>{
-        if(/[a-zA-Z]/.test(e.target.value)){
+        if(/^[a-z][a-z\s]*$/g.test(e.target.value)){
             this.setState({
                 validateOp: true,
                 isSubmitDisabled: false
                 
             })
-        }else if(e.target.value===""){
-            this.setState({
-                validateOp: undefined,
-                isSubmitDisabled: true
-            })
-        }else if(e.target.value===""){
-            this.setState({
-              validateOp: undefined,
-          })
+
         }else{
             this.setState({
                 validateOp: false,
@@ -50,19 +42,20 @@ export default class Home extends React.Component{
 
 
 
-  // canSubmit() {
-  //   const { name } = this.state
-  //   if (name.length >= 5) {
-  //     this.setState({
-  //       isSubmitDisabled: false
-  //     })
-  //   }
-  //   else {
-  //     this.setState({
-  //       isSubmitDisabled: true
-  //     })
-  //   }
-  // }
+    // canSubmit() {
+    //   const { status, samplesLength, name } = this.state
+    //   // TODO: add valid email format validation in this condition
+    //   if (samplesLength.length == 1 && status.length == 1 && name.length > 0) {
+    //     this.setState({
+    //       isSubmitDisabled: false
+    //     })
+    //   }
+    //   else {
+    //     this.setState({
+    //       isSubmitDisabled: true
+    //     })
+    //   }
+    // }
 
   handleChangeSampleLenght = event => {
     this.setState({
