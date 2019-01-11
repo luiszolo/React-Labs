@@ -3,7 +3,7 @@ const pool = require('./../config/database');
 const regex = require('./../middlewares/regex');
 
 // Finish
-async function addTest (req, res) {
+async function addTest (req, res) {    
 	const body  = req.body;
 	const newTest = {
 		name: body.name,
