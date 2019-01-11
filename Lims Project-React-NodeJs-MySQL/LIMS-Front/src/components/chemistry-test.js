@@ -79,9 +79,9 @@ export default class ChemistryTest extends React.Component{
       handleSubmit = event => {
         event.preventDefault();
     
-        const sample =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
+        const sample =  this.state.name 
         const operator = this.state.id
-        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Chemistry Test", status:"Sample Ready for Chemistry" })// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Chemistry Test", status:"Sample Ready for Heat" })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
