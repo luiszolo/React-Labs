@@ -33,6 +33,7 @@ export default class ChemistryTest extends React.Component{
               name: event.target.value,
             } );// este name es el de la variable
           }
+
           handleOnBlur=(e)=>{
             if(/\d\d\d\d\d/.test(e.target.value)){
                 this.setState({
@@ -43,7 +44,6 @@ export default class ChemistryTest extends React.Component{
             }else if(e.target.value===""){
                 this.setState({
                     validateOp: undefined,
-                    isSubmitDisabled: true
                 })
             }else{
                 this.setState({
@@ -63,25 +63,28 @@ export default class ChemistryTest extends React.Component{
           }, function(){ this.canSubmit()})
       
         }
-    //   canSubmit() {
-    //     const { name } = this.state
-    //     if (name.length >= 5) {
-    //       this.setState({
-    //         isSubmitDisabled: false
-    //       })
-    //     }
-    //     else {
-    //       this.setState({
-    //         isSubmitDisabled: true
-    //       })
-    //     }
-    //   }
+      canSubmit() {
+        const { name } = this.state
+        if (name.length >= 5) {
+          this.setState({
+            isSubmitDisabled: false
+          })
+        }
+        else {
+          this.setState({
+            isSubmitDisabled: true
+          })
+        }
+      }
     
       handleSubmit = event => {
         event.preventDefault();
     
-        const sample =  this.state.name 
+
+        const sample =  this.state.name
+        
         const operator = this.state.id
+
         axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Chemistry Test", status:"Sample Ready for Heat" })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
@@ -136,23 +139,18 @@ export default class ChemistryTest extends React.Component{
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
-
-                        <Sample
-                            number={1}
-                            format={format}
-/>
                     <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="name" 
                         // placeholder="#####"
                         // onBlur={handleOnBlur}
                         onChange={this.handleChangeSample}
-
                         />
                         <label className="col col-4 mr-1">{message}</label>
+
                     </div>
-                    <button
+                    <button 
                         type="submit" 
                         className="btn btn-primary col-6"  
                         disabled={this.state.isSubmitDisabled}

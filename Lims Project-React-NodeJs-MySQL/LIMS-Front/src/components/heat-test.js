@@ -34,7 +34,7 @@ export default class HeatTest extends React.Component{
             } );// este name es el de la variable
           }
           handleOnBlur=(e)=>{
-            if(/\d\d\d\d\d/.test(e.target.value)){
+            if(/\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===5){
                 this.setState({
                     validateOp: true,
                     isSubmitDisabled: false
@@ -196,7 +196,7 @@ export default class HeatTest extends React.Component{
 
 
 
-                                            <input 
+                        <input 
                         type="text" 
                         className={operatorClassName}
                         name="sample" 

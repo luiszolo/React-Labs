@@ -78,8 +78,8 @@ export default class SpinnerTest extends React.Component{
     
       handleSubmit = event => {
         event.preventDefault();
-    
-        const sample =  this.state.name 
+        
+        const sample=  this.state.name 
         const operator = this.state.id
         axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Heat Test", status:"Sample Passed Spinner" })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
