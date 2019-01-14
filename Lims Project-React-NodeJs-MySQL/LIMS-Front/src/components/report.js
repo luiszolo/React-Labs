@@ -3,22 +3,24 @@ import axios from 'axios';
 import ReactDOM from 'react-dom';
 export default class SampleSearch extends React.Component{
     state = {
-        persons: []
+        tests: []
       }
     
       componentDidMount() {
-        axios.get(`https://jsonplaceholder.typicode.com/users`)
+        axios.get(`http://10.2.1.94:4000/api/logs/`)
           .then(res => {
-            const persons = res.data;
-            this.setState({ persons });
+            const tests = res.data.Logs;
+            this.setState({ tests });
           })
       }
     
       render() {
         return (
           <ul>
-            { this.state.persons.map(person => <li>{person.name}</li>)}
+            { this.state.tests.map(log => <li>{log.onCreated}</li>)}
+            { this.state.tests.map(log => <li>{log.operator_Id}</li>)}
           </ul>
+          
         )
       }
     }

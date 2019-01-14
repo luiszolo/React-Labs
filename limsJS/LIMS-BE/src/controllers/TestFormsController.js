@@ -6,6 +6,7 @@ const request = require('request');
 // Testing
 async function insertData(req, res) {
 	let body = req.body;
+	console.log(body);
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
