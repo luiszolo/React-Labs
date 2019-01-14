@@ -35,6 +35,11 @@ async function insertData(req, res) {
 			attributeError = true;
 			break;
 		}
+		let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttribute WHERE attribute_Id=${attribute[0].id} AND test_Id=${test.id}`);
+		if (validateRelationship == false) {
+			attributeError = true;
+			break;
+		}
 	}
 
 	if (sampleError || attributeError) {
@@ -44,6 +49,7 @@ async function insertData(req, res) {
 		return;
 	}
 
+	console.log('Validation passed')
 	for await (const reqSample of body.samples) {
 		let sample = await pool.query(`SELECT * FROM Sample WHERE name='${reqSample.toUpperCase()}'`);
 		for await (const reqAttribute of body.attributes) {
@@ -79,3 +85,7 @@ async function insertData(req, res) {
 		}
 	}
 }
+
+module.exports = {
+	insertData: insertData
+};
