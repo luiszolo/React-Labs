@@ -7,5 +7,6 @@ router.use('/logs', require('./LogRoutes'));
 router.use('/attributes', require('./AttributeRoutes'));
 router.use('/sample-values', require('./SampleValueRoutes'));
 router.use('/status', require('./StatusRoutes'));
+router.use('/test-forms', require('./TestFormsRoutes'));
 
 module.exports = router;
