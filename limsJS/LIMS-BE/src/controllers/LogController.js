@@ -4,7 +4,7 @@ const dbInteract = require('./../middlewares/db-interact');
 // Testing
 async function addLog (req, res) {
 	let body  = req.body;
-	
+	console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id='${body.operator}'`);
 	if(operator == false) {
 		res.send({
@@ -36,7 +36,7 @@ async function addLog (req, res) {
 		});
 		return;
 	}
-
+console.log(new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' '));
 	await pool.query(`INSERT INTO Log SET 
 		operator_Id = ${operator.result.id}, sample_Id = ${sample.result.id},
 		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' ')}"

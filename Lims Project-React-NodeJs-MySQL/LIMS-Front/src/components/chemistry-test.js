@@ -20,6 +20,20 @@ export default class ChemistryTest extends React.Component{
     
           }
 
+          
+
+          handleChangeOperator = event => {
+            this.setState({ 
+              id: event.target.value,
+            } );// este name es el de la variable
+          }
+
+          handleChangeSample = event => {
+            this.setState({ 
+              name: event.target.value,
+            } );// este name es el de la variable
+          }
+
           handleOnBlur=(e)=>{
             if(/\d\d\d\d\d/.test(e.target.value)){
                 this.setState({
@@ -44,7 +58,8 @@ export default class ChemistryTest extends React.Component{
         handleChange(event) {
           this.setState({
             // use dynamic name value to set our state object property
-            name: event.target.value,
+            //name: event.target.value,
+            //id: event.target.value
           }, function(){ this.canSubmit()})
       
         }
@@ -65,9 +80,12 @@ export default class ChemistryTest extends React.Component{
       handleSubmit = event => {
         event.preventDefault();
     
-        const name =  this.state.name // este name2 es puro show no afecta lo imprme en la consola asi nomas //
-    
-        axios.post(`http://localhost:4000/api/samplevalue/add`, {name,})// al  parecer este name tiene que ser el nombre de la columna
+
+        const sample =  this.state.name
+        
+        const operator = this.state.id
+
+        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Chemistry Test", status:"Sample Ready for Heat" })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
@@ -111,6 +129,7 @@ export default class ChemistryTest extends React.Component{
                         name="operator" 
                         placeholder="#####"
                         onBlur={handleOnBlur}
+                        onChange={this.handleChangeOperator}
                         />
                         <label className="col col-4 mr-1">{message}</label>
                   </label>
@@ -120,11 +139,16 @@ export default class ChemistryTest extends React.Component{
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
-                        <Sample
-                            number={1}
-                            message={""}
-                            format={format}
+                    <input 
+                        type="text" 
+                        className={operatorClassName}
+                        name="name" 
+                        // placeholder="#####"
+                        // onBlur={handleOnBlur}
+                        onChange={this.handleChangeSample}
                         />
+                        <label className="col col-4 mr-1">{message}</label>
+
                     </div>
                     <button 
                         type="submit" 
