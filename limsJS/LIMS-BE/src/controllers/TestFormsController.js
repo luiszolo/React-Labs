@@ -40,6 +40,7 @@ async function insertData(req, res) {
 			break;
 		}
 		let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE attribute_Id=${attribute.result.id} AND test_Id=${test.result.id}`);
+		console.log(validateRelationship)
 		if (validateRelationship == false) {
 			attributeError = true;
 			break;
