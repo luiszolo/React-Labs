@@ -1,2 +1,8 @@
-===== 2019-01-14 22:35:46 ===== Server started on port 4000
-===== 2019-01-14 22:35:46 ===== Database is connected.
+===== 2019-01-14 22:44:18 ===== Server started on port 4000
+===== 2019-01-14 22:44:18 ===== Database is connected.
+===== 2019-01-14 22:44:23 ===== { operator: 12345,
+  test: 'Heat Test',
+  samples: [ 'SA-12-12345' ],
+  attributes: [ { name: 'Chemistry', value: 10 } ] }
+===== 2019-01-14 22:44:23 ===== { result: RowDataPacket { id: 1, name: 'CHEMISTRY', unit: 'Q' },
+  pass: true }

@@ -32,11 +32,12 @@ async function insertData(req, res) {
 	let attributeError;
 	for await (const element of body.attributes) {
 		let attribute = await dbInteract.isExists(`SELECT * FROM Attribute WHERE name='${element.name.toUpperCase()}'`);
+		console.log(attribute)
 		if (attribute == false) { 
 			attributeError = true;
 			break;
 		}
-		let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttribute WHERE attribute_Id=${attribute[0].id} AND test_Id=${test.id}`);
+		let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE attribute_Id=${attribute.result.id} AND test_Id=${test.result.id}`);
 		if (validateRelationship == false) {
 			attributeError = true;
 			break;
@@ -55,7 +56,7 @@ async function insertData(req, res) {
 		let sample = await pool.query(`SELECT * FROM Sample WHERE name='${reqSample.toUpperCase()}'`);
 		for await (const reqAttribute of body.attributes) {
 			let attribute = await pool.query(`SELECT * FROM Attribute WHERE name='${reqAttribute.name.toUpperCase()}'`);
-			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.id}, attribute_Id=${attribute[0].id}, value=${reqAttribute.value}`);
+			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute.result.id}, value=${reqAttribute.value}`);
 		}
 	}
 
