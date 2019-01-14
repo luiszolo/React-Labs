@@ -16,7 +16,7 @@ const log_stdout = process.stdout;
 console.log = function(d) {
 	log_file.write(`===== ${new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' ')} ===== `);
 	log_file.write(util.format(d) + '\n');
-	log_stdout.write(util.format(d) + '\n\n');
+	log_stdout.write(util.format(d) + '\n');
 
 	concatFiles([
 		path.join(__dirname, './logs/server.log'),
