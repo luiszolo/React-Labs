@@ -8,7 +8,10 @@ async function addTest (req, res) {
 	const newTest = {
 		name: body.name,
 		samplesLength: body.samplesLength,
-		attributes: body.attributes
+		attributes: body.attributes,
+		state: body.status,
+		prevStatus: body.prevStatus,
+		postStatus: body.postStatus
 	};
 
 	console.log(body)
@@ -25,7 +28,7 @@ async function addTest (req, res) {
 		});
 		return;
 	}
-	await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=true`);
+	await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state ? true : false}`);
 	if (newTest.attributes != null) {
 		for await (const element of newTest.attributes) {
 			const auxAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${element.toUpperCase()}'`);
@@ -41,6 +44,19 @@ async function addTest (req, res) {
 			}
 		}
 	}
+
+	// if (newTest.prevStatus != null) {
+	// 	for await (const i of newTest.prevStatus) {
+	// 		const auxPre = await pool.query(`SELECT * FROM Status WHERE name='${i.toUpperCase()}'`);
+	// 		if (auxPre != null || auxPre != [{ }]) {
+	// 			const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
+	// 			for await (const j of newTest.postStatus) {
+	// 				const auxPost = await pool.query(`SELECT * FROM Status WHERE name='${j.toUpperCase()}'`);
+	// 				if( auxPost ) { }
+ 	// 			}
+	// 		}
+	// 	}
+	// }
 
 	if (newTest.attributes == null) {
 		res.send({
