@@ -15,6 +15,7 @@ async function insertData(req, res) {
 		return;
 	}
 	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test.toUpperCase()}'`);
+	console.log(test)
 	if (test == false) {
 		res.send({
 			message: 'The test doesn\'t exists'
@@ -23,7 +24,8 @@ async function insertData(req, res) {
 	}
 	let sampleError;
 	for await (const element of body.samples) {
-		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`)
+		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
+		console.log(sample)
 		if (sample == false) { 
 			sampleError = true;
 			break;
@@ -32,7 +34,7 @@ async function insertData(req, res) {
 	let attributeError;
 	for await (const element of body.attributes) {
 		let attribute = await dbInteract.isExists(`SELECT * FROM Attribute WHERE name='${element.name.toUpperCase()}'`);
-		console.log(attribute)
+		console.log(attribute);
 		if (attribute == false) { 
 			attributeError = true;
 			break;
@@ -60,8 +62,8 @@ async function insertData(req, res) {
 		}
 	}
 
-	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
-	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.id}`);
+	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
+	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	
 
 	for await (const reqSample of body.samples) {
