@@ -1,2 +1,18 @@
-===== 2019-01-14 19:47:58 ===== Server started on port 4000
-===== 2019-01-14 19:47:58 ===== Database is connected.
+===== 2019-01-14 22:24:28 ===== Server started on port 4000
+===== 2019-01-14 22:24:28 ===== Database is connected.
+===== 2019-01-14 22:24:36 ===== { operator: '12345',
+  sample: 'SA-22-55555',
+  test: 'Chemistry Test',
+  status: 'Sample Ready for Heat' }
+===== 2019-01-14 22:25:12 ===== { operator: '12345',
+  sample: 'SA-22-55555',
+  test: 'Chemistry Test',
+  status: 'Sample Ready for Heat' }
+===== 2019-01-14 22:26:28 ===== { operator: '12345',
+  sample: 'SA-12-12345',
+  test: 'Chemistry Test',
+  status: 'Sample Ready for Heat' }
+===== 2019-01-14 22:36:05 ===== { operator: 12345,
+  test: 'Heat Test',
+  samples: [ 'SA-12-12345' ],
+  attributes: [ { name: 'Chemistry', value: 10 } ] }
