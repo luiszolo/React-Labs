@@ -18,8 +18,6 @@ export default class ChemistryTest extends React.Component{
             id: '', // Table Operator
             value: '', //Table SampleValue
             name:'', //Table Sample
-            
-    
           }
 
           handleChangeValue = event => {
@@ -74,7 +72,7 @@ export default class ChemistryTest extends React.Component{
         const testAttributes= this.state.value
         const operator = this.state.id
 
-        axios.post(`http://localhost:4000/api/logs/add`, {operator,test:"Chemistry Test", sample,attributes:testAttributes })// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/logs/add`, {operator,test:"Chemistry Test", sample,attributes:{testAttributes} })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
