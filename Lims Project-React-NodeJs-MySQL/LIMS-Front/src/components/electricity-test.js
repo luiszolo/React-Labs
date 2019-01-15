@@ -6,7 +6,7 @@ export default class Test extends React.Component{
         this.state={
             name: "Electricity test",
             validOp: undefined,
-            samplesCounter: false,
+            validSamples: undefined,
             samples:[]
         }
     }
@@ -29,22 +29,32 @@ export default class Test extends React.Component{
 
     validateSamples=(e)=>{
         const samples = this.state.samples
-        let sample = e.target.value
+        const sample = e.target.value
+
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-            this.setState({
-                samplesCounter: true,
-                samples: this.state.samples.concat(sample),
-            })
-        }else if(sample===""){
-            if(this.state.samplesCounter !== true){
+            if(samples.length===0){
                 this.setState({
-                    samplesCounter: false,
+                    validSamples: true,
+                    samples: this.state.samples.concat(sample),
                 })
             }
-        }
-        else{
+            else{
+                let exists = false
+                samples.map((value)=>{
+                    console.log(value)
+                    if(sample===value){
+                    exists=true
+                }})
+                if(exists===false){
+                    this.setState({
+                        validSamples: true,
+                        samples: this.state.samples.concat(sample),
+                    })
+                }
+            }
+        }else{
             this.setState({
-                samplesCounter: false,
+                validSamples: false,
             })
         }
     }
@@ -56,7 +66,7 @@ export default class Test extends React.Component{
             state: {
                 name,
                 validOp,
-                samplesCounter,
+                validSamples,
             }
           } = this;
 
@@ -208,11 +218,11 @@ export default class Test extends React.Component{
                     </div>
                     <button
                             type="submit"
-                            className="btn btn-primary col-4 offset-4 col-lg-2 offset-lg-5 mt-5"
-                            disabled={(samplesCounter && validOp) ? false : true}
+                            className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-5"
+                            disabled={(validSamples && validOp) ? false : true}
                             onClick={() => {window.alert('You Added a Sample')}}
                         >
-                        Save Data
+                        Save data
                         </button>
                 </form>
             </div>
