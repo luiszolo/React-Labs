@@ -21,18 +21,40 @@ export default class SampleSearch extends React.Component{
         const { tableData } = this.state;
         return (
           <ul>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
             <p>User ID</p>
-            { this.state.tests.map(log => <li>{log.operator_Id}</li>)}
-            <hr/>
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4  "}>{log.operator_Id}</li>)}
+            </div>
+            <div class="col-sm">
             <p>Status</p>
-            { this.state.tests.map(log => <li>{log.status_Id}</li>)}
-            <hr/>
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log.status_Id}</li>)}
+            </div>
+            <div class="col-sm">
             <p>Test</p>
-            { this.state.tests.map(log => <li>{log.test_Id}</li>)}
-            <hr/>
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log.test_Id}</li>)}
+            </div>
+            <div class="col-sm">
+            
             <p>Created On</p>
-            { this.state.tests.map(log => <li>{log.onCreated}</li>)}
-          </ul>
+            { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log.onCreated}</li>)}
+            </div>
+          </div>
+        </div>
+        </ul>
+
+
+          
+            
+
+            
+
+            
+
+            
+ 
+          
 
 
 

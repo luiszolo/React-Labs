@@ -11,12 +11,14 @@ export default class ChemistryTest extends React.Component{
     this.state={
         validateOp: undefined,
         isSubmitDisabled: true,
+        OperatorExists:false,
     }}
 
         state = {
             id: '', // Table Operator
             value: '', //Table SampleValue
             name:'', //Table Sample
+            
     
           }
 
@@ -34,24 +36,7 @@ export default class ChemistryTest extends React.Component{
             } );// este name es el de la variable
           }
 
-          handleOnBlur=(e)=>{
-            if(/\d\d\d\d\d/.test(e.target.value)){
-                this.setState({
-                    validateOp: true,
-                    isSubmitDisabled: false
-                    
-                })
-            }else if(e.target.value===""){
-                this.setState({
-                    validateOp: undefined,
-                })
-            }else{
-                this.setState({
-                    validateOp: false,
-                    isSubmitDisabled: true
-                })
-            }
-        }
+
 
 
 
@@ -91,6 +76,26 @@ export default class ChemistryTest extends React.Component{
             console.log(res.data);
           });
       }
+
+      handleOnBlur=(e)=>{
+        const operator = this.state.id
+        axios.get(`http://10.2.1.94:4000/api/operators/`+operator)//manda el get con el nombre del operador ejemplo: 12345
+        .then(res => {
+          if (res.data.message) {//si devuelve el no existe se pone que no valida por que pues no existe XD
+            this.setState({
+              // OperatorExists: false
+              validateOp: false,
+              isSubmitDisabled: true
+            });
+          } else  {
+            this.setState({//si te regresa cualquier cosa como un json con info es que si existe y pues se valida una vez que se comprueba que existe hay que hacer las validaciones este 
+              validateOp: true,//es el primer filtro saber si existe o no
+              isSubmitDisabled: false
+              // OperatorExists: true
+            });
+          }
+        })
+    }
         render(){
 
           const {
