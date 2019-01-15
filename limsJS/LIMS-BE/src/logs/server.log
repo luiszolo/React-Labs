@@ -1,6 +1,2 @@
-===== 2019-01-14 22:58:11 ===== Server started on port 4000
-===== 2019-01-14 22:58:16 ===== Database is connected.
-===== 2019-01-14 22:58:38 ===== { operator: 12345,
-  test: 'Chemistry Test',
-  samples: [ 'SA-12-12345' ],
-  attributes: [ { name: 'Chemistry', value: 10 } ] }
+===== 2019-01-15 17:30:42 ===== Server started on port 4000
+===== 2019-01-15 17:30:42 ===== Database is connected.

@@ -68,7 +68,7 @@ async function getLogs (req, res) {
 // Finish
 async function getLogBySample (req, res) {
 	let params = req.params;
-	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.sample.toUpperCase()}'`);
+	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.sample}'`); // no me esta filtrando por id siempre sale que no existe la sample 
 	if (sample == false) {
 		res.send({
 			message: 'The sample doesn\'t exists'
