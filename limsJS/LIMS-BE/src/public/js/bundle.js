@@ -229,18 +229,6 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 
 /***/ }),
 
-/***/ "./src/app/components/Button/Button/index.js":
-/*!***************************************************!*\
-  !*** ./src/app/components/Button/Button/index.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = function (props) {\n\n\tvar cssClasses = 'btn';\n\tif (props.size == 'large') cssClasses.concat('btn-lg');\n\tif (props.size == 'small') cssClasses.concat('btn-sm');\n\n\tswitch (props.colorSchema) {\n\t\tcase 'primary':\n\t\t\tcssClasses.concat('btn-primary');\n\t\t\tbreak;\n\n\t\tcase 'secondary':\n\t\t\tcssClasses.concat('btn-secondary');\n\t\t\tbreak;\n\n\t\tcase 'success':\n\t\t\tcssClasses.concat('btn-success');\n\t\t\tbreak;\n\n\t\tcase 'danger':\n\t\t\tcssClasses.concat('btn-danger');\n\t\t\tbreak;\n\n\t\tcase 'warning':\n\t\t\tcssClasses.concat('btn-warning');\n\t\t\tbreak;\n\n\t\tcase 'info':\n\t\t\tcssClasses.concat('btn-info');\n\t\t\tbreak;\n\n\t\tcase 'light':\n\t\t\tcssClasses.concat('btn-light');\n\t\t\tbreak;\n\n\t\tcase 'dark':\n\t\t\tcssClasses.concat('btn-dark');\n\t\t\tbreak;\n\n\t\tcase 'link':\n\t\t\tcssClasses.concat('btn-link');\n\t\t\tbreak;\n\t}\n\n\treturn _react2.default.createElement(\n\t\t'button',\n\t\t{ className: cssClasses.concat(props.className),\n\t\t\ttype: props.type,\n\t\t\tid: props.id,\n\t\t\tonClick: props.onClick },\n\t\tprops.children\n\t);\n};\n\n//# sourceURL=webpack:///./src/app/components/Button/Button/index.js?");
-
-/***/ }),
-
 /***/ "./src/app/components/Button/index.js":
 /*!********************************************!*\
   !*** ./src/app/components/Button/index.js ***!
@@ -249,7 +237,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nvar _Button = __webpack_require__(/*! ./Button */ \"./src/app/components/Button/Button/index.js\");\n\nvar _Button2 = _interopRequireDefault(_Button);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = {\n\tButton: _Button2.default\n};\n\n//# sourceURL=webpack:///./src/app/components/Button/index.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = function (props) {\n\n\tvar cssClasses = 'btn';\n\tswitch (props.size) {\n\t\tcase 'large':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-lg');\n\t\t\tbreak;\n\n\t\tcase 'small':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-sm');\n\t\t\tbreak;\n\t}\n\n\t// if (props.colorSchema == 'primary') cssClasses = cssClasses + ' btn-primary';\n\n\tswitch (props.colorSchema) {\n\t\tcase 'primary':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-primary');\n\t\t\tbreak;\n\n\t\tcase 'secondary':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-secondary');\n\t\t\tbreak;\n\n\t\tcase 'success':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-success');\n\t\t\tbreak;\n\n\t\tcase 'danger':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-danger');\n\t\t\tbreak;\n\n\t\tcase 'warning':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-warning');\n\t\t\tbreak;\n\n\t\tcase 'info':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-info');\n\t\t\tbreak;\n\n\t\tcase 'light':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-light');\n\t\t\tbreak;\n\n\t\tcase 'dark':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-dark');\n\t\t\tbreak;\n\n\t\tcase 'link':\n\t\t\tcssClasses = cssClasses.concat(' ', 'btn-link');\n\t\t\tbreak;\n\n\t\tdefault:\n\t\t\tbreak;\n\t}\n\n\treturn _react2.default.createElement(\n\t\t'button',\n\t\t{ className: props.className ? cssClasses.concat(' ', props.className) : cssClasses,\n\t\t\ttype: props.type,\n\t\t\tid: props.id,\n\t\t\tonClick: props.onClick },\n\t\tprops.children\n\t);\n};\n\n//# sourceURL=webpack:///./src/app/components/Button/index.js?");
 
 /***/ }),
 
@@ -261,7 +249,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar _react = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactDom = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n\nvar _reactDom2 = _interopRequireDefault(_reactDom);\n\nvar _Button = __webpack_require__(/*! ./components/Button */ \"./src/app/components/Button/index.js\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n_reactDom2.default.render(_react2.default.createElement(\n  _Button.Button,\n  { colorSchema: 'primary' },\n  'Hola'\n), document.getElementById('app'));\n\n//# sourceURL=webpack:///./src/app/index.js?");
+eval("\n\nvar _react = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactDom = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n\nvar _reactDom2 = _interopRequireDefault(_reactDom);\n\nvar _index = __webpack_require__(/*! ./components/Button/index */ \"./src/app/components/Button/index.js\");\n\nvar _index2 = _interopRequireDefault(_index);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n_reactDom2.default.render(_react2.default.createElement(\n  _index2.default,\n  { colorSchema: 'primary' },\n  'Hola'\n), document.getElementById('app'));\n\n//# sourceURL=webpack:///./src/app/index.js?");
 
 /***/ })
 

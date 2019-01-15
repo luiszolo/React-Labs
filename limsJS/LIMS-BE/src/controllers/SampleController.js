@@ -1,5 +1,6 @@
 const pool = require('./../config/database');
 const regex = require('./../middlewares/regex');
+const dbInteract = require('./../middlewares/db-interact');
 
 // Finish
 async function addSample (req, res) {
@@ -10,7 +11,7 @@ async function addSample (req, res) {
 		});
 		return;
 	}
-	if(await getSampleByName(req, res)) {
+	if(await dbInteract.isExists(`SELECT * FROM Sample WHERE name=${body.name.toUpperCase()}`)) {
 		res.send({
 			message: "The sample already exists"
 		});
@@ -41,14 +42,12 @@ async function getSamples (req, res) {
 async function getSampleByName (req, res) {
 	let params = req.params;
 	const name = params.name;
-	const value = await pool.query('SELECT * FROM Sample WHERE name = ?', [name]);
-	
-	res.send({
-		Sample : value[0]
-	});
+	const value = await dbInteract.isExists(`SELECT * FROM Sample WHERE name=${name}`);
 
-	if(value.length == 1) return true;
-	return false;
+	if (value == false) res.send({ message: 'The sample doesn\'t exists' });
+	else res.send({
+		Sample: value.result
+	});
 };
 
 // Finish
