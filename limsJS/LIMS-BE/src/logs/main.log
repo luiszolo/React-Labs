@@ -1,31 +1,37 @@
-===== 2019-01-14 22:44:18 ===== Server started on port 4000
-===== 2019-01-14 22:44:18 ===== Database is connected.
-===== 2019-01-14 22:44:23 ===== { operator: 12345,
-  test: 'Heat Test',
+===== 2019-01-15 00:51:34 ===== Server started on port 4000
+===== 2019-01-15 00:51:34 ===== Database is connected.
+===== 2019-01-15 00:47:53 ===== Server started on port 4000
+===== 2019-01-15 00:47:53 ===== ===== 2019-01-14 22:55:14 ===== Server started on port 4000
+===== 2019-01-14 22:55:14 ===== Database is connected.
+===== 2019-01-14 22:55:18 ===== { operator: 12345,
+  test: 'Chemistry Test',
   samples: [ 'SA-12-12345' ],
   attributes: [ { name: 'Chemistry', value: 10 } ] }
-===== 2019-01-14 22:44:23 ===== { result: RowDataPacket { id: 1, name: 'CHEMISTRY', unit: 'Q' },
+===== 2019-01-14 22:55:18 ===== { result:
+   RowDataPacket { id: 9, name: 'CHEMISTRY TEST', samplesLength: 1, status: 1 },
   pass: true }
-===== 2019-01-14 22:44:18 ===== Server started on port 4000
-===== 2019-01-14 22:44:18 ===== Database is connected.
-===== 2019-01-14 22:44:23 ===== { operator: 12345,
-  test: 'Heat Test',
-  samples: [ 'SA-12-12345' ],
-  attributes: [ { name: 'Chemistry', value: 10 } ] }
-===== 2019-01-14 22:44:18 ===== Server started on port 4000
-===== 2019-01-14 22:44:18 ===== ===== 2019-01-14 22:43:41 ===== Server started on port 4000
-===== 2019-01-14 22:43:41 ===== Database is connected.
-===== 2019-01-14 22:43:44 ===== { operator: 12345,
-  test: 'Heat Test',
-  samples: [ 'SA-12-12345' ],
-  attributes: [ { name: 'Chemistry', value: 10 } ] }
-===== 2019-01-14 22:43:44 ===== { result: RowDataPacket { id: 1, name: 'CHEMISTRY', unit: 'Q' },
+===== 2019-01-14 22:55:18 ===== { result: RowDataPacket { id: 1, name: 'SA-12-12345' },
   pass: true }
-===== 2019-01-14 22:43:41 ===== Server started on port 4000
-===== 2019-01-14 22:43:41 ===== Database is connected.
-===== 2019-01-14 22:43:44 ===== { operator: 12345,
-  test: 'Heat Test',
+===== 2019-01-14 22:55:18 ===== { result: RowDataPacket { id: 1, name: 'CHEMISTRY', unit: 'Q' },
+  pass: true }
+===== 2019-01-14 22:55:18 ===== { result: RowDataPacket { test_Id: 9, attribute_Id: 1 },
+  pass: true }
+===== 2019-01-14 22:55:18 ===== Validation passed
+===== 2019-01-14 22:55:14 ===== Server started on port 4000
+===== 2019-01-14 22:55:14 ===== Database is connected.
+===== 2019-01-14 22:55:18 ===== { operator: 12345,
+  test: 'Chemistry Test',
   samples: [ 'SA-12-12345' ],
   attributes: [ { name: 'Chemistry', value: 10 } ] }
-===== 2019-01-14 22:43:41 ===== Server started on port 4000
-===== 2019-01-14 22:43:41 ===== 
+===== 2019-01-14 22:55:18 ===== { result:
+   RowDataPacket { id: 9, name: 'CHEMISTRY TEST', samplesLength: 1, status: 1 },
+  pass: true }
+===== 2019-01-14 22:55:18 ===== { result: RowDataPacket { id: 1, name: 'SA-12-12345' },
+  pass: true }
+===== 2019-01-14 22:55:14 ===== Server started on port 4000
+===== 2019-01-14 22:55:14 ===== Database is connected.
+===== 2019-01-14 22:55:18 ===== { operator: 12345,
+  test: 'Chemistry Test',
+  samples: [ 'SA-12-12345' ],
+  attributes: [ { name: 'Chemistry', value: 10 } ] }
+===== 2019-0

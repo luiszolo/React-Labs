@@ -1,13 +1,15 @@
 import React from 'react';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
+import MaterialTable from 'material-table';
+
 export default class SampleSearch extends React.Component{
     state = {
-        tests: []
+        tests: [],
+ 
       }
     
       componentDidMount() {
-        axios.get(`http://10.2.1.94:4000/api/logs/`)
+        axios.get(`http://10.2.1.94:4000/api/logs/`)// agregarle en el api un filtrado por id y que en un combo lo agreguemos como +{id}
           .then(res => {
             const tests = res.data.Logs;
             this.setState({ tests });
@@ -15,12 +17,25 @@ export default class SampleSearch extends React.Component{
       }
     
       render() {
+
+        const { tableData } = this.state;
         return (
           <ul>
-            { this.state.tests.map(log => <li>{log.onCreated}</li>)}
+            <p>User ID</p>
             { this.state.tests.map(log => <li>{log.operator_Id}</li>)}
+            <hr/>
+            <p>Status</p>
+            { this.state.tests.map(log => <li>{log.status_Id}</li>)}
+            <hr/>
+            <p>Test</p>
+            { this.state.tests.map(log => <li>{log.test_Id}</li>)}
+            <hr/>
+            <p>Created On</p>
+            { this.state.tests.map(log => <li>{log.onCreated}</li>)}
           </ul>
-          
-        )
+
+
+
+        );
       }
     }

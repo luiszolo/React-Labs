@@ -17,12 +17,13 @@ class App extends React.Component {
   constructor(props){
       super(props);
       this.state={
-          tests: []
+          tests: [],
+          x:"activated"
       }
   }
 
    componentWillMount() {
-       fetch("http://10.2.1.94:4000/api/tests/?actived=true")
+       fetch("http://10.2.1.94:4000/api/tests/?"+this.state.x+"=true")
            .then(res => res.json()) 
            .then(data=> this.setState({tests: data.Tests}));
    }
