@@ -15,8 +15,16 @@ export default class SpinnerTest extends React.Component{
 
         state = {
             id: '', // Table Operator
-            value: '', //Table SampleValue
+            //value: '', //Table SampleValue
             name:'', //Table Sample
+            sample1:'',
+            sample2:'',
+            sample3:'',
+            sample4:'',
+            sample5:'',
+            value1:'',
+ 
+
     
           }
 
@@ -28,13 +36,72 @@ export default class SpinnerTest extends React.Component{
             } );// este name es el de la variable
           }
 
-          handleChangeSample = event => {
+          handleChangeSample1 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample1: event.target.value,
             } );// este name es el de la variable
           }
+
+          handleChangeSample2 = event => {
+            this.setState({ 
+              sample2: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample3 = event => {
+            this.setState({ 
+              sample3: event.target.value,
+            } );// este name es el de la variable
+          }          
+          handleChangeSample4 = event => {
+            this.setState({ 
+              sample4: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample5 = event => {
+            this.setState({ 
+              sample5: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample6 = event => {
+            this.setState({ 
+              sample6: event.target.value,
+            } );// este name es el de la variable
+          }
+
+          handleChangeSample7 = event => {
+            this.setState({ 
+              sample7: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample8 = event => {
+            this.setState({ 
+              sample8: event.target.value,
+            } );// este name es el de la variable
+          }          
+          handleChangeSample9 = event => {
+            this.setState({ 
+              sample9: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample10 = event => {
+            this.setState({ 
+              sample10: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeAtrtribute1 = event => {
+            this.setState({ 
+              value1: event.target.value,
+            } );// este name es el de la variable
+          }
+
+ 
+
+
+
+
+
           handleOnBlur=(e)=>{
-            if(/\d\d\d\d\d/.test(e.target.value)){
+            if(/\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===5){
                 this.setState({
                     validateOp: true,
                     isSubmitDisabled: false
@@ -78,10 +145,21 @@ export default class SpinnerTest extends React.Component{
     
       handleSubmit = event => {
         event.preventDefault();
-        
-        const sample=  this.state.name 
+    
+        const sample1 =  this.state.sample1
+        const sample2 =  this.state.sample2
+        const sample3 =  this.state.sample3
+        const sample4 =  this.state.sample4
+        const sample5 =  this.state.sample5 
+        const sample6 =  this.state.sample6
+        const sample7 =  this.state.sample7
+        const sample8 =  this.state.sample8
+        const sample9 =  this.state.sample9
+        const sample10 = this.state.sample10 
         const operator = this.state.id
-        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Heat Test", status:"Sample Passed Spinner" })// al  parecer este name tiene que ser el nombre de la columna
+        const value1= this.state.value1
+
+        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample1,sample2,sample3,sample4,sample5,sample6,sample7,sample8,sample9,sample10],attributes:[{name:"Velocity",value:value1}] })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
@@ -130,21 +208,22 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-4 mr-1">{message}</label>
                   </label>
                   <label className="pr-1 form-inline">
-                    Velocity (RPM):
-                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeAtrtribute} />
+                    Velocity (Sec):
+                    <input type="text" className="form-control m-1" name="value1" onChange={this.handleChangeAtrtribute1} />
                   </label>
+
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
                     
                     <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample1" 
                         number={1}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample1}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -152,12 +231,12 @@ export default class SpinnerTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample2" 
                         number={2}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample2}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -166,12 +245,12 @@ export default class SpinnerTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample3" 
                         number={3}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample3}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -181,95 +260,100 @@ export default class SpinnerTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample4" 
                         number={4}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample4}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
 
-                                            <input 
+                        <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample5" 
                         number={5}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample5}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
-                         <input 
+
+                                                <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample6" 
                         number={6}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample6}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
-                                            <input 
+
+
+                                                <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample7" 
                         number={7}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample7}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
 
-                                            <input 
+
+                                                <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample8" 
                         number={8}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample8}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
 
 
-                                            <input 
+                                                <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample9" 
                         number={9}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample9}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
 
 
-                                            <input 
+
+                                                <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample10" 
                         number={10}
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample10}
                         />
                         <label className="col col-4 mr-1">{message}</label>
                     </div>

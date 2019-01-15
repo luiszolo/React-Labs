@@ -15,8 +15,16 @@ export default class HeatTest extends React.Component{
 
         state = {
             id: '', // Table Operator
-            value: '', //Table SampleValue
+            //value: '', //Table SampleValue
             name:'', //Table Sample
+            sample1:'',
+            sample2:'',
+            sample3:'',
+            sample4:'',
+            sample5:'',
+            value1:'',
+            value2:''
+
     
           }
 
@@ -30,30 +38,42 @@ export default class HeatTest extends React.Component{
 
           handleChangeSample1 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample1: event.target.value,
             } );// este name es el de la variable
           }
 
           handleChangeSample2 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample2: event.target.value,
             } );// este name es el de la variable
           }
           handleChangeSample3 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample3: event.target.value,
             } );// este name es el de la variable
           }          
           handleChangeSample4 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample4: event.target.value,
             } );// este name es el de la variable
           }
           handleChangeSample5 = event => {
             this.setState({ 
-              name: event.target.value,
+              sample5: event.target.value,
             } );// este name es el de la variable
           }
+          handleChangeAtrtribute1 = event => {
+            this.setState({ 
+              value1: event.target.value,
+            } );// este name es el de la variable
+          }
+
+          handleChangeAtrtribute2 = event => {
+            this.setState({ 
+              value2: event.target.value,
+            } );// este name es el de la variable
+          }
+
 
 
 
@@ -104,13 +124,15 @@ export default class HeatTest extends React.Component{
       handleSubmit = event => {
         event.preventDefault();
     
-        const sample1 =  this.state.name
-        const sample2 =  this.state.name
-        const sample3 =  this.state.name
-        const sample4 =  this.state.name
-        const sample5 =  this.state.name 
+        const sample1 =  this.state.sample1
+        const sample2 =  this.state.sample2
+        const sample3 =  this.state.sample3
+        const sample4 =  this.state.sample4
+        const sample5 =  this.state.sample5 
         const operator = this.state.id
-        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample1, test:"Heat Test", status:"Sample Ready for Chemistry" })// al  parecer este name tiene que ser el nombre de la columna
+        const value1= this.state.value1
+        const value2=this.state.value2
+        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample1,sample2,sample3,sample4,sample5],attributes:[{name:"Temperature",value:value1},{name:"Time Elapse",value:value2}] })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
@@ -160,11 +182,11 @@ export default class HeatTest extends React.Component{
                   </label>
                   <label className="pr-1 form-inline">
                     Temperature (C):
-                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeAtrtribute} />
+                    <input type="text" className="form-control m-1" name="value1" onChange={this.handleChangeAtrtribute1} />
                   </label>
                   <label className="pr-1 form-inline">
                     Time elapse (sec):
-                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeAtrtribute} />
+                    <input type="text" className="form-control m-1" name="value2" onChange={this.handleChangeAtrtribute2} />
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
@@ -172,7 +194,7 @@ export default class HeatTest extends React.Component{
                     <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample1" 
                         number={1}
                         format={format}
                         placeholder="SA-##-#####"
@@ -185,7 +207,7 @@ export default class HeatTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample2" 
                         number={2}
                         format={format}
                         placeholder="SA-##-#####"
@@ -199,7 +221,7 @@ export default class HeatTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample3" 
                         number={3}
                         format={format}
                         placeholder="SA-##-#####"
@@ -214,7 +236,7 @@ export default class HeatTest extends React.Component{
                                             <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample4" 
                         number={4}
                         format={format}
                         placeholder="SA-##-#####"
@@ -228,7 +250,7 @@ export default class HeatTest extends React.Component{
                         <input 
                         type="text" 
                         className={operatorClassName}
-                        name="sample" 
+                        name="sample5" 
                         number={5}
                         format={format}
                         placeholder="SA-##-#####"

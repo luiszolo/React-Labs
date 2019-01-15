@@ -6,7 +6,7 @@ const request = require('request');
 
 // Testing
 async function insertData(req, res) {
-	let body = req.body;
+	let body = req.body;console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
@@ -63,28 +63,30 @@ async function insertData(req, res) {
 		}
 	}
 	
+	console.log("Algo")
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
+	console.log("Algo2")
 
 	for await (const reqSample of body.samples) {
 		for await (const reqPost of postStatus) {
 			for await  (const reqPrev of prevStatus) {
 				let status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPrev.prev_State}`);
-				console.log(status)
-				await require('./LogController').addLog({body : {
+				req.body = {
 					operator: body.operator,
 					sample: reqSample,
 					test: body.test,
 					status: status.result.name
-				}}, res);
+				}
+				await require('./LogController').addLog(req, res);
 				status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPost.post_State}`);
-				console.log(status)
-				await require('./LogController').addLog({body : {
+				req.body = {
 					operator: body.operator,
 					sample: reqSample,
 					test: body.test,
 					status: status.result.name
-				}}, res)
+				}
+				await require('./LogController').addLog(req, res);
 			}
 		}
 	}
