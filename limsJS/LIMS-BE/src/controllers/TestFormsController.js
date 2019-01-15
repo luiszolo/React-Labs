@@ -59,7 +59,7 @@ async function insertData(req, res) {
 				attribute: attribute[0].id,
 				value: reqAttribute.value
 			})
-			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value=${reqAttribute.value}`);
+			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value='${reqAttribute.value}'`);
 		}
 	}
 	

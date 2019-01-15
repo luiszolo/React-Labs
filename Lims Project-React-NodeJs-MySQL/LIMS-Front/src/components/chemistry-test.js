@@ -69,10 +69,10 @@ export default class ChemistryTest extends React.Component{
     
 
         const sample =  this.state.name
-        const testAttributes= this.state.value
+        const value= this.state.value
         const operator = this.state.id
 
-        axios.post(`http://localhost:4000/api/logs/add`, {operator,test:"Chemistry Test", sample,attributes:{testAttributes} })// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Chemistry Test", samples:[sample],attributes:[{name:"Chemistry",value}] })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);

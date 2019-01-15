@@ -28,11 +28,36 @@ export default class HeatTest extends React.Component{
             } );// este name es el de la variable
           }
 
-          handleChangeSample = event => {
+          handleChangeSample1 = event => {
             this.setState({ 
               name: event.target.value,
             } );// este name es el de la variable
           }
+
+          handleChangeSample2 = event => {
+            this.setState({ 
+              name: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample3 = event => {
+            this.setState({ 
+              name: event.target.value,
+            } );// este name es el de la variable
+          }          
+          handleChangeSample4 = event => {
+            this.setState({ 
+              name: event.target.value,
+            } );// este name es el de la variable
+          }
+          handleChangeSample5 = event => {
+            this.setState({ 
+              name: event.target.value,
+            } );// este name es el de la variable
+          }
+
+
+
+
           handleOnBlur=(e)=>{
             if(/\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===5){
                 this.setState({
@@ -79,9 +104,13 @@ export default class HeatTest extends React.Component{
       handleSubmit = event => {
         event.preventDefault();
     
-        const sample =  this.state.name 
+        const sample1 =  this.state.name
+        const sample2 =  this.state.name
+        const sample3 =  this.state.name
+        const sample4 =  this.state.name
+        const sample5 =  this.state.name 
         const operator = this.state.id
-        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Heat Test", status:"Sample Ready for Chemistry" })// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample1, test:"Heat Test", status:"Sample Ready for Chemistry" })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
@@ -148,7 +177,7 @@ export default class HeatTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample1}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -161,7 +190,7 @@ export default class HeatTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample2}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -175,7 +204,7 @@ export default class HeatTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample3}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -190,7 +219,7 @@ export default class HeatTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample4}
                         />
                         <label className="col col-4 mr-1">{message}</label>
 
@@ -204,7 +233,7 @@ export default class HeatTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         // onBlur={handleOnBlur}
-                        onChange={this.handleChangeSample}
+                        onChange={this.handleChangeSample5}
                         />
                         <label className="col col-4 mr-1">{message}</label>
                     </div>
