@@ -1,60 +1,79 @@
 import React from 'react';
 
-import Sample from './sample.js'
-
 export default class Test extends React.Component{
     constructor(props){
         super(props);
         this.state={
             name: "Electricity test",
-            validateOp: undefined,
-            isSubmitDisabled: true,
+            validOp: undefined,
+            samplesCounter: false,
+            samples:[]
         }
     }
 
-    handleOnBlur=(e)=>{
-        if(/\d\d\d\d\d/.test(e.target.value)&& e.target.value.length===5){
+    validateOperator=(e)=>{
+        if(/\d\d\d\d\d/.test(e.target.value) && e.target.value.length===5){
             this.setState({
-                validateOp: true,
-                isSubmitDisabled: false
-                
+                validOp: true,
             })
         }else if(e.target.value===""){
             this.setState({
-                validateOp: undefined,
-                isSubmitDisabled: true
+                validOp: undefined,
             })
         }else{
             this.setState({
-                validateOp: false,
-                isSubmitDisabled: true
+                validOp: false,
+            })
+        }
+    }
+
+    validateSamples=(e)=>{
+        const samples = this.state.samples
+        let sample = e.target.value
+        if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+            this.setState({
+                samplesCounter: true,
+                samples: this.state.samples.concat(sample),
+            })
+        }else if(sample===""){
+            if(this.state.samplesCounter !== true){
+                this.setState({
+                    samplesCounter: false,
+                })
+            }
+        }
+        else{
+            this.setState({
+                samplesCounter: false,
             })
         }
     }
 
     render(){
         const {
-            handleOnBlur,
+            validateSamples,
+            validateOperator,
             state: {
                 name,
-                validateOp,
+                validOp,
+                samplesCounter,
             }
           } = this;
 
         const format="SA-##-#####"
 
-        let operatorClassName="sample col-lg-3 col-5 form-control";
+        let operatorClassName="sample col-lg-3 col-3 form-control";
         let message=" "
 
-        if(validateOp===false){
-            operatorClassName= "sample col-lg-3 col-5 form-control border-danger"
+        if(validOp===false){
+            operatorClassName= operatorClassName +=" border-danger"
             message="Incorret syntax"
-        }else if(validateOp===true){
-            operatorClassName= "sample col-lg-3 col-5 form-control border-success"
+        }else if(validOp===true){
+            operatorClassName= operatorClassName += " border-success"
             message=" "
         }
         else{
-            operatorClassName="sample col-lg-3 col-6 form-control"
+            operatorClassName="sample col-lg-3 col-3 form-control"
         }
 
         return(<div>
@@ -63,68 +82,138 @@ export default class Test extends React.Component{
             </div>
             <div className="col col-12">
                 <form>
-                    <div className="form-inline pb-3">
-                        <label className="col col-lg-5 col-3 text-right d-block">Operator ID:</label>
+                    <div className="row form-inline pb-3">
+                        <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input
-                            type="text" 
+                            type="text"
                             className={operatorClassName}
-                            name="operator" 
+                            name="operator"
                             placeholder="#####"
-                            onBlur={handleOnBlur}
+                            onBlur={validateOperator}
                             />
-                        <label className="col col-lg-4 col-4">{message}</label>
+                        <label className="col col-lg-5 col-4">{message}</label>
                     </div>
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
-                        <Sample
-                            number={1}
-                            format={format}
-                        />
-                        <Sample
-                            number={2}
-                            format={format}
-                        />
-                        <Sample
-                            number={3}
-                            format={format}
-                        />
-                        <Sample
-                            number={4}
-                            format={format}
-                        />
-                        <Sample
-                            number={5}
-                            format={format}
-                        />
-                        <Sample
-                            number={6}
-                            format={format}
-                        />
-                        <Sample
-                            number={7}
-                            format={format}
-                        />
-                        <Sample
-                            number={8}
-                            format={format}
-                        />
-                        <Sample
-                            number={9}
-                            format={format}
-                        />
-                        <Sample
-                            number={10}
-                            format={format}
-                        />
-                        <button
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample1"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample2"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample3"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample4"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample5"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample6"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample7"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample8"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample9"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                        <div className="row form-inline pb-1">
+                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
+                            <input 
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample10"} 
+                                placeholder={format}
+                                onChange={validateSamples}
+                            />
+                            <label className="col col-lg-4 col-sm-4">{" "}</label> 
+                        </div>
+                    </div>
+                    <button
                             type="submit"
                             className="btn btn-primary col-4 offset-4 col-lg-2 offset-lg-5 mt-5"
-                            disabled={this.state.isSubmitDisabled}
+                            disabled={(samplesCounter && validOp) ? false : true}
                             onClick={() => {window.alert('You Added a Sample')}}
                         >
                         Save Data
                         </button>
-                    </div>
                 </form>
             </div>
         </div>)

@@ -1,7 +1,7 @@
 const dbInteract = require('./../middlewares/db-interact');
 const ip = require('./../config/ip');
 const pool = require('./../config/database');
-const request = require('request');
+const axios = require('axios');
 
 // Testing
 async function insertData(req, res) {
@@ -70,7 +70,7 @@ async function insertData(req, res) {
 	for await (const reqSample of body.samples) {
 		for await (const reqPost of postStatus) {
 			for await (const reqPrev of prevStatus) {
-				request.post(`https://${ip}:4000/api/logs/add`, { 
+				axios.post(`https://${ip}:4000/api/logs/add`, { 
 					body: {
 						operator: body.operator,
 						sample: reqSample.name,
@@ -78,7 +78,7 @@ async function insertData(req, res) {
 						status: reqPrev.name
 					}
 				});
-				request.post(`https://${ip}:4000/api/logs/add`, { 
+				axios.post(`https://${ip}:4000/api/logs/add`, { 
 					body: {
 						operator: body.operator,
 						sample: reqSample.name,
