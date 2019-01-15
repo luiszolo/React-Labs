@@ -8,8 +8,24 @@ export default class Test extends React.Component{
             name: "Electricity test",
             validOp: undefined,
             validSamples: undefined,
-            samples:[],
+            samples: Array(10).fill(null),
         }
+    }
+
+    updateSamples=(value,position)=>{
+        this.setState(state=>{
+            let newSamples= state.samples
+            newSamples = state.samples.map((sample,i)=>{
+                if(i==position){
+                    return newSamples[i]=value
+                } else {
+                    return sample;
+                  }
+            })
+            return {
+                newSamples,
+            };
+        })
     }
 
     validateOperator=(e)=>{
@@ -37,36 +53,28 @@ export default class Test extends React.Component{
     }
 
     validateSamples=(e)=>{
+        const index =e.target.name.replace("sample","")
         const sample = e.target.value
         const samples = this.state.samples
 
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/` + sample) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
-                if (res.data==={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                if (res.data=={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     console.log("No esta en la base de datos")
                 } else  {
-                    if(samples.length===0){
-                        this.setState({
-                            validSamples: true,
-                            samples: this.state.samples.concat(sample),
-                        })
-                    }
-                    else{
-                        let exists = false
-                        samples.map((value)=>{
-                            if(sample===value){
-                            exists=true
-                        }})
-                        if(exists===false){
-                            this.setState({
-                                validSamples: true,
-                                samples: this.state.samples.concat(sample),
-                            })
-                        }
+                    let exists = false
+                    samples.map((value)=>{
+                        if(sample===value){
+                        exists=true
+                    }})
+                    if(exists===false){
+                        this.updateSamples(sample,index-1)
                     }
                 }
             })
+        }else if(sample===""){
+            this.updateSamples(null,index-1)
         }else{
             this.setState({
                 validSamples: false,
