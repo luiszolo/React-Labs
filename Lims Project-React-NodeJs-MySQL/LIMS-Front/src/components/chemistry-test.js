@@ -20,6 +20,12 @@ export default class ChemistryTest extends React.Component{
             name:'', //Table Sample
           }
 
+          handleChangeValue = event => {
+            this.setState({ 
+              value: event.target.value,
+            } );// este name es el de la variable
+          }
+
           handleChangeOperator = event => {
             this.setState({ 
               id: event.target.value,
@@ -58,16 +64,17 @@ export default class ChemistryTest extends React.Component{
         event.preventDefault();
 
         const sample =  this.state.name
-        
+        const value= this.state.value
         const operator = this.state.id
 
-        axios.post(`http://localhost:4000/api/logs/add`, {operator, sample, test:"Chemistry Test", status:"Sample Ready for Heat" })// al  parecer este name tiene que ser el nombre de la columna
+        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Chemistry Test", samples:[sample],attributes:[{name:"Chemistry",value}] })// al  parecer este name tiene que ser el nombre de la columna
           .then(res => {
             console.log(res);
             console.log(res.data);
           });
       }
 
+<<<<<<< HEAD
         handleOnBlur=()=>{
             const operator = this.state.id
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
@@ -83,6 +90,23 @@ export default class ChemistryTest extends React.Component{
             })
         }
         
+=======
+      handleOnBlur=(e)=>{
+        const operator = this.state.id
+        axios.get(`http://10.2.1.94:4000/api/operators/`+operator)//manda el get con el nombre del operador ejemplo: 12345
+        .then(res => {
+          if (res.data.message) {//si devuelve el no existe se pone que no valida por que pues no existe XD
+            console.log(res.data.message);
+          } else  {
+            this.setState({//si te regresa cualquier cosa como un json con info es que si existe y pues se valida una vez que se comprueba que existe hay que hacer las validaciones este 
+              validateOp: true,//es el primer filtro saber si existe o no
+              isSubmitDisabled: false
+              // OperatorExists: true
+            });
+          }
+        })
+    }
+>>>>>>> f65899053c0039547babbef6760315e56614893e
         render(){
           const {
             handleOnBlur,
@@ -126,7 +150,7 @@ export default class ChemistryTest extends React.Component{
                   </label>
                   <label className="pr-1 form-inline">
                     Chemistry:
-                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeAtrtribute} />
+                    <input type="text" className="form-control m-1" name="value" onChange={this.handleChangeValue} />
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">

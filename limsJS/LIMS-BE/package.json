@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
-    "react": "webpack -w",
+		"dev-react": "webpack --mode development --watch",
+		"react": "webpack --mode production",
     "start": "concurrently \"npm run dev \" \"npm run react\""
   },
   "keywords": [],
@@ -30,14 +31,14 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "concurrently": "^4.1.0",
     "css-loader": "^2.1.0",
     "nodemon": "^1.18.9",
     "style-loader": "^0.23.1",
-    "webpack": "^4.28.3",
+    "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
   }
 }
