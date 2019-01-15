@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import MaterialTable from 'material-table';
 
 export default class SampleSearch extends React.Component{
     state = {
