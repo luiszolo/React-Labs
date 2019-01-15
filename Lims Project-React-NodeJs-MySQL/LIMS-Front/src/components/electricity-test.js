@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Test extends React.Component{
     constructor(props){
@@ -7,16 +8,24 @@ export default class Test extends React.Component{
             name: "Electricity test",
             validOp: undefined,
             validSamples: undefined,
-            samples:[]
+            samples:[],
         }
     }
 
     validateOperator=(e)=>{
-        if(/\d\d\d\d\d/.test(e.target.value) && e.target.value.length===5){
-            this.setState({
-                validOp: true,
+        const operator = e.target.value
+        if(/\d\d\d\d\d/.test(operator) && operator.length===5){
+            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+            .then(res => {
+                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    console.log(res.data.message)
+                } else  {
+                    this.setState({
+                        validOp: true,
+                    })
+                }
             })
-        }else if(e.target.value===""){
+        }else if(operator===""){
             this.setState({
                 validOp: undefined,
             })
@@ -28,30 +37,36 @@ export default class Test extends React.Component{
     }
 
     validateSamples=(e)=>{
-        const samples = this.state.samples
         const sample = e.target.value
+        const samples = this.state.samples
 
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-            if(samples.length===0){
-                this.setState({
-                    validSamples: true,
-                    samples: this.state.samples.concat(sample),
-                })
-            }
-            else{
-                let exists = false
-                samples.map((value)=>{
-                    console.log(value)
-                    if(sample===value){
-                    exists=true
-                }})
-                if(exists===false){
-                    this.setState({
-                        validSamples: true,
-                        samples: this.state.samples.concat(sample),
-                    })
+            axios.get(`http://10.2.1.94:4000/api/samples/` + sample) //manda el get con el codigo del sample ejemplo: SA-12-12342
+            .then(res => {
+                if (res.data==={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    console.log("No esta en la base de datos")
+                } else  {
+                    if(samples.length===0){
+                        this.setState({
+                            validSamples: true,
+                            samples: this.state.samples.concat(sample),
+                        })
+                    }
+                    else{
+                        let exists = false
+                        samples.map((value)=>{
+                            if(sample===value){
+                            exists=true
+                        }})
+                        if(exists===false){
+                            this.setState({
+                                validSamples: true,
+                                samples: this.state.samples.concat(sample),
+                            })
+                        }
+                    }
                 }
-            }
+            })
         }else{
             this.setState({
                 validSamples: false,

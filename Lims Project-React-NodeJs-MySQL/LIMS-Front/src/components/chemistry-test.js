@@ -18,11 +18,7 @@ export default class ChemistryTest extends React.Component{
             id: '', // Table Operator
             value: '', //Table SampleValue
             name:'', //Table Sample
-            
-    
           }
-
-          
 
           handleChangeOperator = event => {
             this.setState({ 
@@ -35,10 +31,6 @@ export default class ChemistryTest extends React.Component{
               name: event.target.value,
             } );// este name es el de la variable
           }
-
-
-
-
 
         handleChange(event) {
           this.setState({
@@ -64,7 +56,6 @@ export default class ChemistryTest extends React.Component{
     
       handleSubmit = event => {
         event.preventDefault();
-    
 
         const sample =  this.state.name
         
@@ -77,27 +68,22 @@ export default class ChemistryTest extends React.Component{
           });
       }
 
-      handleOnBlur=(e)=>{
-        const operator = this.state.id
-        axios.get(`http://10.2.1.94:4000/api/operators/`+operator)//manda el get con el nombre del operador ejemplo: 12345
-        .then(res => {
-          if (res.data.message) {//si devuelve el no existe se pone que no valida por que pues no existe XD
-            this.setState({
-              // OperatorExists: false
-              validateOp: false,
-              isSubmitDisabled: true
-            });
-          } else  {
-            this.setState({//si te regresa cualquier cosa como un json con info es que si existe y pues se valida una vez que se comprueba que existe hay que hacer las validaciones este 
-              validateOp: true,//es el primer filtro saber si existe o no
-              isSubmitDisabled: false
-              // OperatorExists: true
-            });
-          }
-        })
-    }
+        handleOnBlur=()=>{
+            const operator = this.state.id
+            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+            .then(res => {
+                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    console.log(res.data.message)
+                } else  {
+                    this.setState({ //si te regresa cualquier cosa como un json con info es que si existe y pues se valida una vez que se comprueba que existe hay que hacer las validaciones este 
+                    validateOp: true, //es el primer filtro saber si existe o no
+                    isSubmitDisabled: false
+                    });
+                }
+            })
+        }
+        
         render(){
-
           const {
             handleOnBlur,
             state: {
