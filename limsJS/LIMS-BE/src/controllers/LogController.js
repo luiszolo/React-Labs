@@ -40,9 +40,6 @@ async function addLog (req, res) {
 		operator_Id = ${operator.result.id}, sample_Id = ${sample.result.id},
 		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' ')}"
 	`);
-	res.send({
-		message: 'Insertion successfull'
-	});
 };
 
 // Unnecessary

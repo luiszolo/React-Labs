@@ -37,7 +37,7 @@ export default class SampleSearch extends React.Component{
             <div class="col-sm">
             
             <p>Created On</p>
-            { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log.onCreated}</li>)}
+            { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log.sample_Id}</li>)}
             </div>
           </div>
         </div>
