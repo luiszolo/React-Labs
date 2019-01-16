@@ -15,7 +15,7 @@ export default class Test extends React.Component{
     updateSamples=(value,position)=>{
         this.setState(state=>{
             let samples = state.samples.map((sample,i)=>{
-                if(i==position){
+                if(i===position){
                     return sample=value
                 } else {
                     return sample;
@@ -51,7 +51,7 @@ export default class Test extends React.Component{
         }
     }
 
-    validateSamples=(e)=>{
+    addSample=(e)=>{
         const index =e.target.name.replace("sample","")
         const sample = e.target.value
         const samples = this.state.samples
@@ -59,32 +59,56 @@ export default class Test extends React.Component{
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
-                if (res.data=={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                if (res.data==={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     console.log("No esta en la base de datos")
                 } else  {
                     let exists = false
                     samples.map((value)=>{
                         if(sample===value){
-                        exists=true
+                        return exists=true
                     }})
                     if(exists===false){
                         this.updateSamples(sample,index-1)
                     }
                 }
             })
-        }else if(sample===""){
-            this.updateSamples(null,index-1)
         }else{
+            this.updateSamples(null,index-1)
+        }
+    }
+
+    validateSamples=()=>{
+        const nulls = this.state.samples.filter((sample)=>{return sample==null})
+        console.log(nulls)
+        if(nulls.length===10){
             this.setState({
-                validSamples: false,
+                validSamples: false
+            })
+        }else{
+            this.state.samples.map((sample)=>{
+                if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+                    this.setState({
+                        validSamples: true
+                    })
+                }else if(sample===null){
+                    this.setState({
+                        validSamples: true
+                    })
+                }
+                else{
+                    this.setState({
+                        validSamples: false
+                    })
+                }
             })
         }
     }
 
     render(){
         const {
-            validateSamples,
+            addSample,
             validateOperator,
+            validateSamples,
             state: {
                 name,
                 validOp,
@@ -134,7 +158,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample1"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -145,7 +170,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -156,7 +182,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample3"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -167,7 +194,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample4"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -178,7 +206,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample5"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -189,7 +218,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample6"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -200,7 +230,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample7"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -211,7 +242,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample8"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -222,7 +254,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample9"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -233,7 +266,8 @@ export default class Test extends React.Component{
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample10"} 
                                 placeholder={format}
-                                onChange={validateSamples}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
