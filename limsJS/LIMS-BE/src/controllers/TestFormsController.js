@@ -74,16 +74,19 @@ async function insertData(req, res) {
 
 	for await (const reqSample of body.samples) {
 		let sample = await pool.query(`SELECT * FROM Sample WHERE name='${reqSample.toUpperCase()}'`);
-		for await (const reqAttribute of body.attributes) {
-			let attribute = await pool.query(`SELECT * FROM Attribute WHERE name='${reqAttribute.name.toUpperCase()}'`);
-			console.log({
-				sample: sample[0].id,
-				test: test.result.id,
-				attribute: attribute[0].id,
-				value: reqAttribute.value
-			})
-			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value='${reqAttribute.value}'`);
+		if (body.attributes) {
+			for await (const reqAttribute of body.attributes) {
+				let attribute = await pool.query(`SELECT * FROM Attribute WHERE name='${reqAttribute.name.toUpperCase()}'`);
+				console.log({
+					sample: sample[0].id,
+					test: test.result.id,
+					attribute: attribute[0].id,
+					value: reqAttribute.value
+				})
+				await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value='${reqAttribute.value}'`);
+			}
 		}
+		else break;
 	}
 
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
