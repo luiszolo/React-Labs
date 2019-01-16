@@ -46,20 +46,25 @@ async function insertData(req, res) {
 
 	}
 	let attributeError;
-	for await (const element of body.attributes) {
-		let attribute = await dbInteract.isExists(`SELECT * FROM Attribute WHERE name='${element.name.toUpperCase()}'`);
-		if (attribute == false) { 
-			attributeError = true;
-			break;
+	if (body.attributes) {
+		for await (const element of body.attributes) {
+			let attribute = await dbInteract.isExists(`SELECT * FROM Attribute WHERE name='${element.name.toUpperCase()}'`);
+			if (attribute == false) { 
+				attributeError = true;
+				break;
+			}
+			let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE attribute_Id=${attribute.result.id} AND test_Id=${test.result.id}`);
+			if (validateRelationship == false) {
+				attributeError = true;
+				break;
+			}
 		}
-		let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE attribute_Id=${attribute.result.id} AND test_Id=${test.result.id}`);
-		if (validateRelationship == false) {
-			attributeError = true;
-			break;
-		}
-	}
+	} 
 
-	if (sampleError || attributeError) {
+	let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE test_Id=${test.result.id}`);
+	if (validateRelationship.pass) attributeError = true;
+
+	if ((sampleError || attributeError)) {
 		res.send({
 			message: 'Samples or Attributes are wrong'
 		});
