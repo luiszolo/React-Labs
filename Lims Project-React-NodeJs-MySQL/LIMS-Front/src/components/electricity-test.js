@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-export default class Test extends React.Component{
+export default class ElectricityTest extends React.Component{
     constructor(props){
         super(props);
         this.state={
@@ -10,6 +10,7 @@ export default class Test extends React.Component{
             validSamples: undefined,
             samples: Array(10).fill(null),
             id: '',
+            messageAPI:'',
         }
     }
 
@@ -64,7 +65,7 @@ export default class Test extends React.Component{
                     console.log("No esta en la base de datos")
                 } else  {
                     let exists = false
-                    samples.map((value)=>{
+                    samples.forEach((value)=>{
                         if(sample===value){
                         return exists=true
                     }})
@@ -85,7 +86,7 @@ export default class Test extends React.Component{
                 validSamples: false
             })
         }else{
-            this.state.samples.map((sample)=>{
+            this.state.samples.forEach((sample)=>{
                 if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
                     this.setState({
                         validSamples: true
@@ -118,8 +119,27 @@ export default class Test extends React.Component{
         // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
         // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
       //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
-        samples.map((sample)=>{
+        samples.forEach((sample)=>{
             axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample]})
+            
+
+            .then( res=> {
+                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                  console.log(res.data.message)
+                  this.setState({
+                    messageAPI:res.data.message,
+                  })
+      
+                } else {
+                  this.setState({ // this is for reseting the inputs
+                    id: '', 
+                    sample1:'',
+                    value1:'',
+                  });
+                }
+              });
+
+
         })
       }
     render(){
@@ -135,7 +155,7 @@ export default class Test extends React.Component{
           } = this;
 
         const format="SA-##-#####"
-
+        const{messageAPI}=this.state;
         let operatorClassName="sample col-lg-3 col-3 form-control";
         let message=" "
 
@@ -301,6 +321,7 @@ export default class Test extends React.Component{
                         >
                         Save data
                         </button>
+                        <p>{messageAPI}</p>
                 </form>
             </div>
         </div>)
