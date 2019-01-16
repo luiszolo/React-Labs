@@ -5,7 +5,8 @@ import BaseButton from '../../components/Button/BaseButton';
 export default props => {
 
 	let cssClasses = '';
-	if (props.toolbar) cssClasses = 'btn-toolbar';
+	if (props.type='toolbar') cssClasses = 'btn-toolbar';
+	else if (props.vertical='vertical') cssClasses = 'btn-group-vertical';
 	else cssClasses = 'btn-group';
 
 

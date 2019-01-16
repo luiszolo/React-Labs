@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Sample from './sample.js'
 
 import '../index.css';
 
