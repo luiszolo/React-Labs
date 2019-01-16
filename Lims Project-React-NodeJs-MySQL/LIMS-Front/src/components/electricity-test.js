@@ -9,6 +9,7 @@ export default class Test extends React.Component{
             validOp: undefined,
             validSamples: undefined,
             samples: Array(10).fill(null),
+            id: '',
         }
     }
 
@@ -79,7 +80,6 @@ export default class Test extends React.Component{
 
     validateSamples=()=>{
         const nulls = this.state.samples.filter((sample)=>{return sample==null})
-        console.log(nulls)
         if(nulls.length===10){
             this.setState({
                 validSamples: false
@@ -104,6 +104,24 @@ export default class Test extends React.Component{
         }
     }
 
+
+    handleChangeOperator = event => {
+        this.setState({ 
+          id: event.target.value,//Var x = input.text
+        } );
+      }
+      handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
+        event.preventDefault();
+        const operator= this.state.id
+        const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
+         //cuando se manda como un solo string aunque pongas las , estan dentro del string si pones
+        // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
+        // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
+      //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
+        samples.map((sample)=>{
+            axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample]})
+        })
+      }
     render(){
         const {
             addSample,
@@ -137,7 +155,7 @@ export default class Test extends React.Component{
                 <h1 className="text-center">{name}</h1>
             </div>
             <div className="col col-12">
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input
@@ -146,6 +164,7 @@ export default class Test extends React.Component{
                             name="operator"
                             placeholder="#####"
                             onBlur={validateOperator}
+                            onChange={this.handleChangeOperator}
                             />
                         <label className="col col-lg-5 col-4">{message}</label>
                     </div>
@@ -256,6 +275,7 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -268,6 +288,7 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>

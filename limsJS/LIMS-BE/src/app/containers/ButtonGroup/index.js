@@ -1,5 +1,7 @@
 import React from 'react';
 
+import BaseButton from '../../components/Button/BaseButton';
+
 export default props => {
 
 	let cssClasses = '';
@@ -62,10 +64,13 @@ export default props => {
 	return (
 		<div className={props.className ? cssClasses.concat(' ', props.className) : cssClasses}>
 			{
-				props.buttons.map( button => <Button 
-					colorSchema={props.colorSchema}>
+				props.buttons.map( button => <BaseButton className={button.className}
+					colorSchema={props.colorSchema}
+					type={button.type}
+					id={button.id}
+					onClick={button.onClick}>
 						{button.children}
-					</Button>)
+					</BaseButton>)
 			}
 		</div>
 	);
