@@ -42,7 +42,7 @@ async function getSamples (req, res) {
 async function getSampleByName (req, res) {
 	let params = req.params;
 	const name = params.name;
-	const value = await dbInteract.isExists(`SELECT * FROM Sample WHERE name=${name}`);
+	const value = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${name}'`);
 
 	if (value == false) res.send({ message: 'The sample doesn\'t exists' });
 	else res.send({

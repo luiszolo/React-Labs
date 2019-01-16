@@ -36,13 +36,14 @@ async function insertData(req, res) {
 		if (sample == false) { 
 			sampleError = true;
 			break;
-		} else {
-			const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
-			if (logValidation.pass == true) {
-				sampleError = true;
-				break;
-			}
-		}
+		} 
+		// const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
+		// if (logValidation.pass == true) {
+		// 	sampleError = true;
+		// 	break;
+		// }
+		
+
 	}
 	let attributeError;
 	for await (const element of body.attributes) {
