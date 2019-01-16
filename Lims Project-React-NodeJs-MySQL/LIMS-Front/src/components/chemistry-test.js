@@ -1,14 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import Sample from './sample.js'
 
 import '../index.css';
 
 export default class ChemistryTest extends React.Component{
-
-  constructor(props){
-    super(props);
-    }
         state = { //In this chunk we are preparing the states that are going to be inserted in our json for POST method to the API
             id: '',
             name:'', 
@@ -114,7 +109,6 @@ export default class ChemistryTest extends React.Component{
                     <button 
                         type="submit" 
                         className="btn btn-primary col-6"
-                        onClick="document.getElementById('input').value = ''"//Trabajar en el clear 
                         onClick={() => {window.alert('You Added a Sample')}}
                     >
                     Save Data

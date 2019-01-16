@@ -1,13 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import Sample from './sample.js'
 
 import '../index.css';
 
 export default class SpinnerTest extends React.Component{
-  constructor(props){
-    super(props);
-    }
         state = { //In this chunk we are preparing the states that are going to be inserted in our json for POST method to the API
             id: '',
             name:'', 

@@ -16,9 +16,7 @@ export default class SampleSearch extends React.Component{
       }
     
       render() {
-
-        const { tableData } = this.state;
-        return (
+        return(
           <ul>
         <div class="container">
           <div class="row">

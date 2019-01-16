@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import '../index.css';
-import Sample from './sample.js'
 
 export default class Home extends React.Component{
 
@@ -39,8 +38,6 @@ export default class Home extends React.Component{
         }
 
     }
-
-
 
     // canSubmit() {
     //   const { status, samplesLength, name } = this.state
