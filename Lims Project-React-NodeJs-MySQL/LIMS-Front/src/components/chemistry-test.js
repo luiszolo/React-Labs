@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Sample from './sample.js'
 
 import '../index.css';
 
@@ -136,7 +135,6 @@ export default class ChemistryTest extends React.Component{
                     <button 
                         type="submit" 
                         className="btn btn-primary col-6"
-                        
                         onClick={() => {window.alert('You Added a Sample')}}
                     >
                     Save Data
