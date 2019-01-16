@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ButtonGroup from './containers/ButtonGroup';
+import ButtonGroup from './bootstrap/containers/ButtonGroup';
 
 ReactDOM.render(
 	<ButtonGroup colorSchema='success'
@@ -16,13 +16,13 @@ ReactDOM.render(
 				id: 'btn2',
 				type:'button',
 				onClick: (e) => console.log('Hola btn2'),
-				children: 'Holis'
+				children: <p>Holiwis</p>
 			},
 			{
 				id: 'btn3',
 				type:'button',
 				onClick: (e) => console.log('Hola btn3'),
-				children: 'Holis'
+				children: <h1>Hello there</h1>
 			}
 		]}
 	/>, 
