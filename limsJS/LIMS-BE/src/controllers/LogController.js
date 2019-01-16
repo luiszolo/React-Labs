@@ -50,7 +50,12 @@ async function deleteLog (req, res) {
 
 // Finish
 async function getLogs (req, res) {
-	const value = await pool.query('SELECT * FROM Log ORDER BY onCreated DESC');
+	const value = await pool.query(`
+		SELECT Operator.id AS 'UserID', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
+		JOIN Status ON Status.id = Log.status_Id 
+		JOIN Test ON Test.id = Log.test_Id
+		JOIN Operator ON Operator.id = Log.operator_Id
+	`);
 	if (value == undefined) {
 		res.send({
 			message: "No logs founds"
@@ -74,7 +79,12 @@ async function getLogBySample (req, res) {
 		return;
 	}
 
-	const value = await pool.query('SELECT * FROM Log WHERE sample_Id = ?', [sample.result.id]);
+	const value = await pool.query(`
+		SELECT Operator.id AS 'UserID', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
+		JOIN Status ON Status.id = Log.status_Id 
+		JOIN Test ON Test.id = Log.test_Id
+		JOIN Operator ON Operator.id = Log.operator_Id WHERE Log.sample_Id=${sample.result.id}
+	`);
 	res.send({
 		Logs : value
 	});
