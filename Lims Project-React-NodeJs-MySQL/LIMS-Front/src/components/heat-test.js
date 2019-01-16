@@ -95,7 +95,7 @@ export default class HeatTest extends React.Component{
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample3],attributes:[{name:"Temperature",value:value1},{name:"Time Elapse",value2}] })
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample4],attributes:[{name:"Temperature",value:value1},{name:"Time Elapse",value2}] })
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample5],attributes:[{name:"Temperature",value:value1},{name:"Time Elapse",value2}] })
-      
+        
       }
         render(){ //Making the Form
           const {

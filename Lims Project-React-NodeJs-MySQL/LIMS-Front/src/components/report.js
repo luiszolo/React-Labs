@@ -24,20 +24,20 @@ export default class SampleSearch extends React.Component{
           <div class="row">
             <div class="col-sm">
             <p>User ID</p>
-            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4  "}>{log.operator_Id}</li>)}
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4  "}>{log["UserID"]}</li>)}
             </div>
             <div class="col-sm">
             <p>Status</p>
-            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log.status_Id}</li>)}
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log["State"]}</li>)}
             </div>
             <div class="col-sm">
             <p>Test</p>
-            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log.test_Id}</li>)}
+            { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["Test"]}</li>)}
             </div>
             <div class="col-sm">
             
             <p>Created On</p>
-            { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log.sample_Id}</li>)}
+            { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log["On Created"]}</li>)}
             </div>
           </div>
         </div>

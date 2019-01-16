@@ -8,13 +8,13 @@ export default class ChemistryTest extends React.Component{
 
   constructor(props){
     super(props);
-    }
-        state = { //In this chunk we are preparing the states that are going to be inserted in our json for POST method to the API
+    
+        this.state = { //In this chunk we are preparing the states that are going to be inserted in our json for POST method to the API
             id: '',
-            name:'', 
-            sample1:'none',
+            sample1:'',
             value1:'',
-          }//Here we are taking the input user data and inserting it to our states
+            messageAPI:'',
+          }}//Here we are taking the input user data and inserting it to our states
           handleChangeOperator = event => {
             this.setState({ 
               id: event.target.value,//Var x = input.text
@@ -56,6 +56,22 @@ export default class ChemistryTest extends React.Component{
         // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
       //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Chemistry Test", samples:[sample1],attributes:[{name:"CHEMISTRY",value:value1}]})
+        .then( res=> {
+          if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+            console.log(res.data.message)
+            this.setState({
+              messageAPI:res.data.message,
+            })
+
+          } else {
+            this.setState({ // this is for reseting the inputs
+              id: '', 
+              sample1:'',
+              value1:'',
+            });
+          }
+        });
+        
       }
         render(){ //Making the Form
           const {
@@ -64,6 +80,10 @@ export default class ChemistryTest extends React.Component{
                 validateOp,
             }
           } = this;
+          const{id}=this.state;
+          const{sample1}=this.state;
+          const{value1}=this.state;
+          const{messageAPI}=this.state;
           const format="SA-##-#####"
           let operatorClassName="sample form-control";
           let message=" "
@@ -79,7 +99,7 @@ export default class ChemistryTest extends React.Component{
           }
             return(
               <div className="col col-sm-6 offset-sm-4">
-              <h1>Heat Test</h1>
+              <h1>Chemistry Test</h1>
                 <form onSubmit={this.handleSubmit}>
                   <label className="pr-1 form-inline">
                     Operator ID:
@@ -91,12 +111,13 @@ export default class ChemistryTest extends React.Component{
                         placeholder="#####"
                         onBlur={handleOnBlur}
                         onChange={this.handleChangeOperator}
+                        value={id}
                         />
                         <label className="col col-4 mr-1">{message}</label>
                   </label>
                   <label className="pr-1 form-inline">
                     Chemistry:
-                    <input type="text" id="input" className="form-control m-1" name="value1" onChange={this.handleChangeAtrtribute1} />
+                    <input type="text" id="input" className="form-control m-1" name="value1" onChange={this.handleChangeAtrtribute1} value={value1} />
                   </label>
                   <h1>Sample Barcodes</h1>
                     <div className="form-group">
@@ -109,18 +130,23 @@ export default class ChemistryTest extends React.Component{
                         format={format}
                         placeholder="SA-##-#####"
                         onChange={this.handleChangeSample1}
+                        value={sample1}
                         />
                     </div>
                     <button 
                         type="submit" 
                         className="btn btn-primary col-6"
-                        onClick="document.getElementById('input').value = ''"//Trabajar en el clear 
+                        
                         onClick={() => {window.alert('You Added a Sample')}}
                     >
                     Save Data
                     </button>
+                    <p>{messageAPI}</p>
+                    
+    	
                    
               </form>
+             
             </div>
             )
         }

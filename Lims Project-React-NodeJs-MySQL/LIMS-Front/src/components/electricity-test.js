@@ -59,8 +59,8 @@ export default class Test extends React.Component{
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
-                if (res.data=={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    console.log("No esta en la base de datos")
+                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    console.log(res.data.message)
                 } else  {
                     let exists = false
                     samples.map((value)=>{
