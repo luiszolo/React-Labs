@@ -21,12 +21,27 @@ async function insertData(req, res) {
 		});
 		return;
 	}
+
+	const bothStatus = await dbInteract.isExists(`SELECT * FROM TestStatus WHERE test_Id=${test.result.id}`);
+	if (bothStatus == false) {
+		res.send({
+			message: 'The test doesn\'t have status' 
+		});
+		return;
+	} 
+
 	let sampleError;
 	for await (const element of body.samples) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
 			sampleError = true;
 			break;
+		} else {
+			const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
+			if (logValidation.pass == true) {
+				sampleError = true;
+				break;
+			}
 		}
 	}
 	let attributeError;
@@ -43,12 +58,14 @@ async function insertData(req, res) {
 		}
 	}
 
-	if (sampleError && attributeError) {
+	if (sampleError || attributeError) {
 		res.send({
 			message: 'Samples or Attributes are wrong'
 		});
 		return;
 	}
+
+
 	for await (const reqSample of body.samples) {
 		let sample = await pool.query(`SELECT * FROM Sample WHERE name='${reqSample.toUpperCase()}'`);
 		for await (const reqAttribute of body.attributes) {
@@ -62,11 +79,9 @@ async function insertData(req, res) {
 			await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value='${reqAttribute.value}'`);
 		}
 	}
-	
-	console.log("Algo")
+
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
-	console.log("Algo2")
 
 	for await (const reqSample of body.samples) {
 		for await (const reqPost of postStatus) {
