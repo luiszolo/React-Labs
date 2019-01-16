@@ -10,76 +10,9 @@ export default class Test extends React.Component{
             validSamples: undefined,
             samples: Array(10).fill(null),
             id: '',
-            sample1:'',
-            sample2:'',
-            sample3:'',
-            sample4:'',
-            sample5:'',
-            sample6:'',
-            sample7:'',
-            sample8:'',
-            sample9:'',
-            sample0:'',
-            value1:'',
         }
     }
 
-    handleChangeOperator = event => {
-        this.setState({ 
-          id: event.target.value,//Var x = input.text
-        } );
-      }
-      handleChangeSample1 = event => {
-        this.setState({ 
-          sample1: event.target.value,
-        } );
-      }
-      handleChangeSample2 = event => {
-        this.setState({ 
-          sample2: event.target.value,
-        } );
-      }
-      handleChangeSample3 = event => {
-        this.setState({ 
-          sample3: event.target.value,
-        } );
-      }          
-      handleChangeSample4 = event => {
-        this.setState({ 
-          sample4: event.target.value,
-        } );
-      }
-      handleChangeSample5 = event => {
-        this.setState({ 
-          sample5: event.target.value,
-        } );
-      }
-      handleChangeSample6 = event => {
-        this.setState({ 
-          sample6: event.target.value,
-        } );
-      }
-      handleChangeSample7 = event => {
-        this.setState({ 
-          sample7: event.target.value,
-        } );
-      }
-      handleChangeSample8 = event => {
-        this.setState({ 
-          sample8: event.target.value,
-        } );
-      }          
-      handleChangeSample9 = event => {
-        this.setState({ 
-          sample9: event.target.value,
-        } );
-      }
-      handleChangeSample0 = event => {
-        this.setState({ 
-          sample0: event.target.value,
-        } );
-      }
- 
     updateSamples=(value,position)=>{
         this.setState(state=>{
             let samples = state.samples.map((sample,i)=>{
@@ -94,34 +27,7 @@ export default class Test extends React.Component{
             };
         })
     }
-    handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
-        event.preventDefault();
-        const sample1 =  this.state.sample1
-        const sample2 =  this.state.sample2
-        const sample3 =  this.state.sample3
-        const sample4 =  this.state.sample4
-        const sample5 =  this.state.sample5 
-        const sample6 =  this.state.sample6
-        const sample7 =  this.state.sample7
-        const sample8 =  this.state.sample8
-        const sample9 =  this.state.sample9
-        const sample0 =  this.state.sample0 
-        const operator = this.state.id
-        const value1= this.state.value1 //cuando se manda como un solo string aunque pongas las , estan dentro del string si pones
-        // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
-        // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
-      //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample1]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample2]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample3]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample4]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample5]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample6]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample7]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample8]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample9]})
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample0]})
-      }
+
     validateOperator=(e)=>{
         const operator = e.target.value
         if(/\d\d\d\d\d/.test(operator) && operator.length===5){
@@ -154,8 +60,8 @@ export default class Test extends React.Component{
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    console.log(res.data.message)
+                if (res.data==={}) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    console.log("No esta en la base de datos")
                 } else  {
                     let exists = false
                     samples.map((value)=>{
@@ -174,7 +80,6 @@ export default class Test extends React.Component{
 
     validateSamples=()=>{
         const nulls = this.state.samples.filter((sample)=>{return sample==null})
-        console.log(nulls)
         if(nulls.length===10){
             this.setState({
                 validSamples: false
@@ -199,6 +104,24 @@ export default class Test extends React.Component{
         }
     }
 
+
+    handleChangeOperator = event => {
+        this.setState({ 
+          id: event.target.value,//Var x = input.text
+        } );
+      }
+      handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
+        event.preventDefault();
+        const operator= this.state.id
+        const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
+         //cuando se manda como un solo string aunque pongas las , estan dentro del string si pones
+        // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
+        // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
+      //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
+        samples.map((sample)=>{
+            axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample]})
+        })
+      }
     render(){
         const {
             addSample,
@@ -232,7 +155,7 @@ export default class Test extends React.Component{
                 <h1 className="text-center">{name}</h1>
             </div>
             <div className="col col-12">
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input
@@ -256,7 +179,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -281,7 +203,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -294,7 +215,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -307,7 +227,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -320,7 +239,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -333,7 +251,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -346,7 +263,6 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -359,7 +275,7 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
+
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -372,7 +288,7 @@ export default class Test extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-                                onChange={this.handleChangeOperator}
+
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
