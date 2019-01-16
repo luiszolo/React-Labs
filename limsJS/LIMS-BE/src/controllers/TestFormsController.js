@@ -61,9 +61,6 @@ async function insertData(req, res) {
 		}
 	} 
 
-	let validateRelationship = await dbInteract.isExists(`SELECT * FROM TestAttributes WHERE test_Id=${test.result.id}`);
-	if (validateRelationship.pass) attributeError = true;
-
 	if ((sampleError || attributeError)) {
 		res.send({
 			message: 'Samples or Attributes are wrong'
