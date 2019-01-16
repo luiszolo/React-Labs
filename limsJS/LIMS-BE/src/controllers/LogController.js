@@ -74,7 +74,12 @@ async function getLogBySample (req, res) {
 		return;
 	}
 
-	const value = await pool.query('SELECT * FROM Log WHERE sample_Id = ?', [sample.result.id]);
+	const value = await pool.query(`
+		SELECT Operator.id, Status.name, Test.name, Log.onCreated FROM Log
+		JOIN Status ON Status.id = Log.status_Id 
+		JOIN Test ON Test.id = Log.test_Id
+		JOIN Operator ON Operator.id = Log.operator_Id
+	`);
 	res.send({
 		Logs : value
 	});
