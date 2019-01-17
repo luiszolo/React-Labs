@@ -37,15 +37,15 @@ async function insertData(req, res) {
 			sampleError = true;
 			break;
 		} 
-		// const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
-		// if (logValidation.pass == true) {
-		// 	sampleError = true;
-		// 	break;
-		// }
+		const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
+		if (logValidation.pass == true) {
+			sampleError = true;
+			break;
+		}
 		
 
 	}
-	let attributeError;
+	let attributeError = false;
 	if (body.attributes) {
 		for await (const element of body.attributes) {
 			let attribute = await dbInteract.isExists(`SELECT * FROM Attribute WHERE name='${element.name.toUpperCase()}'`);
