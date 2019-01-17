@@ -11,10 +11,12 @@ export default class ChemistryTest extends React.Component{
         operator: 0,
         messageOp: "",
         validOp: undefined,
-        messageSamples: Array(5).fill(null),
-        validSamples: undefined,
-        Chemistry: 0,
-        samples: Array(5).fill(null),
+        chemistry: null,
+        messageCh: null,
+        validCh: undefined,
+        sample: null,
+        validSample: undefined,
+        messageSample: null,
     }
 }
 
@@ -33,48 +35,58 @@ updateSamples=(value,position)=>{
     })
 }
 
-updateSamplesMessage=(value,position)=>{
-    this.setState(state=>{
-        let messageSamples = state.messageSamples.map((message,i)=>{
-            if(i===position){
-                return message=value
-            } else {
-                return message;
-                }
+validateChemistry=(e)=>{
+    const chemistry = e.target.value
+
+    if(/CH-\d\d-\d\d\d\d\d/.test(chemistry) && chemistry.length===11){
+        this.setState({
+            chemistry: chemistry,
+            validCh: true,
         })
-        return {
-            messageSamples,
-        };
-    })
+    }else if(chemistry===""){
+        this.setState({
+            messageCh: null,
+            validCh: false,
+        })
+    }else{
+        this.setState({
+            chemistry: null,
+            messageCh: "Invalid syntax",
+            validCh: false,
+        })
+    }
 }
 
 addSample=(e)=>{
-    const index =e.target.name.replace("sample","")
     const sample = e.target.value
-    const samples = this.state.samples
 
     if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
         axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
         .then(res => {
             if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                 const message=res.data.message
-                this.updateSamplesMessage(message,index-1)
+
+                this.setState({
+                    messageSample: message,
+                })
             } else {
-                let exists = false
-                samples.forEach((value)=>{
-                    if(sample===value){
-                        this.updateSamplesMessage("This sample is repeated",index-1)
-                        return exists = true
-                }})
-                if(exists===false){
-                    this.updateSamples(sample,index-1)
-                    this.updateSamplesMessage(null,index-1)
-                }
+                this.setState({
+                    sample: sample,
+                    messageSample: null,
+                    validSample: true,
+                })
             }
         })
+    }else if(sample===""){
+        this.setState({
+            messageSample: null,
+            validSample: false
+        })
     }else{
-        this.updateSamples(null,index-1)
-        this.updateSamplesMessage(null,index-1)
+        this.setState({
+            messageSample: "Incorrect syntax",
+            validSample: false
+        })
     }
 }
 
@@ -99,6 +111,7 @@ validateOperator=(e)=>{
         })
     }else if(operator===""){
         this.setState({
+            messageOp: "",
             validOp: undefined,
         })
     }else{
@@ -108,73 +121,38 @@ validateOperator=(e)=>{
     }
 }
 
-validateSamples=()=>{
-    const nulls = this.state.samples.filter((sample)=>{return sample===null})
-    if(nulls.length===5){
-        this.setState({
-            validSamples: false
-        })
-    }else{
-        this.state.samples.forEach((sample)=>{
-            if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-                this.setState({
-                    validSamples: true
-                })
-            }else if(sample===null){
-                this.setState({
-                    validSamples: true
-                })
-            }
-            else{
-                this.setState({
-                    validSamples: false
-                })
-            }
-        })
-    }
-}
-
-handleChangeChemistry = event => {
-    this.setState({ 
-        Chemistry: event.target.value,
-    } );
-}
-
-
-
 handleSubmit = event => {
     event.preventDefault();
 
     const operator= this.state.operator
     const Chemistry = this.state.Chemistry
-  
+    const sample =this.state.sample
 
-    const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
-
-    samples.forEach((sample)=>{
-        axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
-            operator,
-            test:"Chemistry Test",
-            samples:[sample],
-            attributes:[{
-                name: "Chemistry",
-                value: Chemistry
-            }]
-        })
+    axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
+        operator,
+        test: "Chemistry Test",
+        samples: sample,
+        attributes:[{
+            name: "Chemistry",
+            value: Chemistry
+        }]
     })
+
 }
 
 render(){
     const {
         addSample,
         validateOperator,
-        validateSamples,
+        validateChemistry,
         state: {
             name,
             messageOp,
             validOp,
-            messageSamples,
-            validSamples,
+            messageCh,
+            validCh,
+            messageSample,
+            validSample,
         }
     } = this;
 
@@ -212,16 +190,16 @@ render(){
                 <div className="row form-inline pb-3">
                     <label className="col col-lg-5 col-4 text-right d-block">Chemistry:</label>
                     <input 
-                        type="number" 
+                        type="text" 
                         className={"sample col-lg-3 col-3 form-control"}
-                        placeholder="###"
-                        name="temperature" 
-                        onChange={this.handleChangeTemperature}
+                        placeholder="CH-##-#####"
+                        name="chemistry" 
+                        onBlur={validateChemistry}
                     />
-                    <label className="col col-lg-5 col-4">{" "}</label>
+                    <label className="col col-lg-4 col-4 text-danger">{messageCh}</label>
                 </div>
                 <div>
-                    <h5 className="text-center">Sample Barcodes</h5>
+                    <h5 className="text-center">Sample Barcode</h5>
                 <div className="row form-inline pb-1">
                     <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                     <input 
@@ -229,17 +207,16 @@ render(){
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample1"} 
                         placeholder={format}
-                        onBlur={validateSamples}
                         onChange={addSample}
                     />
-                    <label className={labelClass}>{messageSamples[0]}</label> 
+                    <label className={labelClass}>{messageSample}</label> 
                 </div>
                 
                 </div>
                 <button
                     type="submit"
                     className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
-                    disabled={(validSamples && validOp) ? false : true}
+                    disabled={(validOp && validCh && validSample) ? false : true}
                     onClick={() => {window.alert('You Added a Sample')}}
                 >
                 Save Data
