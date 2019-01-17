@@ -75,7 +75,7 @@ export default class HeatTest extends React.Component{
             })
         }else{
             this.updateSamples(null,index-1)
-            this.updateSamplesMessage(null,index-1)
+            this.updateSamplesMessage("Incorrect format",index-1)
         }
     }
 
