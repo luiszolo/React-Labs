@@ -110,6 +110,11 @@ export default class HeatTest extends React.Component{
         }
     }
 
+    handleChangeOperator=event =>{
+        this.setState({
+            id: event.target.value,
+        });
+    }
     handleChangeAtrtribute1 = event => {
         this.setState({ 
             temperature: event.target.value,
@@ -136,7 +141,7 @@ export default class HeatTest extends React.Component{
         // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
         //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
         samples.forEach((sample)=>{
-            axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample],attributes:[{name:"Temperature",value:temperature},{name:"Time Elapse",time}] })
+            axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Heat Test", samples:[sample],attributes:[{name:"Temperature",value:temperature},{name:"Time Elapse",value:time}] })
         })
     }
     render(){ //Making the Form
