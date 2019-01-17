@@ -79,14 +79,14 @@ async function getLogBySample (req, res) {
 		return;
 	}
 
-	const value = await dbInteract.isExists(`
+	const value = await pool.query(`
 		SELECT Operator.id AS 'UserID', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
 		JOIN Status ON Status.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id WHERE Log.sample_Id=${sample.result.id}
 	`);
 	
-	if (value == false) {
+	if (value == undefined) {
 		res.send({
 			message : "This sample doesn\'t have any log registry"
 		});
