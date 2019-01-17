@@ -41,18 +41,18 @@ class App extends React.Component {
         return(<div className="root">
             {title}
             <Tests>
-                    {menu.map((t, keyT)=>{
-                        return (<div label={t}>
-                            {comp.map((c,keyC)=>{
-                                if(keyT===keyC){
-                                    return(c)
-                                }else{
-                                    return ""
-                                }
-                            })}
-                        </div>)}
-                    )}
-                </Tests>
+                {menu.map((t, keyT)=>{
+                    return (<div label={t}>
+                        {comp.map((c,keyC)=>{
+                            if(keyT===keyC){
+                                return(c)
+                            }else{
+                                return ""
+                            }
+                        })}
+                    </div>)}
+                )}
+            </Tests>
         </div>)
   }
 }
