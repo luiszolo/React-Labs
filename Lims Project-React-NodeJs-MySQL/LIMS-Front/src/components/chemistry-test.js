@@ -4,149 +4,248 @@ import axios from 'axios';
 import '../index.css';
 
 export default class ChemistryTest extends React.Component{
-
   constructor(props){
     super(props);
-    
-        this.state = { //In this chunk we are preparing the states that are going to be inserted in our json for POST method to the API
-            id: '',
-            sample1:'',
-            value1:'',
-            messageAPI:'',
-          }}//Here we are taking the input user data and inserting it to our states
-          handleChangeOperator = event => {
-            this.setState({ 
-              id: event.target.value,//Var x = input.text
-            } );
-          }
-          handleChangeSample1 = event => {
-            this.setState({ 
-              sample1: event.target.value,
-            } );
-          }
-          handleChangeAtrtribute1 = event => {
-            this.setState({ 
-              value1: event.target.value,
-            } );
-          }
-        handleChange(event) {
-          this.setState({
-          }, function(){ this.canSubmit()})
-        }
-      canSubmit() { //Simple validation for the Operator. Will change in Post Validation
-        const { name } = this.state
-        if (name.length >= 5) {
-          this.setState({
-            isSubmitDisabled: false
-          })
-        }
-        else {
-          this.setState({
-            isSubmitDisabled: true
-          })
-        }
-      }
-      handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
-        event.preventDefault();
-        const sample1 =  this.state.sample1
-        const operator = this.state.id
-        const value1= this.state.value1//cuando se manda como un solo string aunque pongas las , estan dentro del string si pones
-        // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
-        // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
-      //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
-        axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Chemistry Test", samples:[sample1],attributes:[{name:"CHEMISTRY",value:value1}]})
-        .then( res=> {
-          if (res.data.message=="Insertion completed") { //si devuelve el no existe se pone que no valida por que pues no existe XD
-            console.log(res.data.message)
-            this.setState({
-              id: '', 
-              sample:'',
-              messageAPI:res.data.message,
-            })
+    this.state={
+        name: "Chemistry Test",
+        operator: 0,
+        messageOp: "",
+        validOp: undefined,
+        messageSamples: Array(5).fill(null),
+        validSamples: undefined,
+        Chemistry: 0,
+        samples: Array(5).fill(null),
+    }
+}
 
-          } else {
-            this.setState({ // this is for reseting the inputs
-              messageAPI:res.data.message,
-            });
-          }
-        });
-        
-      }
-        render(){ //Making the Form
-          const {
-            handleOnBlur,
-            state: {
-                validateOp,
+updateSamples=(value,position)=>{
+    this.setState(state=>{
+        let samples = state.samples.map((sample,i)=>{
+            if(i===position){
+                return sample=value
+            } else {
+                return sample;
             }
-          } = this;
-          const{id}=this.state;
-          const{sample1}=this.state;
-          const{value1}=this.state;
-          const{messageAPI}=this.state;
-          const format="SA-##-#####"
-          let operatorClassName="sample form-control";
-          let message=" "
-          if(validateOp===false){
-              operatorClassName= "sample form-control border-danger"
-              message="Incorret syntax"
-          }else if(validateOp===true){
-              operatorClassName= "sample form-control border-success"
-              message=" "
-          }
-          else{
-              operatorClassName="sample form-control"
-          }
-            return(
-              <div className="col col-sm-6 offset-sm-4">
-              <h1>Chemistry Test</h1>
-                <form onSubmit={this.handleSubmit}>
-                  <label className="pr-1 form-inline">
-                    Operator ID:
+        })
+        return {
+            samples,
+        };
+    })
+}
+
+updateSamplesMessage=(value,position)=>{
+    this.setState(state=>{
+        let messageSamples = state.messageSamples.map((message,i)=>{
+            if(i===position){
+                return message=value
+            } else {
+                return message;
+                }
+        })
+        return {
+            messageSamples,
+        };
+    })
+}
+
+addSample=(e)=>{
+    const index =e.target.name.replace("sample","")
+    const sample = e.target.value
+    const samples = this.state.samples
+
+    if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+        axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
+        .then(res => {
+            if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                const message=res.data.message
+                this.updateSamplesMessage(message,index-1)
+            } else {
+                let exists = false
+                samples.forEach((value)=>{
+                    if(sample===value){
+                        this.updateSamplesMessage("This sample is repeated",index-1)
+                        return exists = true
+                }})
+                if(exists===false){
+                    this.updateSamples(sample,index-1)
+                    this.updateSamplesMessage(null,index-1)
+                }
+            }
+        })
+    }else{
+        this.updateSamples(null,index-1)
+        this.updateSamplesMessage(null,index-1)
+    }
+}
+
+validateOperator=(e)=>{
+    const operator = e.target.value
+
+    if(/\d\d\d\d\d/.test(operator) && operator.length===5){
+        axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+        .then(res => {
+            if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                this.setState({
+                    messageOp: res.data.message,
+                    validOp: false,
+                })
+            } else  {
+                this.setState({
+                    operator: operator,
+                    messageOp: "",
+                    validOp: true,
+                })
+            }
+        })
+    }else if(operator===""){
+        this.setState({
+            validOp: undefined,
+        })
+    }else{
+        this.setState({
+            validOp: false,
+        })
+    }
+}
+
+validateSamples=()=>{
+    const nulls = this.state.samples.filter((sample)=>{return sample===null})
+    if(nulls.length===5){
+        this.setState({
+            validSamples: false
+        })
+    }else{
+        this.state.samples.forEach((sample)=>{
+            if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+                this.setState({
+                    validSamples: true
+                })
+            }else if(sample===null){
+                this.setState({
+                    validSamples: true
+                })
+            }
+            else{
+                this.setState({
+                    validSamples: false
+                })
+            }
+        })
+    }
+}
+
+handleChangeChemistry = event => {
+    this.setState({ 
+        Chemistry: event.target.value,
+    } );
+}
+
+
+
+handleSubmit = event => {
+    event.preventDefault();
+
+    const operator= this.state.operator
+    const Chemistry = this.state.Chemistry
+  
+
+    const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
+
+    samples.forEach((sample)=>{
+        axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
+            operator,
+            test:"Chemistry Test",
+            samples:[sample],
+            attributes:[{
+                name: "Chemistry",
+                value: Chemistry
+            }]
+        })
+    })
+}
+
+render(){
+    const {
+        addSample,
+        validateOperator,
+        validateSamples,
+        state: {
+            name,
+            messageOp,
+            validOp,
+            messageSamples,
+            validSamples,
+        }
+    } = this;
+
+    const format="SA-##-#####"
+    const labelClass="col col-lg-4 col-sm-4 text-danger"
+
+    let operatorClassName="sample col-lg-3 col-3 form-control";
+
+    if(validOp===false){
+        operatorClassName= operatorClassName +=" border-danger"
+    }else if(validOp===true){
+        operatorClassName= operatorClassName += " border-success"
+    }
+    else{
+        operatorClassName="sample col-lg-3 col-3 form-control"
+    }
+
+    return(<div>
+        <div className="col col-12 pb-3">
+            <h1 className="text-center">{name}</h1>
+        </div>
+        <div className="col col-12">
+            <form onSubmit={this.handleSubmit}>
+                <div className="row form-inline pb-3">
+                    <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                     <input 
-                        id="input"
                         type="text" 
                         className={operatorClassName}
                         name="operator" 
                         placeholder="#####"
-                        onBlur={handleOnBlur}
-                        onChange={this.handleChangeOperator}
-                        value={id}
-                        />
-                        <label className="col col-4 mr-1">{message}</label>
-                  </label>
-                  <label className="pr-1 form-inline">
-                    Chemistry:
-                    <input type="text" id="input" className="form-control m-1" name="value1" onChange={this.handleChangeAtrtribute1} value={value1} />
-                  </label>
-                  <h1>Sample Barcodes</h1>
-                    <div className="form-group">
-                        <input 
-                        id="input"
-                        type="text" 
-                        className={operatorClassName}
-                        name="sample1" 
-                        number={1}
-                        format={format}
-                        placeholder="SA-##-#####"
-                        onChange={this.handleChangeSample1}
-                        value={sample1}
-                        />
-                    </div>
-                    <button 
-                        type="submit" 
-                        className="btn btn-primary col-6"
-                        onClick={() => {window.alert('You Added a Sample')}}
-                    >
-                    Save Data
-                    </button>
-                    <p>{messageAPI}</p>
-                    
-    	
-                   
-              </form>
-             
-            </div>
-            )
-        }
+                        onBlur={validateOperator}
+                    />
+                    <label className={labelClass}>{messageOp}</label>
+                </div>
+                <div className="row form-inline pb-3">
+                    <label className="col col-lg-5 col-4 text-right d-block">Chemistry:</label>
+                    <input 
+                        type="number" 
+                        className={"sample col-lg-3 col-3 form-control"}
+                        placeholder="###"
+                        name="temperature" 
+                        onChange={this.handleChangeTemperature}
+                    />
+                    <label className="col col-lg-5 col-4">{" "}</label>
+                </div>
+                <div>
+                    <h5 className="text-center">Sample Barcodes</h5>
+                <div className="row form-inline pb-1">
+                    <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                    <input 
+                        type="text"
+                        className={"sample col-lg-3 col-4 form-control"}
+                        name={"sample1"} 
+                        placeholder={format}
+                        onBlur={validateSamples}
+                        onChange={addSample}
+                    />
+                    <label className={labelClass}>{messageSamples[0]}</label> 
+                </div>
+                
+                </div>
+                <button
+                    type="submit"
+                    className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
+                    disabled={(validSamples && validOp) ? false : true}
+                    onClick={() => {window.alert('You Added a Sample')}}
+                >
+                Save Data
+                </button>
+            </form>
+        </div>
+      </div>)
     }
-    
+}
