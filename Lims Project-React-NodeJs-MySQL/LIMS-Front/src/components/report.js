@@ -61,9 +61,12 @@ export default class SampleSearch extends React.Component{
    
         axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
                   .then(res => {
-                    if(res.data==="{}"){
+                    if(res.data.message){
+                       const tests = res.data.Logs;
+                       this.setState({ tests:[] });
                       this.setState({ // this is for reseting the inputs
-                        messageAPI:"No logs for this Sample",
+                        messageAPI:res.data.message
+                        
                       });
                     }
                     else{
@@ -76,58 +79,50 @@ export default class SampleSearch extends React.Component{
         const{sample}=this.state;
         const{validOp}=this.state;
         const{messageAPI}=this.state;
-        return(<ul>
-            <div class="container">
-            <form onSubmit={this.handleSubmit}>
-            <h1>Sample Barcodes</h1>
-                <div className="form-group">
-                    <input 
-                    id="input"
-                    type="text"
-                    name="sample1" 
-                    number={1}
-                    placeholder="SA-##-#####"
-                    onChange={this.handleChangeSample}
-                    value={sample}
-                    onBlur={this.validateOperator}
-                    />
-                <button 
-                    type="submit" 
-                    className="btn btn-primary col-1"
-                    disabled={validOp}
-                    //onBlur={validateOperator}
-                >
-                Search
-                </button>
-                    <p>{messageAPI}</p>
-                </div>
-            
-            </form>
-            <div class="row">
-                <div class="col-sm">
-                <p>User ID</p>
-                {this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log["UserID"]}</li>)}
-                </div>
-                <div class="col-sm">
-                <p>Status</p>
-                { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log["State"]}</li>)}
-                </div>
-                <div class="col-sm">
-                <p>Test</p>
-                { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["Test"]}</li>)}
-                </div>
-                <div class="col-sm">
-                
-                <p>Created On</p>
-                { this.state.tests.map(log => <li className={"sample col-lg-6 col-4 "}>{log["On Created"]}</li>)}
+        var pstyle={color:'red'};
+        console.log(this.state.tests)
+        return(
+        <ul>
+            <div className="container">
+                <form onSubmit={this.handleSubmit}>
+                <h1>Sample Barcodes</h1>
+                    <div className="form-group">
+                        <input 
+                        id="input"
+                        type="text"
+                        name="sample1" 
+                        number={1}
+                        placeholder="SA-##-#####"
+                        onChange={this.handleChangeSample}
+                        value={sample}
+                        onBlur={this.validateOperator}
+                        />
+                    <button 
+                        type="submit" 
+                        className="btn btn-primary col-1"
+                        disabled={validOp}
+                        //onBlur={validateOperator}
+                    >
+                    Search
+                    </button>
+                        <p style={pstyle} >{messageAPI}</p>
+                    </div>
+                </form>
+                <div className="row">
+                    <div className="col-sm">
+                    <p>User ID</p>
+                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4  "}>{log["UserID"]}</li>)}
+                    </div>
+                    <div className="col-sm">
+                    <p>Status</p>
+                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log["State"]}</li>)}
+                    </div>
+                    <div className="col-sm">
+                    <p>Test</p>
+                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["Test"]}</li>)}
+                    </div>
                 </div>
             </div>
-            
-            </div>
-        </ul>
-        );
-        
-      }
-      
-      
+        </ul>);
+        }
     }
