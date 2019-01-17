@@ -130,20 +130,19 @@ handleChangeOperator = event => {
   //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
     samples.forEach((sample)=>{
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Spinner Test", samples:[sample],attributes:[{name:"Velocity",value:value1}]})
-        
-
-        .then( res=> {
-            if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+            .then( res=> {
+            if (res.data.message=="Insertion completed") { //si devuelve el no existe se pone que no valida por que pues no existe XD
               console.log(res.data.message)
               this.setState({
+                id: '', 
+                sample:'',
+                value1:'',
                 messageAPI:res.data.message,
               })
   
             } else {
               this.setState({ // this is for reseting the inputs
-                id: '', 
-                sample1:'',
-                value1:'',
+                messageAPI:res.data.message,
               });
             }
           });
@@ -162,7 +161,11 @@ render(){
             validSamples,
         }
       } = this;
-
+      
+      const{id}=this.state;
+      const{sample}=this.state;
+   
+      
     const format="SA-##-#####"
     const{messageAPI}=this.state;
     const{value1}=this.state;
@@ -195,6 +198,7 @@ render(){
                         placeholder="#####"
                         onBlur={validateOperator}
                         onChange={this.handleChangeOperator}
+                        value={id}
                         />
                     <label className="col col-lg-5 col-4">{message}</label>
                 </div>
@@ -212,6 +216,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -224,6 +229,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -236,6 +242,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -248,6 +255,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -260,6 +268,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -272,6 +281,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -284,6 +294,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -296,6 +307,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
                     </div>
@@ -308,6 +320,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
 
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 
@@ -321,6 +334,7 @@ render(){
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
+                            value={sample}
 
                         />
                         <label className="col col-lg-4 col-sm-4">{" "}</label> 

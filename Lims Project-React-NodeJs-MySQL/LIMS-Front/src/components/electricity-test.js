@@ -13,7 +13,7 @@ export default class ElectricityTest extends React.Component{
             messageAPI:'',
         }
     }
-
+    
     updateSamples=(value,position)=>{
         this.setState(state=>{
             let samples = state.samples.map((sample,i)=>{
@@ -28,7 +28,7 @@ export default class ElectricityTest extends React.Component{
             };
         })
     }
-
+    
     validateOperator=(e)=>{
         const operator = e.target.value
         if(/\d\d\d\d\d/.test(operator) && operator.length===5){
@@ -52,12 +52,12 @@ export default class ElectricityTest extends React.Component{
             })
         }
     }
-
+    
     addSample=(e)=>{
         const index =e.target.name.replace("sample","")
         const sample = e.target.value
         const samples = this.state.samples
-
+    
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
@@ -78,7 +78,7 @@ export default class ElectricityTest extends React.Component{
             this.updateSamples(null,index-1)
         }
     }
-
+    
     validateSamples=()=>{
         const nulls = this.state.samples.filter((sample)=>{return sample==null})
         if(nulls.length===10){
@@ -104,42 +104,42 @@ export default class ElectricityTest extends React.Component{
             })
         }
     }
-
-
+    
+    
     handleChangeOperator = event => {
         this.setState({ 
           id: event.target.value,//Var x = input.text
         } );
       }
+
       handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
         event.preventDefault();
         const operator= this.state.id
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
+        
          //cuando se manda como un solo string aunque pongas las , estan dentro del string si pones
         // +","+ el string que te dara es "sample1,sample2" cuando el json tiene que mandarse como "sample1","sample2"
         // Our POST is using AXIOS the sintaxis is as follows: (TLDR: is sending a json to our API)
       //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
         samples.forEach((sample)=>{
             axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Electricity Test", samples:[sample]})
-            
-
-            .then( res=> {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                .then( res=> {
+                if (res.data.message=="Insertion completed") { //si devuelve el no existe se pone que no valida por que pues no existe XD
                   console.log(res.data.message)
                   this.setState({
+                    id: '', 
+                    sample:'',
                     messageAPI:res.data.message,
                   })
       
                 } else {
                   this.setState({ // this is for reseting the inputs
-                    id: '', 
-                    sample1:'',
-                    value1:'',
+                    messageAPI:res.data.message,
                   });
                 }
               });
-
-
+    
+    
         })
       }
     render(){
@@ -153,12 +153,17 @@ export default class ElectricityTest extends React.Component{
                 validSamples,
             }
           } = this;
-
+          
+          const{id}=this.state;
+          const{sample}=this.state;
+       
+          
         const format="SA-##-#####"
         const{messageAPI}=this.state;
+      
         let operatorClassName="sample col-lg-3 col-3 form-control";
         let message=" "
-
+    
         if(validOp===false){
             operatorClassName= operatorClassName +=" border-danger"
             message="Incorret syntax"
@@ -169,7 +174,7 @@ export default class ElectricityTest extends React.Component{
         else{
             operatorClassName="sample col-lg-3 col-3 form-control"
         }
-
+    
         return(<div>
             <div className="col col-12 pb-3">
                 <h1 className="text-center">{name}</h1>
@@ -185,9 +190,12 @@ export default class ElectricityTest extends React.Component{
                             placeholder="#####"
                             onBlur={validateOperator}
                             onChange={this.handleChangeOperator}
+                            value={id}
                             />
                         <label className="col col-lg-5 col-4">{message}</label>
                     </div>
+
+                     
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
                         <div className="row form-inline pb-1">
@@ -199,6 +207,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -211,6 +220,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -223,6 +233,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -235,6 +246,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -247,6 +259,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -259,6 +272,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -271,6 +285,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -283,6 +298,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
+                                value={sample}
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -295,7 +311,8 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-
+                                value={sample}
+    
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -308,7 +325,8 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
-
+                                value={sample}
+    
                             />
                             <label className="col col-lg-4 col-sm-4">{" "}</label> 
                         </div>
@@ -326,4 +344,4 @@ export default class ElectricityTest extends React.Component{
             </div>
         </div>)
     }
-}
+    }

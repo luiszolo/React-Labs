@@ -56,17 +56,17 @@ export default class ChemistryTest extends React.Component{
       //axios.(Method)((URL of API),{Our json its part default values like test:"Heat Test but other parts like operator are taken from the handleSubmit"})     
         axios.post(`http://localhost:4000/api/test-forms/add`, {operator,test:"Chemistry Test", samples:[sample1],attributes:[{name:"CHEMISTRY",value:value1}]})
         .then( res=> {
-          if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+          if (res.data.message=="Insertion completed") { //si devuelve el no existe se pone que no valida por que pues no existe XD
             console.log(res.data.message)
             this.setState({
+              id: '', 
+              sample:'',
               messageAPI:res.data.message,
             })
 
           } else {
             this.setState({ // this is for reseting the inputs
-              id: '', 
-              sample1:'',
-              value1:'',
+              messageAPI:res.data.message,
             });
           }
         });
