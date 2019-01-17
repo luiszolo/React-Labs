@@ -121,6 +121,10 @@ export default class SampleSearch extends React.Component{
                     <p>Test</p>
                     { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["Test"]}</li>)}
                     </div>
+                    <div className="col-sm">
+                    <p>On Created</p>
+                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["On Created"]}</li>)}
+                    </div>
                 </div>
             </div>
         </ul>);
