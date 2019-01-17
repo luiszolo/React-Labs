@@ -86,7 +86,7 @@ async function getLogBySample (req, res) {
 		JOIN Operator ON Operator.id = Log.operator_Id WHERE Log.sample_Id=${sample.result.id}
 	`);
 	
-	if (value == [{ }] || value == null || value == undefined) {
+	if (value[0] == undefined) {
 		res.send({
 			message : "This sample doesn\'t have any log registry"
 		});

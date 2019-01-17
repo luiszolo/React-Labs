@@ -4,9 +4,9 @@ const pool = require('./../config/database')
 
 async function isExists(query) {
 	const obj = await pool.query(query);
-	if(obj == undefined) return false;
+	if(obj[0] == undefined) return false;
 	return {
-		result: obj,
+		result: obj[0],
 		pass: true
 	}
 }
