@@ -8,14 +8,14 @@ export default class HeatTest extends React.Component{
         super(props);
         this.state={
             name: "Heat Test",
-            operator: 0,
+            operator: '',
             messageOp: "",
             validOp: undefined,
-            messageSamples: Array(5).fill(null),
+            messageSamples: Array(5).fill(""),
             validSamples: undefined,
             temperature: "",
             time: 0,
-            samples: Array(5).fill(null),
+            samples: Array(5).fill(""),
         }
     }
 
@@ -48,10 +48,15 @@ export default class HeatTest extends React.Component{
             };
         })
     }
-
-    addSample=(e)=>{
-        const index =e.target.name.replace("sample","")
+addSample2=(e)=>{
+            const index =e.target.name.replace("sample","")
         const sample = e.target.value
+}
+    addSample=(e)=>{
+        // const index =e.target.name.replace("sample","")
+        // const sample = e.target.value
+        const index= this.index,
+        const sample=this.sample
         const samples = this.state.samples
 
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
@@ -74,7 +79,7 @@ export default class HeatTest extends React.Component{
                 }
             })
         }else{
-            this.updateSamples(null,index-1)
+            this.updateSamples("",index-1)
             this.updateSamplesMessage("Incorrect format",index-1)
         }
     }
@@ -92,7 +97,7 @@ export default class HeatTest extends React.Component{
                     })
                 } else  {
                     this.setState({
-                        operator: operator,
+                        //operator: operator,
                         messageOp: "",
                         validOp: true,
                     })
@@ -110,7 +115,7 @@ export default class HeatTest extends React.Component{
     }
 
     validateSamples=()=>{
-        const nulls = this.state.samples.filter((sample)=>{return sample===null})
+        const nulls = this.state.samples.filter((sample)=>{return sample==""})
         if(nulls.length===5){
             this.setState({
                 validSamples: false
@@ -121,7 +126,7 @@ export default class HeatTest extends React.Component{
                     this.setState({
                         validSamples: true
                     })
-                }else if(sample===null){
+                }else if(sample==""){
                     this.setState({
                         validSamples: true
                     })
@@ -147,6 +152,12 @@ export default class HeatTest extends React.Component{
         } );
     }
 
+    validateOperator2 = event => {
+        this.setState({ 
+          operator: event.target.value
+      });
+    }
+
     handleSubmit = event => {
         event.preventDefault();
 
@@ -170,10 +181,27 @@ export default class HeatTest extends React.Component{
                     value: time
                 }]
             })
+
+            .then( res=> {
+                if (res.data.message==="Insertion completed") {
+                    console.log(res.data.message)
+                    this.setState({
+						operator: 0, 
+						samples: Array(10).fill(""),
+						messageAPI: res.data.message,
+                        validSamples: false,
+                        operator:"",
+                    })
+      
+                } else {
+                    console.log(res.data.message)
+                    this.setState({
+						messageAPI: "Sample already went through this Test"
+                    });
+                }
+              })
         })
-        this.setState({
-            temperature:"",
-        })
+
     }
 
     render(){
@@ -181,6 +209,7 @@ export default class HeatTest extends React.Component{
             addSample,
             validateOperator,
             validateSamples,
+            validateOperator2,
             state: {
                 name,
                 messageOp,
@@ -188,9 +217,12 @@ export default class HeatTest extends React.Component{
                 messageSamples,
                 validSamples,
                 temperature,
+                samples,
+                messageAPI,
+                
             }
         } = this;
-
+        const {operator} = this.state;
         const format="SA-##-#####"
         const labelClass="col col-lg-4 col-sm-4 text-danger"
 
@@ -214,11 +246,13 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input 
+                            value={operator}
                             type="text" 
                             className={operatorClassName}
                             name="operator" 
                             placeholder="#####"
-                            onBlur={validateOperator}
+                            //onBlur={validateOperator}
+                            onChange={validateOperator2}
                         />
                         <label className={labelClass}>{messageOp}</label>
                     </div>
@@ -249,6 +283,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                         <input 
+                        value={samples[0]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample1"} 
@@ -261,6 +296,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                         <input 
+                        value={samples[1]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample2"}
@@ -273,6 +309,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                         <input 
+                        value={samples[2]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample3"} 
@@ -285,6 +322,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                         <input 
+                        value={samples[3]}
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample4"} 
@@ -297,6 +335,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                         <input 
+                        //value={samples[4]}
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample5"} 
@@ -307,7 +346,9 @@ export default class HeatTest extends React.Component{
                         <label className={labelClass}>{messageSamples[4]}</label> 
                         </div>
                     </div>
+                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
                     <button
+                    value={samples[5]}
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
