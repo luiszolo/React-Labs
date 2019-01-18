@@ -30,6 +30,9 @@ async function insertData(req, res) {
 		return;
 	} 
 
+	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
+	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
+
 	let sampleError;
 	for await (const element of body.samples) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
@@ -37,14 +40,21 @@ async function insertData(req, res) {
 			sampleError = true;
 			break;
 		} 
-		const logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
+		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
 		if (logValidation.pass == true) {
 			sampleError = true;
 			break;
 		}
-		
 
+		logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${prevStatus[0].id}`);
+		if (logValidation.pass == true) {
+			continue;
+		} else {
+			sampleError = true;
+			break;
+		}
 	}
+	
 	let attributeError = false;
 	if (body.attributes) {
 		for await (const element of body.attributes) {
@@ -85,9 +95,6 @@ async function insertData(req, res) {
 		}
 		else break;
 	}
-
-	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
-	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 
 	for await (const reqSample of body.samples) {
 		for await (const reqPost of postStatus) {
