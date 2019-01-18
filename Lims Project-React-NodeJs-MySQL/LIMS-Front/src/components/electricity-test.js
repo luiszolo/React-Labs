@@ -101,7 +101,7 @@ export default class ElectricityTest extends React.Component{
                 }
             })
         }else{
-            this.updateSamples(null,index-1)
+            this.updateSamples("",index-1)
             this.updateSamplesMessage(null,index-1)
         }
     }
@@ -246,6 +246,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[2]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample3"} 
                                 placeholder={format}
@@ -258,6 +259,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[3]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample4"} 
                                 placeholder={format}
@@ -270,6 +272,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[4]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample5"} 
                                 placeholder={format}
@@ -282,6 +285,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[5]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample6"} 
                                 placeholder={format}
@@ -294,6 +298,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[6]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample7"} 
                                 placeholder={format}
@@ -306,6 +311,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[7]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample8"} 
                                 placeholder={format}
@@ -318,6 +324,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[8]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample9"} 
                                 placeholder={format}
@@ -330,6 +337,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
                             <input 
                                 type="text"
+                                value={this.state.samples[9]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample10"}
                                 placeholder={format}

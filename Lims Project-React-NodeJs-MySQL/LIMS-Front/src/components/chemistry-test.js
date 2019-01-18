@@ -125,16 +125,16 @@ handleSubmit = event => {
     event.preventDefault();
 
     const operator= this.state.operator
-    const Chemistry = this.state.Chemistry
+    const chemistry = this.state.chemistry
     const sample =this.state.sample
 
     axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
         operator,
         test: "Chemistry Test",
-        samples: sample,
+        samples: [sample],
         attributes:[{
-            name: "Chemistry",
-            value: Chemistry
+            name: "CHEMISTRY",
+            value: chemistry
         }]
     })
 

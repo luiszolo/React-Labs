@@ -160,6 +160,25 @@ export default class SpinnerTest extends React.Component{
                     value: velocity
                 }]
             })
+
+            .then( res=> {
+                if (res.data.message==="Insertion completed") {
+                    console.log(res.data.message)
+                    this.setState({
+						operator: 0, 
+						samples: Array(10).fill(""),
+						messageAPI: res.data.message,
+						validSamples: false,
+                    })
+      
+                } else {
+                    console.log(res.data.message)
+                    this.setState({
+						messageAPI: "Sample already went through this Test"
+                    });
+                }
+              })
+
         })
     }
 
@@ -174,6 +193,8 @@ export default class SpinnerTest extends React.Component{
                 validOp,
                 messageSamples,
                 validSamples,
+                messageAPI,
+                samples,
             }
         } = this;
 
@@ -225,30 +246,33 @@ export default class SpinnerTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                         <input 
-                            type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
-                            name={"sample1"} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={addSample}
+                                 value={samples[0]}
+                                 type="text"
+                                 className={"sample col-lg-3 col-4 form-control"}
+                                 name={"sample1"} 
+                                 placeholder={format}
+                                 onBlur={validateSamples}
+                                 onChange={addSample}
                         />
                         <label className={labelClass}>{messageSamples[0]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                         <input 
-                            type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
-                            name={"sample2"}
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={addSample}
+                                value={this.state.samples[1]}
+                                type="text"
+                                className={"sample col-lg-3 col-4 form-control"}
+                                name={"sample2"}
+                                placeholder={format}
+                                onBlur={validateSamples}
+                                onChange={addSample}
                         />
                         <label className={labelClass}>{messageSamples[1]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                         <input 
+                        value={this.state.samples[2]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample3"} 
@@ -262,6 +286,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[3]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample4"} 
                         placeholder={format}
@@ -274,6 +299,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[4]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample5"} 
                         placeholder={format}
@@ -286,6 +312,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[5]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample6"} 
                         placeholder={format}
@@ -298,6 +325,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[6]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample7"} 
                         placeholder={format}
@@ -310,6 +338,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[7]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample8"} 
                         placeholder={format}
@@ -322,6 +351,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[8]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample9"} 
                         placeholder={format}
@@ -334,6 +364,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
                         <input 
                         type="text"
+                        value={this.state.samples[9]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample10"} 
                         placeholder={format}
@@ -343,11 +374,12 @@ export default class SpinnerTest extends React.Component{
                         <label className={labelClass}>{messageSamples[9]}</label> 
                         </div>
                     </div>
+                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
-                        onClick={() => {window.alert('You Added a Sample')}}
+                        
                     >
                     Save Data
                     </button>
