@@ -150,14 +150,17 @@ export default class ElectricityTest extends React.Component{
                     console.log(res.data.message)
                     this.setState({
                     operator: 0, 
-                    samples: Array(10).fill(null),
+                    samples: Array(10).fill(""),
                     messageAPI: res.data.message,
+                    samples:"",
+
+                    
                     })
       
                 } else {
                     console.log(res.data.message)
                     this.setState({
-                        messageAPI: res.data.message,
+                        messageAPI: "Sample already went through this Test"
                     });
                 }
               })
@@ -176,6 +179,7 @@ export default class ElectricityTest extends React.Component{
                 messageSamples,
                 validSamples,
                 messageAPI,
+                samples,
             }
         } = this;
 
@@ -215,6 +219,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                             <input 
+                                value={samples}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample1"} 
@@ -227,6 +232,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                             <input 
+                                value={samples}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"}

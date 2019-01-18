@@ -11,10 +11,10 @@ export default class SpinnerTest extends React.Component{
             operator: 0,
             messageOp: "",
             validOp: undefined,
-            messageSamples: Array(5).fill(null),
+            messageSamples: Array(10).fill(null),
             validSamples: undefined,
             velocity: 0,
-            samples: Array(5).fill(null),
+            samples: Array(10).fill(null),
         }
     }
 

@@ -13,7 +13,7 @@ export default class HeatTest extends React.Component{
             validOp: undefined,
             messageSamples: Array(5).fill(null),
             validSamples: undefined,
-            temperature: 0,
+            temperature: "",
             time: 0,
             samples: Array(5).fill(null),
         }
@@ -171,6 +171,9 @@ export default class HeatTest extends React.Component{
                 }]
             })
         })
+        this.setState({
+            temperature:"",
+        })
     }
 
     render(){
@@ -184,6 +187,7 @@ export default class HeatTest extends React.Component{
                 validOp,
                 messageSamples,
                 validSamples,
+                temperature,
             }
         } = this;
 
@@ -221,6 +225,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Temperature (C):</label>
                         <input 
+                        value={temperature}
                             type="number" 
                             className={"sample col-lg-3 col-3 form-control"}
                             placeholder="###"
