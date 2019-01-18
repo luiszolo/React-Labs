@@ -11,7 +11,7 @@ export default class ElectricityTest extends React.Component{
             validOp: undefined,
             messageSamples: Array(10).fill(null),
             validSamples: undefined,
-            samples: Array(10).fill(null),
+            samples: Array(10).fill(""),
             messageAPI: ""
         }
     }
@@ -107,7 +107,7 @@ export default class ElectricityTest extends React.Component{
     }
     
     validateSamples=()=>{
-        const nulls = this.state.samples.filter((sample)=>{return sample==null})
+        const nulls = this.state.samples.filter((sample)=>{return sample==""})
         if(nulls.length===10){
             this.setState({
                 validSamples: false
@@ -118,7 +118,7 @@ export default class ElectricityTest extends React.Component{
                     this.setState({
                         validSamples: true
                     })
-                }else if(sample===null){
+                }else if(sample==""){
                     this.setState({
                         validSamples: true
                     })
@@ -142,29 +142,29 @@ export default class ElectricityTest extends React.Component{
         samples.forEach((sample)=>{
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
-                test: "Electricity Test",
+                test: this.state.name,
                 samples: [sample],
             })
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
                     console.log(res.data.message)
                     this.setState({
-                    operator: 0, 
-                    samples: Array(10).fill(""),
-                    messageAPI: res.data.message,
-                    samples:"",
-
-                    
+						operator: 0, 
+						samples: Array(10).fill(""),
+						messageAPI: res.data.message,
+						validSamples: false,
                     })
       
                 } else {
                     console.log(res.data.message)
                     this.setState({
-                        messageAPI: "Sample already went through this Test"
+						messageAPI: "Sample already went through this Test"
                     });
                 }
               })
-        })
+		})
+		
+		
     }
       
       render(){
@@ -219,7 +219,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                             <input 
-                                value={samples}
+                                value={samples[0]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample1"} 
@@ -232,7 +232,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                             <input 
-                                value={samples}
+                                value={this.state.samples[1]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"}
