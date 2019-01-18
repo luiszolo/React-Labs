@@ -79,23 +79,27 @@ export default class SampleSearch extends React.Component{
         const{sample}=this.state;
         const{validOp}=this.state;
         const{messageAPI}=this.state;
+
         var pstyle={color:'red'};
+
         console.log(this.state.tests)
+
         return(
         <ul>
             <div className="container">
                 <form onSubmit={this.handleSubmit}>
                 <h1>Sample Barcodes</h1>
-                    <div className="form-group">
+                    <div className="form-inline">
                         <input 
-                        id="input"
-                        type="text"
-                        name="sample1" 
-                        number={1}
-                        placeholder="SA-##-#####"
-                        onChange={this.handleChangeSample}
-                        value={sample}
-                        onBlur={this.validateOperator}
+                            id="input"
+                            type="text"
+                            name="sample1"
+                            className={"sample col-lg-3 col-4 form-control"}
+                            number={1}
+                            placeholder="SA-##-#####"
+                            onChange={this.handleChangeSample}
+                            value={sample}
+                            onBlur={this.validateOperator}
                         />
                     <button 
                         type="submit" 

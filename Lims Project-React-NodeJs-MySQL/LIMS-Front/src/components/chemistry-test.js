@@ -8,15 +8,16 @@ export default class ChemistryTest extends React.Component{
     super(props);
     this.state={
         name: "Chemistry Test",
-        operator: 0,
+        operator: "",
         messageOp: "",
         validOp: undefined,
-        chemistry: null,
-        messageCh: null,
+        chemistry: "",
+        messageCh: "",
         validCh: undefined,
-        sample: null,
+        sample: "",
         validSample: undefined,
-        messageSample: null,
+        messageSample: "",
+        messageAPI: ""
     }
 }
 
@@ -45,12 +46,12 @@ validateChemistry=(e)=>{
         })
     }else if(chemistry===""){
         this.setState({
-            messageCh: null,
+            messageCh: "",
             validCh: false,
         })
     }else{
         this.setState({
-            chemistry: null,
+            chemistry: "",
             messageCh: "Invalid syntax",
             validCh: false,
         })
@@ -61,25 +62,31 @@ addSample=(e)=>{
     const sample = e.target.value
 
     if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-        axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
-        .then(res => {
-            if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                const message=res.data.message
-
-                this.setState({
-                    messageSample: message,
-                })
-            } else {
                 this.setState({
                     sample: sample,
-                    messageSample: null,
+                    messageSample: "",
                     validSample: true,
                 })
-            }
-        })
+
+        // axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
+        // .then(res => {
+        //     if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+        //         const message=res.data.message
+
+        //         this.setState({
+        //             messageSample: message,
+        //         })
+        //     } else {
+        //         this.setState({
+        //             sample: sample,
+        //             messageSample: "",
+        //             validSample: true,
+        //         })
+        //     }
+        // })
     }else if(sample===""){
         this.setState({
-            messageSample: null,
+            messageSample: "",
             validSample: false
         })
     }else{
@@ -125,19 +132,33 @@ handleSubmit = event => {
     event.preventDefault();
 
     const operator= this.state.operator
-    const Chemistry = this.state.Chemistry
+    const chemistry = this.state.chemistry
     const sample =this.state.sample
 
     axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
         operator,
         test: "Chemistry Test",
-        samples: sample,
+        samples: [sample],
         attributes:[{
             name: "Chemistry",
-            value: Chemistry
+            value: chemistry
         }]
     })
-
+    .then( res=> {
+        if (res.data.message==="Insertion completed") {
+            console.log(res.data.message)
+            this.setState({
+                sample: "",
+                messageAPI: res.data.message,
+                validSamples: false,
+            })
+        } else {
+            console.log(res.data.message)
+            this.setState({
+                messageAPI: "Sample already went through this Test"
+            });
+        }
+      })
 }
 
 render(){
@@ -153,6 +174,7 @@ render(){
             validCh,
             messageSample,
             validSample,
+            messageAPI,
         }
     } = this;
 
@@ -181,7 +203,7 @@ render(){
                     <input 
                         type="text" 
                         className={operatorClassName}
-                        name="operator" 
+                        name="operator"
                         placeholder="#####"
                         onBlur={validateOperator}
                     />
@@ -192,8 +214,8 @@ render(){
                     <input 
                         type="text" 
                         className={"sample col-lg-3 col-3 form-control"}
+                        name="chemistry"
                         placeholder="CH-##-#####"
-                        name="chemistry" 
                         onBlur={validateChemistry}
                     />
                     <label className="col col-lg-4 col-4 text-danger">{messageCh}</label>
@@ -205,7 +227,8 @@ render(){
                     <input 
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
-                        name={"sample1"} 
+                        name={"sample1"}
+                        value={this.state.sample}
                         placeholder={format}
                         onChange={addSample}
                     />
@@ -213,11 +236,11 @@ render(){
                 </div>
                 
                 </div>
+                <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
                 <button
                     type="submit"
                     className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                     disabled={(validOp && validCh && validSample) ? false : true}
-                    onClick={() => {window.alert('You Added a Sample')}}
                 >
                 Save Data
                 </button>
