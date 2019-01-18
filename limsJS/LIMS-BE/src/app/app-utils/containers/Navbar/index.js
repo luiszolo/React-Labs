@@ -15,8 +15,9 @@ export default class extends React.Component {
 	}
 
 	onClickTab(tab) {
+		console.log(tab.target.id)
 		this.setState({
-			activeTab: tab
+			activeTab: tab.target.id
 		});
 	}
 
@@ -24,12 +25,17 @@ export default class extends React.Component {
 		const { items } = this.props;
 		let buttonClasses ='text-center rounded-0 shadow-none';
 		return (
-			<nav className='nav bg-info'>
+			<nav className='nav'>
 						<BaseButton className={buttonClasses}
-							id='home'
+							id='Home'
 							colorSchema='info'
 							type='button'
-							onClick={e => console.log('Home')}
+							onClick={this.onClickTab}
+							onMouseLeave={ e => console.log('leave') }
+							onMouseEnter={ e => console.log('enter') }
+							hoverEffectClass='btn-light'
+							selectedClass='btn-dark'
+							selected={this.state.activeTab === 'Home' ? true : false}
 						>
 							Home
 						</BaseButton>
@@ -40,7 +46,12 @@ export default class extends React.Component {
 										id={element.name}
 										colorSchema='info'
 										type='button'
-										onClick={e => console.log(element.name)}
+										onClick={ this.onClickTab }
+										onMouseLeave={ e => console.log('leave') }
+										onMouseEnter={ e => console.log('enter') }
+										hoverEffectClass='btn-light'
+										selectedClass='btn-dark'
+										selected={this.state.activeTab == element.name ? true : false}
 									>
 										{element.name}
 									</BaseButton>
@@ -51,7 +62,12 @@ export default class extends React.Component {
 							id='report'
 							colorSchema='info'
 							type='button'
-							onClick={e => console.log('Generate Report')}
+							onClick={ this.onClickTab }
+							onMouseLeave={ e => console.log('leave') }
+							onMouseEnter={ e => console.log('enter') }
+							hoverEffectClass='btn-light'
+							selectedClass='btn-dark'
+							selected={this.state.activeTab == 'Generate Report' ? true : false}
 						>
 							Generate Report
 						</BaseButton>

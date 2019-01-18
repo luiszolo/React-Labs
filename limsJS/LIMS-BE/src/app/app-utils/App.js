@@ -31,10 +31,12 @@ export default class extends React.Component {
 				<header className='container-fluid position-fixed text-center bg-info text-white'>
 					<h1>LIMS</h1>
 				</header>
-				<div className='sidebar'>
+				<div className='sidebar col-md-2 col-sm-12'>
 					<Navbar items={this.state.tests}/>
 				</div>
-				<div id='content'></div>
+				<div id='content' className='cold-md-10 col-sm-12'>
+
+				</div>
 			</div>
 		);
 	}

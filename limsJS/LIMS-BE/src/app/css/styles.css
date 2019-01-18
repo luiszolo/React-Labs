@@ -23,10 +23,10 @@ header {
 
 .sidebar {
 	height: 100%;
-	width: 15rem;
 	overflow: hidden !important;
 	position: absolute !important;
 	padding: 0;
+	padding-top: 4rem;
 	margin: 0;
 }
 
@@ -37,9 +37,5 @@ header {
 
 #content {
 	height: auto;
-	padding-top: 4rem;
-	padding-left: 15rem;
-	padding-bottom: 4rem;
-	padding-right: 10px;
 	overflow: auto;
 }
