@@ -12,7 +12,8 @@ export default class ElectricityTest extends React.Component{
             messageSamples: Array(10).fill(null),
             validSamples: undefined,
             samples: Array(10).fill(""),
-            messageAPI: ""
+            messageAPI: "",
+            buttonTitle:"",
         }
     }
     
@@ -87,6 +88,8 @@ export default class ElectricityTest extends React.Component{
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     const message=res.data.message
                     this.updateSamplesMessage(message,index-1)
+                    //here is were we add the axios post but i need to know how are we sending the json data 
+                    
                 } else {
                     let exists = false
                     samples.forEach((value)=>{
@@ -102,7 +105,7 @@ export default class ElectricityTest extends React.Component{
             })
         }else{
             this.updateSamples("",index-1)
-            this.updateSamplesMessage(null,index-1)
+            this.updateSamplesMessage("Incorrect format",index-1)
         }
     }
     
@@ -140,6 +143,9 @@ export default class ElectricityTest extends React.Component{
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
    
         samples.forEach((sample)=>{
+            axios.post(`http://10.2.1.94:4000/api/samples/add`,{// mejorar el lunes
+                name: [sample],
+            })
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
                 test: this.state.name,
@@ -166,12 +172,28 @@ export default class ElectricityTest extends React.Component{
 		
 		
     }
-      
+
+
+
+    settingTitle=()=>{
+        const val =this.state.validOp;
+        if(val==true){
+            this.setState({
+                buttonTitle:"Form is Ready"
+            })
+        }
+        else{
+            this.setState({
+            buttonTitle:"Form not ready"
+        })
+        }
+    }
       render(){
         const {
             addSample,
             validateOperator,
             validateSamples,
+            settingTitle,
             state: {
                 name,
                 messageOp,
@@ -180,6 +202,7 @@ export default class ElectricityTest extends React.Component{
                 validSamples,
                 messageAPI,
                 samples,
+                buttonTitle,
             }
         } = this;
 
@@ -219,7 +242,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                             <input 
-                                value={samples[0]}
+                                //value={samples[0]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample1"} 
@@ -232,7 +255,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                             <input 
-                                value={this.state.samples[1]}
+                                //value={this.state.samples[1]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"}
@@ -246,7 +269,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[2]}
+                                //value={this.state.samples[2]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample3"} 
                                 placeholder={format}
@@ -259,7 +282,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[3]}
+                                //value={this.state.samples[3]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample4"} 
                                 placeholder={format}
@@ -272,7 +295,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[4]}
+                                //value={this.state.samples[4]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample5"} 
                                 placeholder={format}
@@ -285,7 +308,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[5]}
+                               // value={this.state.samples[5]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample6"} 
                                 placeholder={format}
@@ -298,7 +321,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[6]}
+                                //value={this.state.samples[6]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample7"} 
                                 placeholder={format}
@@ -311,7 +334,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[7]}
+                                //value={this.state.samples[7]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample8"} 
                                 placeholder={format}
@@ -324,7 +347,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[8]}
+                                //value={this.state.samples[8]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample9"} 
                                 placeholder={format}
@@ -337,7 +360,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
                             <input 
                                 type="text"
-                                value={this.state.samples[9]}
+                                //value={this.state.samples[9]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample10"}
                                 placeholder={format}
@@ -352,9 +375,12 @@ export default class ElectricityTest extends React.Component{
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
+                        onMouseEnter={settingTitle}
+                        title={buttonTitle}
                     >
                     Save Data
                     </button>
+                    
                 </form>
             </div>
           </div>)

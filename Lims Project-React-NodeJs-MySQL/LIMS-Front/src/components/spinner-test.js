@@ -246,7 +246,7 @@ export default class SpinnerTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                         <input 
-                                 value={samples[0]}
+                                 //value={samples[0]}
                                  type="text"
                                  className={"sample col-lg-3 col-4 form-control"}
                                  name={"sample1"} 
@@ -259,7 +259,7 @@ export default class SpinnerTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                         <input 
-                                value={this.state.samples[1]}
+                                //value={this.state.samples[1]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"}
@@ -272,7 +272,7 @@ export default class SpinnerTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                         <input 
-                        value={this.state.samples[2]}
+                        //value={this.state.samples[2]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample3"} 
@@ -286,7 +286,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[3]}
+                        //value={this.state.samples[3]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample4"} 
                         placeholder={format}
@@ -299,7 +299,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[4]}
+                        //value={this.state.samples[4]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample5"} 
                         placeholder={format}
@@ -312,7 +312,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[5]}
+                        //value={this.state.samples[5]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample6"} 
                         placeholder={format}
@@ -325,7 +325,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[6]}
+                        //value={this.state.samples[6]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample7"} 
                         placeholder={format}
@@ -338,7 +338,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[7]}
+                        //value={this.state.samples[7]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample8"} 
                         placeholder={format}
@@ -351,7 +351,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[8]}
+                        //value={this.state.samples[8]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample9"} 
                         placeholder={format}
@@ -364,7 +364,7 @@ export default class SpinnerTest extends React.Component{
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
                         <input 
                         type="text"
-                        value={this.state.samples[9]}
+                        //value={this.state.samples[9]}
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample10"} 
                         placeholder={format}

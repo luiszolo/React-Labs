@@ -29,3 +29,6 @@ img{
 .sample{
     width: 8rem;
 }
+button[disabled]:hover {
+    background: red;
+}

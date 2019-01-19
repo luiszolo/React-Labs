@@ -46,8 +46,8 @@ async function insertData(req, res) {
 			break;
 		}
 
-		logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${prevStatus[0].id}`);
-		if (logValidation.pass == true) {
+		let logValidation2 = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${prevStatus[0].prev_State}`);
+		if (logValidation2.pass == true) {
 			continue;
 		} else {
 			sampleError = true;

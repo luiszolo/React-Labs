@@ -16,6 +16,7 @@ export default class HeatTest extends React.Component{
             temperature: "",
             time: 0,
             samples: Array(5).fill(""),
+            buttonTitle:"",
         }
     }
 
@@ -48,15 +49,10 @@ export default class HeatTest extends React.Component{
             };
         })
     }
-addSample2=(e)=>{
-            const index =e.target.name.replace("sample","")
-        const sample = e.target.value
-}
+
     addSample=(e)=>{
-        // const index =e.target.name.replace("sample","")
-        // const sample = e.target.value
-        const index= this.index,
-        const sample=this.sample
+        const index =e.target.name.replace("sample","")
+        const sample = e.target.value
         const samples = this.state.samples
 
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
@@ -152,11 +148,7 @@ addSample2=(e)=>{
         } );
     }
 
-    validateOperator2 = event => {
-        this.setState({ 
-          operator: event.target.value
-      });
-    }
+
 
     handleSubmit = event => {
         event.preventDefault();
@@ -209,7 +201,7 @@ addSample2=(e)=>{
             addSample,
             validateOperator,
             validateSamples,
-            validateOperator2,
+          
             state: {
                 name,
                 messageOp,
@@ -219,6 +211,7 @@ addSample2=(e)=>{
                 temperature,
                 samples,
                 messageAPI,
+                buttonTitle,
                 
             }
         } = this;
@@ -246,20 +239,20 @@ addSample2=(e)=>{
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input 
-                            value={operator}
+                            //value={operator}
                             type="text" 
                             className={operatorClassName}
                             name="operator" 
                             placeholder="#####"
-                            //onBlur={validateOperator}
-                            onChange={validateOperator2}
+                            onBlur={validateOperator}
+                            
                         />
                         <label className={labelClass}>{messageOp}</label>
                     </div>
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Temperature (C):</label>
                         <input 
-                        value={temperature}
+                        //value={temperature}
                             type="number" 
                             className={"sample col-lg-3 col-3 form-control"}
                             placeholder="###"
@@ -283,7 +276,7 @@ addSample2=(e)=>{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                         <input 
-                        value={samples[0]}
+                        //value={samples[0]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample1"} 
@@ -296,7 +289,7 @@ addSample2=(e)=>{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                         <input 
-                        value={samples[1]}
+                        //value={samples[1]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample2"}
@@ -309,7 +302,7 @@ addSample2=(e)=>{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                         <input 
-                        value={samples[2]}
+                        //value={samples[2]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample3"} 
@@ -322,7 +315,7 @@ addSample2=(e)=>{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                         <input 
-                        value={samples[3]}
+                        //value={samples[3]}
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample4"} 
@@ -353,6 +346,7 @@ addSample2=(e)=>{
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
                         onClick={() => {window.alert('You Added a Sample')}}
+                        title={buttonTitle}
                     >
                     Save Data
                     </button>
