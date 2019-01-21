@@ -44,11 +44,13 @@ async function insertData(req, res) {
 		if (sample == false) { 
 			sampleError = true;
 			sampleErrorList.notExists.push(element.toUpperCase());
+			continue;
 		} 
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
 		if (logValidation.pass == true) {
 			sampleError = true;
 			sampleErrorList.notRepeat.push(element.toUpperCase());
+			continue;
 		}
 
 		for await (const statusElement of prevStatus) {
@@ -58,6 +60,7 @@ async function insertData(req, res) {
 			} else {
 				sampleError = true;
 				sampleErrorList.notPrev.push(element.toUpperCase());
+				continue;
 			}
 		}
 	}
