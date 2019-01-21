@@ -69,6 +69,7 @@ async function insertData(req, res) {
 			if (logValidation2.pass == true) {
 				continue;
 			} else {
+				if(test.result.id == 0) continue;
 				sampleError = true;
 				sampleErrorList.notPrev.push(element.toUpperCase());
 				continue;
@@ -94,7 +95,7 @@ async function insertData(req, res) {
 
 	if ((sampleError || attributeError)) {
 		res.send({
-			message: 'Samples or Attributes are wrong',
+			message: 'Samples are wrong',
 			sampleErrorList: sampleErrorList
 		});
 		return;
