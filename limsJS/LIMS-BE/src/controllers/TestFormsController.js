@@ -69,7 +69,7 @@ async function insertData(req, res) {
 			if (logValidation2.pass == true) {
 				continue;
 			} else {
-				if(test.result.id == 0) continue;
+				if(test.result.id == 1) continue;
 				sampleError = true;
 				sampleErrorList.notPrev.push(element.toUpperCase());
 				continue;
