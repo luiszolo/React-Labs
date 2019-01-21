@@ -36,16 +36,12 @@ async function insertData(req, res) {
 	let sampleError;
 	let sampleErrorList = {
 		notExists: [],
+		Exists: [],
 		notRepeatTest: [],
 		notPrev: [],
 		repeatFormData: [],
 	};
 
-	body.samples.forEach(element => {
-		body.samples.forEach(element2 => {
-			if(element == element2) sampleErrorList.repeatFormData.push(element2);
-		});
-	});
 
 	if(test.result.id == 1) {
 		let reqCopy = req;
@@ -53,7 +49,10 @@ async function insertData(req, res) {
 			reqCopy.body = {
 				name: sample
 			};
-			await require('./SampleController').addSample(reqCopy, res);
+			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == false){
+				sampleErrorList.Exists.push(sample.toUpperCase());
+				continue;
+			} else await require('./SampleController').addSample(reqCopy, res);
 		}
 	}
 
@@ -73,8 +72,20 @@ async function insertData(req, res) {
 		}
 
 		for await (const statusElement of prevStatus) {
-			let logValidation2 = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${statusElement.prev_State}`);
+			let logValidation2 = await dbInteract.isExists(`
+				SELECT * FROM Status 
+				JOIN StatusSequence ON Status.id = StatusSequence.status_Id WHERE Status.id=${statusElement.prev_State}
+			`);
 			if (logValidation2.pass == true) {
+				let logValidation3 = await dbInteract.isExists(`
+					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required}
+				`);
+				if (logValidation3 == false) {
+					console.log('Not passed!');
+					sampleError = true;
+					sampleErrorList.notPrev.push(element.toUpperCase());
+					break;
+				}
 				continue;
 			} else {
 				if(test.result.id == 1) continue;
@@ -115,12 +126,12 @@ async function insertData(req, res) {
 		if (body.attributes) {
 			for await (const reqAttribute of body.attributes) {
 				let attribute = await pool.query(`SELECT * FROM Attribute WHERE name='${reqAttribute.name.toUpperCase()}'`);
-				console.log({
-					sample: sample[0].id,
-					test: test.result.id,
-					attribute: attribute[0].id,
-					value: reqAttribute.value
-				})
+				// console.log({
+				// 	sample: sample[0].id,
+				// 	test: test.result.id,
+				// 	attribute: attribute[0].id,
+				// 	value: reqAttribute.value
+				// })
 				await pool.query(`INSERT INTO SampleValue SET sample_Id=${sample[0].id}, test_Id=${test.result.id}, attribute_Id=${attribute[0].id}, value='${reqAttribute.value}'`);
 			}
 		}

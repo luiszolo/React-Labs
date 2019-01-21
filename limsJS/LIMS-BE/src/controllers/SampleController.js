@@ -8,18 +8,9 @@ async function addSample (req, res) {
 
 	console.log(body)
 	if(!regex.validateSampleName(body.name.toUpperCase())) {
-		res.send({
-			message: "The sample doesn't follow the pattern"
-			
-			
-		});
-		
 		return;
 	}
 	if(await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.name.toUpperCase()}'`)) {
-		res.send({
-			message: "The sample already exists"
-		});
 		return;
 	}
 	const newSample = {

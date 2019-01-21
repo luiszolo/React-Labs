@@ -69,3 +69,10 @@ CREATE TABLE IF NOT EXISTS `TestStatus` (
 	CONSTRAINT `fk_TestStatus_prev_state` FOREIGN KEY (prev_State) REFERENCES `Status`(id),
 	CONSTRAINT `fk_TestStatus_post_state` FOREIGN KEY (post_State) REFERENCES `Status`(id)
 );
+
+CREATE TABLE IF NOT EXISTS `StatusSequence` (
+	status_Id INT NOT NULL,
+	status_Required INT NULL,
+	CONSTRAINT `fk_StatusSequence_status_id` FOREIGN KEY (status_Id) REFERENCES `Status`(id),
+	CONSTRAINT `fk_StatusSequence_status_required` FOREIGN KEY (status_Required) REFERENCES `Status`(id)
+);
