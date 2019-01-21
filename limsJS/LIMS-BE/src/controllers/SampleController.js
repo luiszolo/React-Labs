@@ -5,10 +5,15 @@ const dbInteract = require('./../middlewares/db-interact');
 // Finish
 async function addSample (req, res) {
 	let body  = req.body;
+
+	console.log(body)
 	if(!regex.validateSampleName(body.name.toUpperCase())) {
 		res.send({
 			message: "The sample doesn't follow the pattern"
+			
+			
 		});
+		
 		return;
 	}
 	if(await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.name.toUpperCase()}'`)) {

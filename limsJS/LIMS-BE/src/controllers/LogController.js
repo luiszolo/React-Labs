@@ -84,7 +84,8 @@ async function getLogBySample (req, res) {
 		SELECT Operator.id AS 'UserID',Sample.name AS 'Sample', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
 		JOIN Status ON Status.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
-		JOIN Operator ON Operator.id = Log.operator_Id WHERE Log.sample_Id=${sample.result.id}
+		JOIN Operator ON Operator.id = Log.operator_Id 
+		JOIN Sample ON Sample.id = Log.sample_Id WHERE Log.sample_Id=${sample.result.id}
 	`);
 	
 	if (value[0] == undefined) {

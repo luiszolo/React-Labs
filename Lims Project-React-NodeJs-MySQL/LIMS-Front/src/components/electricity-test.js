@@ -55,7 +55,7 @@ export default class ElectricityTest extends React.Component{
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     this.setState({
-                        messageOp: res.data.message,
+                        messageOp: "Operator dosent exist",
                         validOp: false,
                     })
                 } else  {
@@ -68,11 +68,14 @@ export default class ElectricityTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
+                messageOp: "Field cant be blank",
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
+                messageOp: "Invalid Sintaxis",
+                
             })
         }
     }
@@ -85,15 +88,21 @@ export default class ElectricityTest extends React.Component{
         if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    const message=res.data.message
+                if (!res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                    const message="Sample is Ready for the electricity test";
                     this.updateSamplesMessage(message,index-1)
+
                     //here is were we add the axios post but i need to know how are we sending the json data 
                     
                 } else {
                     let exists = false
+                    const message="error 1";//no salen 
+                    this.updateSamplesMessage(message,index-1)
                     samples.forEach((value)=>{
                         if(sample===value){
+                            const message="error 2";//no salen 
+                            this.updateSamplesMessage(message,index-1)
+
                             this.updateSamplesMessage("This sample is repeated",index-1)
                             return exists = true
                     }})
@@ -143,9 +152,9 @@ export default class ElectricityTest extends React.Component{
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
    
         samples.forEach((sample)=>{
-            axios.post(`http://10.2.1.94:4000/api/samples/add`,{// mejorar el lunes
-                name: [sample],
-            })
+            // axios.post(`http://10.2.1.94:4000/api/samples/add`,{// mejorar el lunes
+            //     name: sample,
+            // })
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
                 test: this.state.name,
@@ -374,7 +383,7 @@ export default class ElectricityTest extends React.Component{
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
-                        disabled={(validSamples && validOp) ? false : true}
+                        // disabled={(validSamples && validOp) ? false : true}
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >
