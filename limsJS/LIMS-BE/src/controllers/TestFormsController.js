@@ -112,10 +112,17 @@ async function insertData(req, res) {
 		}
 	} 
 
-	if ((sampleError || attributeError)) {
+	if ((sampleError)) {
 		res.send({
 			message: 'Samples are wrong',
 			sampleErrorList: sampleErrorList
+		});
+		return;
+	}
+
+	if(attributeError) {
+		res.send({
+			message: 'The attributes are diferent!'
 		});
 		return;
 	}
