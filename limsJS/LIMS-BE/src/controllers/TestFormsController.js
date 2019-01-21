@@ -39,6 +39,17 @@ async function insertData(req, res) {
 		notRepeat: [],
 		notPrev: []
 	};
+
+	if(test.result.id == 0) {
+		let reqCopy = req;
+		for await (const sample of  body.samples) {
+			reqCopy.body = {
+				name: sample
+			};
+			await require('./SampleController').addSample(reqCopy, res);
+		}
+	}
+
 	for await (const element of body.samples) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
