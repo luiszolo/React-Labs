@@ -37,6 +37,7 @@ async function insertData(req, res) {
 	let sampleErrorList = {
 		notExists: [],
 		notRepeat: [],
+		notPrev: []
 	};
 	for await (const element of body.samples) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
