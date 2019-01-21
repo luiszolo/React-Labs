@@ -6,7 +6,7 @@ const request = require('request');
 
 // Testing
 async function insertData(req, res) {
-	let body = req.body;console.log(body)
+	let body = req.body;
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
@@ -34,24 +34,30 @@ async function insertData(req, res) {
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 
 	let sampleError;
+	let sampleErrorList = {
+		notExists: [],
+		notRepeat: [],
+	};
 	for await (const element of body.samples) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
 			sampleError = true;
-			break;
+			sampleErrorList.notExists.push(element.toUpperCase());
 		} 
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
 		if (logValidation.pass == true) {
 			sampleError = true;
-			break;
+			sampleErrorList.notRepeat.push(element.toUpperCase());
 		}
 
-		let logValidation2 = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${prevStatus[0].prev_State}`);
-		if (logValidation2.pass == true) {
-			continue;
-		} else {
-			sampleError = true;
-			break;
+		for await (const statusElement of prevStatus) {
+			let logValidation2 = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND status_Id=${statusElement.prev_State}`);
+			if (logValidation2.pass == true) {
+				continue;
+			} else {
+				sampleError = true;
+				sampleErrorList.notPrev.push(element.toUpperCase());
+			}
 		}
 	}
 	
@@ -73,7 +79,8 @@ async function insertData(req, res) {
 
 	if ((sampleError || attributeError)) {
 		res.send({
-			message: 'Samples or Attributes are wrong'
+			message: 'Samples or Attributes are wrong',
+			sampleErrorList: sampleErrorList
 		});
 		return;
 	}

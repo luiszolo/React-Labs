@@ -11,7 +11,7 @@ async function addSample (req, res) {
 		});
 		return;
 	}
-	if(await dbInteract.isExists(`SELECT * FROM Sample WHERE name=${body.name.toUpperCase()}`)) {
+	if(await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.name.toUpperCase()}'`)) {
 		res.send({
 			message: "The sample already exists"
 		});
