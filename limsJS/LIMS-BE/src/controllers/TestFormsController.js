@@ -77,6 +77,7 @@ async function insertData(req, res) {
 				JOIN StatusSequence ON Status.id = StatusSequence.status_Id WHERE Status.id=${statusElement.prev_State}
 			`);
 			if (logValidation2.pass == true) {
+				console.log('Passed');
 				let logValidation3 = await dbInteract.isExists(`
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required}
 				`);
