@@ -81,7 +81,7 @@ async function insertData(req, res) {
 				let logValidation3 = await dbInteract.isExists(`
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required}
 				`);
-				if (logValidation3 == false) {
+				if (logValidation3 == false && test.result.id != 1) {
 					console.log('Not passed!');
 					sampleError = true;
 					sampleErrorList.notPrev.push(element.toUpperCase());
@@ -116,6 +116,7 @@ async function insertData(req, res) {
 	if ((sampleError)) {
 		res.send({
 			message: 'Samples are wrong',
+			test: test.result,
 			sampleErrorList: sampleErrorList
 		});
 		return;
