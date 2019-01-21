@@ -36,11 +36,18 @@ async function insertData(req, res) {
 	let sampleError;
 	let sampleErrorList = {
 		notExists: [],
-		notRepeat: [],
-		notPrev: []
+		notRepeatTest: [],
+		notPrev: [],
+		repeatFormData: [],
 	};
 
-	if(test.result.id == 0) {
+	body.samples.forEach(element => {
+		body.samples.forEach(element2 => {
+			if(element == element2) sampleErrorList.repeatFormData.push(element2);
+		});
+	});
+
+	if(test.result.id == 1) {
 		let reqCopy = req;
 		for await (const sample of  body.samples) {
 			reqCopy.body = {
@@ -57,10 +64,11 @@ async function insertData(req, res) {
 			sampleErrorList.notExists.push(element.toUpperCase());
 			continue;
 		} 
+
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
 		if (logValidation.pass == true) {
 			sampleError = true;
-			sampleErrorList.notRepeat.push(element.toUpperCase());
+			sampleErrorList.notRepeatTest.push(element.toUpperCase());
 			continue;
 		}
 

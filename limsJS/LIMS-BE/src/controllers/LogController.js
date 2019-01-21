@@ -51,10 +51,11 @@ async function deleteLog (req, res) {
 // Finish
 async function getLogs (req, res) {
 	const value = await pool.query(`
-		SELECT Operator.id AS 'UserID', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
+		SELECT Operator.id AS 'UserID', Sample.name AS 'Sample', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
 		JOIN Status ON Status.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id
+		JOIN Sample ON Sample.id = Log.sample_Id
 	`);
 	if (value == undefined) {
 		res.send({
@@ -80,7 +81,7 @@ async function getLogBySample (req, res) {
 	}
 
 	const value = await pool.query(`
-		SELECT Operator.id AS 'UserID', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
+		SELECT Operator.id AS 'UserID',Sample.name AS 'Sample', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
 		JOIN Status ON Status.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id WHERE Log.sample_Id=${sample.result.id}
