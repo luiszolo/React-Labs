@@ -49,7 +49,7 @@ async function insertData(req, res) {
 			reqCopy.body = {
 				name: sample
 			};
-			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == false){
+			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == true){
 				sampleErrorList.Exists.push(sample.toUpperCase());
 				continue;
 			} else await require('./SampleController').addSample(reqCopy, res);
