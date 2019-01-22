@@ -1,8 +1,6 @@
 const dbInteract = require('./../middlewares/db-interact');
-const ip = require('./../config/ip');
+const miscs = require('./../middlewares/miscs');
 const pool = require('./../config/database');
-const axios = require('axios');
-const request = require('request');
 
 // Testing
 async function insertData(req, res) {
@@ -35,13 +33,14 @@ async function insertData(req, res) {
 
 	let sampleError;
 	let sampleErrorList = {
-		notExists: [],
+		NotExists: [],
 		Exists: [],
-		notRepeatTest: [],
-		notPrev: [],
-		repeatFormData: [],
+		RepeatTest: [],
+		NotPrev: [],
+		RepeatSample: [],
 	};
 
+	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples);
 
 	if(test.result.id == 1) {
 		let reqCopy = req;
@@ -60,14 +59,14 @@ async function insertData(req, res) {
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
 			sampleError = true;
-			sampleErrorList.notExists.push(element.toUpperCase());
+			sampleErrorList.NotExists.push(element.toUpperCase());
 			continue;
 		} 
 
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
 		if (logValidation.pass == true) {
 			sampleError = true;
-			sampleErrorList.notRepeatTest.push(element.toUpperCase());
+			sampleErrorList.RepeatTest.push(element.toUpperCase());
 			continue;
 		}
 
@@ -84,14 +83,14 @@ async function insertData(req, res) {
 				if (logValidation3 == false && test.result.id != 1) {
 					console.log('Not passed!');
 					sampleError = true;
-					sampleErrorList.notPrev.push(element.toUpperCase());
+					sampleErrorList.NotPrev.push(element.toUpperCase());
 					break;
 				}
 				continue;
 			} else {
 				if(test.result.id == 1) continue;
 				sampleError = true;
-				sampleErrorList.notPrev.push(element.toUpperCase());
+				sampleErrorList.NotPrev.push(element.toUpperCase());
 				continue;
 			}
 		}

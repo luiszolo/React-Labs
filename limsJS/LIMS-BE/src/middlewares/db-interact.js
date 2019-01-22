@@ -32,12 +32,12 @@ async function findBy(fields, table, conditions=undefined) {
 			}
 		});
 	}
-
-	if(auxWhere == '') {
-
-	}
+	return { 
+		result: await pool.query(query)
+	};
 }
 
 module.exports = {
+	findBy: findBy,
 	isExists: isExists
-}
+};

@@ -63,6 +63,10 @@ async function getLogs (req, res) {
 		});
 		return;
 	}
+
+	for await (const result of value) {
+		result["On Created"] = result['On Created'].toISOString().slice(0, 19).replace('T', ' ');
+	}
 	res.send({
 		Logs : value
 	});
