@@ -89,7 +89,7 @@ export default class ElectricityTest extends React.Component{
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
             .then(res => {
                 if (!res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    const message="Sample is Ready for the electricity test";
+                    const message="Sample is used";
                     this.updateSamplesMessage(message,index-1)
 
                     //here is were we add the axios post but i need to know how are we sending the json data 
@@ -113,8 +113,8 @@ export default class ElectricityTest extends React.Component{
                 }
             })
         }else{
-            this.updateSamples("",index-1)
-            this.updateSamplesMessage("Incorrect format",index-1)
+             this.updateSamples("",index-1)
+             this.updateSamplesMessage("",index-1)
         }
     }
     
@@ -152,9 +152,7 @@ export default class ElectricityTest extends React.Component{
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
    
         samples.forEach((sample)=>{
-            // axios.post(`http://10.2.1.94:4000/api/samples/add`,{// mejorar el lunes
-            //     name: sample,
-            // })
+
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
                 test: this.state.name,
@@ -162,7 +160,7 @@ export default class ElectricityTest extends React.Component{
             })
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
-                    console.log(res.data.message)
+                    console.log(res.data.sampleErrorList)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(""),
@@ -171,7 +169,7 @@ export default class ElectricityTest extends React.Component{
                     })
       
                 } else {
-                    console.log(res.data.message)
+                    console.log(res.data.sampleErrorList)
                     this.setState({
 						messageAPI: "Sample already went through this Test"
                     });
@@ -383,7 +381,7 @@ export default class ElectricityTest extends React.Component{
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
-                        // disabled={(validSamples && validOp) ? false : true}
+                        disabled={(validSamples && validOp) ? false : true}
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >

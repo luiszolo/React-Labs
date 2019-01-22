@@ -93,7 +93,7 @@ export default class HeatTest extends React.Component{
                     })
                 } else  {
                     this.setState({
-                        //operator: operator,
+                        operator: operator,
                         messageOp: "",
                         validOp: true,
                     })
@@ -195,12 +195,25 @@ export default class HeatTest extends React.Component{
         })
 
     }
-
+    settingTitle=()=>{
+        const val =this.state.validOp;
+        if(val==true){
+            this.setState({
+                buttonTitle:"Form is Ready"
+            })
+        }
+        else{
+            this.setState({
+            buttonTitle:"Form not ready"
+        })
+        }
+    }
     render(){
         const {
             addSample,
             validateOperator,
             validateSamples,
+            settingTitle,
           
             state: {
                 name,
@@ -345,7 +358,7 @@ export default class HeatTest extends React.Component{
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
-                        onClick={() => {window.alert('You Added a Sample')}}
+                        onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >
                     Save Data

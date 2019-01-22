@@ -32,3 +32,10 @@ img{
 button[disabled]:hover {
     background: red;
 }
+
+#searchbar{
+    padding: 30px;
+}
+ table{
+     margin: 60px;
+ }
