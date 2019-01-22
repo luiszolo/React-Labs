@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import SampleSearch from './report';
 
 export default class ElectricityTest extends React.Component{
     constructor(props){
@@ -9,18 +10,17 @@ export default class ElectricityTest extends React.Component{
             operator: 0,
             messageOp: "",
             validOp: undefined,
-            messageSamples: Array(10).fill(null),
+            messageSamples: Array(10).fill(""),
             validSamples: undefined,
             samples: Array(10).fill(""),
             messageAPI: "",
-            buttonTitle:"",
         }
     }
     
     updateSamples=(value,position)=>{
         this.setState(state=>{
             let samples = state.samples.map((sample,i)=>{
-                if(i===position){
+                if(position==i){
                     return sample=value
                 } else {
                     return sample;
@@ -34,7 +34,7 @@ export default class ElectricityTest extends React.Component{
 
     updateSamplesMessage=(value,position)=>{
         this.setState(state=>{
-            let messageSamples = state.messageSamples.map((message,i)=>{
+            const messageSamples = state.messageSamples.map((message,i)=>{
                 if(i===position){
                     return message=value
                 } else {
@@ -51,6 +51,11 @@ export default class ElectricityTest extends React.Component{
         const operator = e.target.value
 
         if(/\d\d\d\d\d/.test(operator) && operator.length===5){
+            this.setState({
+                operator: operator,
+                messageOp: "",
+                validOp: true,
+            })
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
@@ -68,80 +73,74 @@ export default class ElectricityTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
-                messageOp: "Field cant be blank",
+                messageOp: "Field can't be blank", //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
-                messageOp: "Invalid Sintaxis",
-                
+                messageOp: "Invalid Syntax",
             })
         }
     }
-    
-    addSample=(e)=>{
-        const index =e.target.name.replace("sample","")
+
+    validateSamples=(e)=>{
+        const sampleNumber =e.target.name.replace("sample","")
         const sample = e.target.value
+
         const samples = this.state.samples
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
-        if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
-            .then(res => {
-                if (!res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    const message="Sample is Ready for the electricity test";
-                    this.updateSamplesMessage(message,index-1)
-
-                    //here is were we add the axios post but i need to know how are we sending the json data 
-                    
-                } else {
-                    let exists = false
-                    const message="error 1";//no salen 
-                    this.updateSamplesMessage(message,index-1)
-                    samples.forEach((value)=>{
-                        if(sample===value){
-                            const message="error 2";//no salen 
-                            this.updateSamplesMessage(message,index-1)
-
-                            this.updateSamplesMessage("This sample is repeated",index-1)
-                            return exists = true
-                    }})
-                    if(exists===false){
-                        this.updateSamples(sample,index-1)
-                        this.updateSamplesMessage(null,index-1)
-                    }
-                }
-            })
-        }else{
-            this.updateSamples("",index-1)
-            this.updateSamplesMessage("Incorrect format",index-1)
-        }
-    }
-    
-    validateSamples=()=>{
-        const nulls = this.state.samples.filter((sample)=>{return sample==""})
-        if(nulls.length===10){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+            this.updateSamplesMessage("Incorrect syntax", sampleNumber-1)
             this.setState({
-                validSamples: false
+                validSamples: false,
             })
+        }else if(sample==""){
+            this.updateSamplesMessage("", sampleNumber-1)
         }else{
-            this.state.samples.forEach((sample)=>{
-                if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+            this.updateSamplesMessage("", sampleNumber-1)
+            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
+            .then(res => {
+                if (!res.data.message) {
+                    this.updateSamplesMessage("The sample already exists", sampleNumber-1)
                     this.setState({
-                        validSamples: true
+                        validSamples: false,
                     })
-                }else if(sample==""){
-                    this.setState({
-                        validSamples: true
+                } else {
+                    samples.forEach((value,index)=>{
+                        if(sample==value && index!=sampleNumber-1){
+                            this.updateSamplesMessage("This sample is repeated", sampleNumber-1)
+                            this.setState({
+                                validSamples: false,
+                            })
+                        }else if(sample==""){
+                            this.updateSamplesMessage("", sampleNumber-1)
+                        }
                     })
                 }
-                else{
-                    this.setState({
-                        validSamples: false
-                    })
-                }
+            })
+            this.setState({
+                validSamples: true,
             })
         }
+        if(correctSamples.length>0){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
+
+    }
+
+    addSample=(e)=>{
+        const sampleNumber =e.target.name.replace("sample","")
+        const sample = e.target.value
+
+        this.updateSamples(sample,sampleNumber-1)
     }
 
     handleSubmit = event => {
@@ -152,9 +151,6 @@ export default class ElectricityTest extends React.Component{
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
    
         samples.forEach((sample)=>{
-            // axios.post(`http://10.2.1.94:4000/api/samples/add`,{// mejorar el lunes
-            //     name: sample,
-            // })
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
                 test: this.state.name,
@@ -178,31 +174,13 @@ export default class ElectricityTest extends React.Component{
                 }
               })
 		})
-		
-		
     }
 
-
-
-    settingTitle=()=>{
-        const val =this.state.validOp;
-        if(val==true){
-            this.setState({
-                buttonTitle:"Form is Ready"
-            })
-        }
-        else{
-            this.setState({
-            buttonTitle:"Form not ready"
-        })
-        }
-    }
       render(){
         const {
             addSample,
             validateOperator,
             validateSamples,
-            settingTitle,
             state: {
                 name,
                 messageOp,
@@ -211,7 +189,6 @@ export default class ElectricityTest extends React.Component{
                 validSamples,
                 messageAPI,
                 samples,
-                buttonTitle,
             }
         } = this;
 
@@ -251,7 +228,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                             <input 
-                                //value={samples[0]}
+                                value={samples[0]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample1"} 
@@ -264,7 +241,7 @@ export default class ElectricityTest extends React.Component{
                         <div className="row form-inline pb-1">
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                             <input 
-                                //value={this.state.samples[1]}
+                                value={samples[1]}
                                 type="text"
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample2"}
@@ -278,7 +255,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[2]}
+                                value={samples[2]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample3"} 
                                 placeholder={format}
@@ -291,7 +268,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[3]}
+                                value={samples[3]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample4"} 
                                 placeholder={format}
@@ -304,7 +281,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[4]}
+                                value={samples[4]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample5"} 
                                 placeholder={format}
@@ -317,7 +294,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
                             <input 
                                 type="text"
-                               // value={this.state.samples[5]}
+                                value={samples[5]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample6"} 
                                 placeholder={format}
@@ -330,7 +307,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[6]}
+                                value={samples[6]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample7"} 
                                 placeholder={format}
@@ -343,7 +320,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[7]}
+                                value={samples[7]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample8"} 
                                 placeholder={format}
@@ -356,7 +333,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[8]}
+                                value={samples[8]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample9"} 
                                 placeholder={format}
@@ -369,7 +346,7 @@ export default class ElectricityTest extends React.Component{
                             <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
                             <input 
                                 type="text"
-                                //value={this.state.samples[9]}
+                                value={samples[9]}
                                 className={"sample col-lg-3 col-4 form-control"}
                                 name={"sample10"}
                                 placeholder={format}
@@ -383,15 +360,13 @@ export default class ElectricityTest extends React.Component{
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
-                        // disabled={(validSamples && validOp) ? false : true}
-                        onMouseEnter={settingTitle}
-                        title={buttonTitle}
+                        disabled={(validSamples && validOp) ? false : true}
+                        title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
                     >
-                    Save Data
+                    {(validSamples && validOp) ? "Save data" : "Form not ready"}
                     </button>
-                    
                 </form>
             </div>
           </div>)
     }
-    }
+}

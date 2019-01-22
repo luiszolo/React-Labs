@@ -30,5 +30,6 @@ img{
     width: 8rem;
 }
 button[disabled]:hover {
-    background: red;
+    border-color: #dc3545;
+    background: #dc3545;
 }
