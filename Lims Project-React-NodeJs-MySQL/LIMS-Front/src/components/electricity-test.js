@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import SampleSearch from './report';
 
 export default class ElectricityTest extends React.Component{
     constructor(props){

@@ -21,18 +21,9 @@ export default class ChemistryTest extends React.Component{
     }
 }
 
-updateSamples=(value,position)=>{
-    this.setState(state=>{
-        let samples = state.samples.map((sample,i)=>{
-            if(i===position){
-                return sample=value
-            } else {
-                return sample;
-            }
-        })
-        return {
-            samples,
-        };
+addSample=(e)=>{
+    this.setState({
+        sample: e.target.value,
     })
 }
 
@@ -58,41 +49,33 @@ validateChemistry=(e)=>{
     }
 }
 
-addSample=(e)=>{
+validateSample=(e)=>{
     const sample = e.target.value
 
-    if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+        this.setState({
+            messageSample: "Incorrect syntax",
+            validSample: false,
+        })
+    }else if(sample==""){
+        this.setState({
+            messageSample: "",
+            validSample: false,
+        })
+    }else{
+        axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
+        .then(res => {
+            if (res.data.message) {
                 this.setState({
-                    sample: sample,
+                    messageSample: res.data.message,
+                    validSample: false,
+                })
+            } else {
+                this.setState({
                     messageSample: "",
                     validSample: true,
                 })
-
-        // axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
-        // .then(res => {
-        //     if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-        //         const message=res.data.message
-
-        //         this.setState({
-        //             messageSample: message,
-        //         })
-        //     } else {
-        //         this.setState({
-        //             sample: sample,
-        //             messageSample: "",
-        //             validSample: true,
-        //         })
-        //     }
-        // })
-    }else if(sample===""){
-        this.setState({
-            messageSample: "",
-            validSample: false
-        })
-    }else{
-        this.setState({
-            messageSample: "Incorrect syntax",
-            validSample: false
+            }
         })
     }
 }
@@ -166,6 +149,7 @@ render(){
         addSample,
         validateOperator,
         validateChemistry,
+        validateSample,
         state: {
             name,
             messageOp,
@@ -231,6 +215,7 @@ render(){
                         value={this.state.sample}
                         placeholder={format}
                         onChange={addSample}
+                        onBlur={validateSample}
                     />
                     <label className={labelClass}>{messageSample}</label> 
                 </div>
@@ -241,8 +226,9 @@ render(){
                     type="submit"
                     className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                     disabled={(validOp && validCh && validSample) ? false : true}
+                    title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                 >
-                Save Data
+                {(validSample && validOp) ? "Save data" : "Form not ready"}
                 </button>
             </form>
         </div>

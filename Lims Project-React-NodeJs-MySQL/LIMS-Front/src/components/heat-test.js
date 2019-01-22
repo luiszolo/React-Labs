@@ -51,33 +51,10 @@ export default class HeatTest extends React.Component{
     }
 
     addSample=(e)=>{
-        const index =e.target.name.replace("sample","")
+        const sampleNumber =e.target.name.replace("sample","")
         const sample = e.target.value
-        const samples = this.state.samples
 
-        if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
-            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el codigo del sample ejemplo: SA-12-12342
-            .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
-                    const message=res.data.message
-                    this.updateSamplesMessage(message,index-1)
-                } else {
-                    let exists = false
-                    samples.forEach((value)=>{
-                        if(sample===value){
-                            this.updateSamplesMessage("This sample is repeated",index-1)
-                            return exists = true
-                    }})
-                    if(exists===false){
-                        this.updateSamples(sample,index-1)
-                        this.updateSamplesMessage(null,index-1)
-                    }
-                }
-            })
-        }else{
-            this.updateSamples("",index-1)
-            this.updateSamplesMessage("Incorrect format",index-1)
-        }
+        this.updateSamples(sample,sampleNumber-1)
     }
 
     validateOperator=(e)=>{
@@ -110,30 +87,56 @@ export default class HeatTest extends React.Component{
         }
     }
 
-    validateSamples=()=>{
-        const nulls = this.state.samples.filter((sample)=>{return sample==""})
-        if(nulls.length===5){
+    validateSamples=(e)=>{
+        const sampleNumber =e.target.name.replace("sample","")
+        const sample = e.target.value
+
+        const samples = this.state.samples
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+            this.updateSamplesMessage("Incorrect syntax", sampleNumber-1)
             this.setState({
-                validSamples: false
+                validSamples: false,
             })
+        }else if(sample==""){
+            this.updateSamplesMessage("", sampleNumber-1)
         }else{
-            this.state.samples.forEach((sample)=>{
-                if(/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11){
+            this.updateSamplesMessage("", sampleNumber-1)
+            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
+            .then(res => {
+                if (res.data.message) {
+                    this.updateSamplesMessage(res.data.message, sampleNumber-1)
                     this.setState({
-                        validSamples: true
+                        validSamples: false,
                     })
-                }else if(sample==""){
-                    this.setState({
-                        validSamples: true
+                } else {
+                    samples.forEach((value,index)=>{
+                        if(sample==value && index!=sampleNumber-1){
+                            this.updateSamplesMessage("This sample is repeated", sampleNumber-1)
+                            this.setState({
+                                validSamples: false,
+                            })
+                        }else if(sample==""){
+                            this.updateSamplesMessage("", sampleNumber-1)
+                        }
                     })
                 }
-                else{
-                    this.setState({
-                        validSamples: false
-                    })
-                }
+            })
+            this.setState({
+                validSamples: true,
             })
         }
+        if(correctSamples.length>0){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
+
     }
 
     handleChangeTemperature = event => {
