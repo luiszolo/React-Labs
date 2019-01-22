@@ -33,3 +33,10 @@ button[disabled]:hover {
     border-color: #dc3545;
     background: #dc3545;
 }
+
+#searchbar{
+    padding: 30px;
+}
+ table{
+     margin: 60px;
+ }

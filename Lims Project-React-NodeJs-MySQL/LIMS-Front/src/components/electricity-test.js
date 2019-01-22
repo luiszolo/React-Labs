@@ -158,7 +158,7 @@ export default class ElectricityTest extends React.Component{
             })
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
-                    console.log(res.data.message)
+                    console.log(res.data.sampleErrorList)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(""),
@@ -167,7 +167,7 @@ export default class ElectricityTest extends React.Component{
                     })
       
                 } else {
-                    console.log(res.data.message)
+                    console.log(res.data.sampleErrorList)
                     this.setState({
 						messageAPI: "Sample already went through this Test"
                     });

@@ -23,7 +23,7 @@ export default class SampleSearch extends React.Component{
       //     })
       // }
 
-      validateOperator=()=>{
+      validateSample=()=>{
         const sample = this.state.sample
         this.setState({ // this is for reseting the inputs
           messageAPI:"",
@@ -50,6 +50,7 @@ export default class SampleSearch extends React.Component{
         }else{
             this.setState({
                 validOp: true,
+                messageAPI: "invalid sintaxis"
                 
             })
         }
@@ -85,8 +86,11 @@ export default class SampleSearch extends React.Component{
         console.log(this.state.tests)
 
         return(
-        <ul>
-            <div className="container">
+            
+<div>
+
+            
+            <div className="container" id="searchbar">
                 <form onSubmit={this.handleSubmit}>
                 <h1>Sample Barcodes</h1>
                     <div className="form-inline">
@@ -94,43 +98,36 @@ export default class SampleSearch extends React.Component{
                             id="input"
                             type="text"
                             name="sample1"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={"sample col-lg-3 col-sm-12  form-control"}
                             number={1}
                             placeholder="SA-##-#####"
                             onChange={this.handleChangeSample}
                             value={sample}
-                            onBlur={this.validateOperator}
+                            onBlur={this.validateSample}
                         />
                     <button 
                         type="submit" 
-                        className="btn btn-primary col-1"
+                        className="btn btn-primary col-lg-1 col-sm-3"
                         disabled={validOp}
                         //onBlur={validateOperator}
                     >
                     Search
                     </button>
-                        <p style={pstyle} >{messageAPI}</p>
+                        <p style={pstyle} className="col-lg-3 col-sm-3" >{messageAPI}</p>
                     </div>
                 </form>
-                <div className="row">
-                    <div className="col-sm">
-                    <p>User ID</p>
-                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4  "}>{log["UserID"]}</li>)}
-                    </div>
-                    <div className="col-sm">
-                    <p>Status</p>
-                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4"}>{log["State"]}</li>)}
-                    </div>
-                    <div className="col-sm">
-                    <p>Test</p>
-                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["Test"]}</li>)}
-                    </div>
-                    <div className="col-sm">
-                    <p>On Created</p>
-                    { this.state.tests.map(log => <li className={"sample col-lg-2 col-4 "}>{log["On Created"]}</li>)}
-                    </div>
-                </div>
-            </div>
-        </ul>);
+</div>
+<table class="table">
+  <thead class="thead-gray">
+  <th scope="col">User ID</th>
+      <th scope="col">Status</th>
+      <th scope="col">Test</th>
+      <th scope="col">Created On</th>
+  </thead>
+  <tbody>
+        { this.state.tests.map(log =><tr className={"sample col-lg-2 col-4"}><td>{log["UserID"]}</td><td>{log["State"]}</td><td>{log["Test"]}</td><td>{log["On Created"]}</td></tr>)}
+  </tbody>
+</table>
+        </div>)
         }
     }
