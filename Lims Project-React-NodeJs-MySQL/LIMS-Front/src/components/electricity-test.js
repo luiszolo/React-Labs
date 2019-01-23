@@ -55,9 +55,9 @@ export default class ElectricityTest extends React.Component{
                 messageOp: "",
                 validOp: true,
             })
-            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                if (res.data.message) { 
                     this.setState({
                         messageOp: "Operator dosent exist",
                         validOp: false,

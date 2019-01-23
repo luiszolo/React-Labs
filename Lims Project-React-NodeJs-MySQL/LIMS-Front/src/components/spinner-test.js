@@ -60,11 +60,16 @@ export default class SpinnerTest extends React.Component{
         const operator = e.target.value
 
         if(/\d\d\d\d\d/.test(operator) && operator.length===5){
+            this.setState({
+                operator: operator,
+                messageOp: "",
+                validOp: true,
+            })
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     this.setState({
-                        messageOp: res.data.message,
+                        messageOp: "Operator dosent exist",
                         validOp: false,
                     })
                 } else  {
@@ -77,11 +82,13 @@ export default class SpinnerTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
+                messageOp: "Field can't be blank", //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
+                messageOp: "Invalid Syntax",
             })
         }
     }
@@ -89,11 +96,12 @@ export default class SpinnerTest extends React.Component{
     validateVelocity=()=>{
         if(/\d\d\d\d\d/.test(this.state.velocity)){
             this.setState({
-                validVel: true
+                validVel: true,
             })
         }else{
             this.setState({
-                validVel: false
+                validVel: false,
+                messageOp: "Must be 5 digits",
             })
         }
     }
@@ -116,10 +124,10 @@ export default class SpinnerTest extends React.Component{
             this.updateSamplesMessage("", sampleNumber-1)
             axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
             .then(res => {
-                if (!res.data.message) {
-                    this.updateSamplesMessage("The sample already exists", sampleNumber-1)
+                if (res.data.message) {
+                    this.updateSamplesMessage("The sample does not exists", sampleNumber-1)
                     this.setState({
-                        validSamples: false,
+                        validSamples: true,
                     })
                 } else {
                     samples.forEach((value,index)=>{
@@ -190,7 +198,7 @@ export default class SpinnerTest extends React.Component{
                 } else {
                     console.log(res.data.message)
                     this.setState({
-						messageAPI: "Sample already went through this Test"
+						messageAPI: "Sample is not ready for this test"
                     });
                 }
               })
@@ -252,8 +260,8 @@ export default class SpinnerTest extends React.Component{
                         <input 
                             type="number" 
                             className={"sample col-lg-3 col-3 form-control"}
-                            placeholder="###"
-                            name="temperature" 
+                            placeholder="#####"
+                            name="velocity" 
                             onChange={this.handleChangeVelocity}
                             onBlur={validateVelocity}
                         />

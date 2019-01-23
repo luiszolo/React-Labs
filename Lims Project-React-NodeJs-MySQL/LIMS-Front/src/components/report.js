@@ -15,25 +15,18 @@ export default class SampleSearch extends React.Component{
         } );
       }
 
-      // componentDidMount() {
-      //   axios.get(`http://10.2.1.94:4000/api/logs/`)// agregarle en el api un filtrado por id y que en un combo lo agreguemos como +{id}
-      //     .then(res => {
-      //       const tests = res.data.Logs;
-      //       this.setState({ tests });
-      //     })
-      // }
 
       validateSample=()=>{
         const sample = this.state.sample
-        this.setState({ // this is for reseting the inputs
+        this.setState({ 
           messageAPI:"",
         });
         if(sample.length===11){
-            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) //manda el get con el nombre del operador ejemplo: 12345
+            axios.get(`http://10.2.1.94:4000/api/samples/${sample}`) 
             .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                if (res.data.message) { 
                     console.log(res.data.message)
-                    this.setState({ // this is for reseting the inputs
+                    this.setState({
                       messageAPI: res.data.message,
                       validOp: true,
                     });
@@ -56,7 +49,7 @@ export default class SampleSearch extends React.Component{
         }
     }
 
-      handleSubmit = event => {// This part is creating the new const that are going to take the values from our previus states that have the user input
+      handleSubmit = event => {
         event.preventDefault();
         const sample =  this.state.sample
    
@@ -65,7 +58,7 @@ export default class SampleSearch extends React.Component{
                     if(res.data.message){
                        const tests = res.data.Logs;
                        this.setState({ tests:[] });
-                      this.setState({ // this is for reseting the inputs
+                      this.setState({ 
                         messageAPI:res.data.message
                         
                       });

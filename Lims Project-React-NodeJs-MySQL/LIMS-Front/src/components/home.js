@@ -19,7 +19,7 @@ export default class Home extends React.Component{
       handleChangeName = event => {
         this.setState({ 
           name: event.target.value,
-        } );// este name es el de la variable
+        } );
       }
 
       handleOnBlur=(e)=>{
@@ -57,13 +57,13 @@ export default class Home extends React.Component{
   handleChangeSampleLenght = event => {
     this.setState({
       samplesLength: event.target.value,
-    } );// este name es el de la variable
+    } );
   }
 
   handleChangeStatus = event => {
     this.setState({
       status: event.target.value,
-    } );// este name es el de la variable
+    } );
   }
 
   handleSubmit = event => {
@@ -73,7 +73,7 @@ export default class Home extends React.Component{
     const samplesLength=this.state.samplesLength
     const status = this.state.status
 
-    axios.post(`http://localhost:4000/api/tests/add`, {name, samplesLength,status})// al  parecer este name tiene que ser el nombre de la columna
+    axios.post(`http://localhost:4000/api/tests/add`, {name, samplesLength,status})
       .then(res => {
         console.log(res);
         console.log(res.data);
