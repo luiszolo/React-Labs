@@ -38,7 +38,7 @@ async function addLog (req, res) {
 	}
 	await pool.query(`INSERT INTO Log SET 
 		operator_Id = ${operator.result.id}, sample_Id = ${sample.result.id},
-		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${new Date(Date.now)}//.toISOString().slice(0, 19).replace('T', ' ')}"
+		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' ')}"
 	`);
 };
 
@@ -75,7 +75,6 @@ async function getLogs (req, res) {
 // Finish
 async function getLogBySample (req, res) {
 	let params = req.params;
-	console.log(params);
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.name}'`); // no me esta filtrando por id siempre sale que no existe la sample 
 	if (sample == false) {
 		res.send({
@@ -92,6 +91,13 @@ async function getLogBySample (req, res) {
 		JOIN Sample ON Sample.id = Log.sample_Id WHERE Log.sample_Id=${sample.result.id}
 	`);
 
+	const attributes = await pool.query(`
+		SELECT Test.name AS 'Test', Attribute.name AS 'Attribute', SampleValue.value AS 'Value' FROM SampleValue
+		JOIN Test ON Test.id=SampleValue.test_Id
+		JOIN Attribute ON  Attribute.id=SampleValue.attribute_Id
+		WHERE SampleValue.sample_Id=${sample.result.id}
+	`);
+
 	for await (const result of value) {
 		result["On Created"] = result['On Created'].toLocaleString();
 	}
@@ -104,7 +110,8 @@ async function getLogBySample (req, res) {
 	}
 
 	res.send({
-		Logs : value
+		Logs : value,
+		Attributes: attributes
 	});
 };
 

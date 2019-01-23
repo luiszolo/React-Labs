@@ -78,7 +78,7 @@ async function insertData(req, res) {
 			if (logValidation2.pass == true) {
 				console.log('Passed');
 				let logValidation3 = await dbInteract.isExists(`
-					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required}
+					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required} AND sample_Id=${sample.result.id}
 				`);
 				if (logValidation3 == false && test.result.id != 1) {
 					console.log('Not passed!');
