@@ -5,8 +5,9 @@ export default class SampleSearch extends React.Component{
     state = {
         sample:'',
         tests: [],
-        validSample: true,
+        validSample: undefined,
         messageAPI:'',
+        attributes:[]
       }
 
       handleChangeSample = event => {
@@ -53,15 +54,17 @@ export default class SampleSearch extends React.Component{
         axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
                   .then(res => {
                     if(res.data.message){
-                        const tests = res.data.Logs;
-                        this.setState({ tests:[] });
+                        this.setState({ tests:[] ,
+                        attributes:[]});
                         this.setState({    // this is for reseting the inputs
                             messageAPI: res.data.message
                         });
                     }
                     else{
             const tests = res.data.Logs;
-            this.setState({ tests });}
+            const attributes = res.data.Attributes;
+            this.setState({ tests,attributes });}
+            //this.setState({ attributes });}
           })
       }
     
@@ -108,8 +111,25 @@ export default class SampleSearch extends React.Component{
                     </thead>
                     <tbody>
                         {this.state.tests.map(log =><tr><td>{log["UserID"]}</td><td>{log["State"]}</td><td>{log["Test"]}</td><td>{log["On Created"]}</td></tr>)}
+                        
                     </tbody>
+                    
                 </table>
+               {this.state.attributes ? ( <table class="table table-info">
+                    <thead class="thead-gray">
+                        <tr>
+                            <th scope="col">User ID</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Test</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.attributes.map(atrb =><tr><td>{atrb["Test"]}</td><td>{atrb["Attribute"]}</td><td>{atrb["Value"]}</td></tr>)}
+                        
+                    </tbody>
+                    
+                </table>) : ''}
+                
             </div>
         </div>)
         }

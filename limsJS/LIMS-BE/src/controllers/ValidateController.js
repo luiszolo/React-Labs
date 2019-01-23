@@ -33,6 +33,7 @@ let GeneralValidator = {
 }
 
 async function SampleValidators (sample, test) {
+	console.log(test, sample)
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
 
 	if(sample == false) {
