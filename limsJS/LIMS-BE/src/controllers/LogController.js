@@ -1,4 +1,5 @@
 const pool = require('./../config/database');
+const miscs = require('./../middlewares/miscs');
 const dbInteract = require('./../middlewares/db-interact');
 
 // Finish
@@ -99,7 +100,8 @@ async function getLogBySample (req, res) {
 	`);
 
 	for await (const result of value) {
-		result["On Created"] = result['On Created'].toLocaleString();
+		result['On Created'] = result['On Created'].toLocaleString();
+		result['Test'] = miscs.capitalizeWord(result['Test']);
 	}
 	
 	if (value[0] == undefined) {
