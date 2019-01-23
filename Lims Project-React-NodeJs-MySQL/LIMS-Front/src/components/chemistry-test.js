@@ -84,9 +84,9 @@ validateOperator=(e)=>{
     const operator = e.target.value
 
     if(/\d\d\d\d\d/.test(operator) && operator.length===5){
-        axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+        axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
         .then(res => {
-            if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+            if (res.data.message) { 
                 this.setState({
                     messageOp: res.data.message,
                     validOp: false,
@@ -117,10 +117,11 @@ handleSubmit = event => {
     const operator= this.state.operator
     const chemistry = this.state.chemistry
     const sample =this.state.sample
+    
 
     axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
         operator,
-        test: "Chemistry Test",
+        test: this.state.name,
         samples: [sample],
         attributes:[{
             name: "Chemistry",
@@ -135,10 +136,16 @@ handleSubmit = event => {
                 messageAPI: res.data.message,
                 validSamples: false,
             })
-        } else {
+        }
+        else if(res.data.message==="Samples are wrong") {
+            this.setState({
+                messageAPI: "Sample went through the test already "
+            });
+        }
+        else {
             console.log(res.data.message)
             this.setState({
-                messageAPI: "Sample already went through this Test"
+                messageAPI: "Sample is not ready for this test"
             });
         }
       })

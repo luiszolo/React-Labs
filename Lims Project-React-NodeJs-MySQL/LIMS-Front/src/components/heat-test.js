@@ -61,11 +61,16 @@ export default class HeatTest extends React.Component{
         const operator = e.target.value
 
         if(/\d\d\d\d\d/.test(operator) && operator.length===5){
-            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
+            this.setState({
+                operator: operator,
+                messageOp: "",
+                validOp: true,
+            })
+            axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
-                if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
+                if (res.data.message) { 
                     this.setState({
-                        messageOp: res.data.message,
+                        messageOp: "Operator dosent exist",
                         validOp: false,
                     })
                 } else  {
@@ -78,15 +83,16 @@ export default class HeatTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
+                messageOp: "Field can't be blank", //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
+                messageOp: "Invalid Syntax",
             })
         }
     }
-
     validateSamples=(e)=>{
         const sampleNumber =e.target.name.replace("sample","")
         const sample = e.target.value
@@ -165,7 +171,7 @@ export default class HeatTest extends React.Component{
         samples.forEach((sample)=>{
             axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
                 operator,
-                test:"Heat Test",
+                test:this.state.name,
                 samples:[sample],
                 attributes:[{
                     name: "Temperature",
@@ -191,7 +197,7 @@ export default class HeatTest extends React.Component{
                 } else {
                     console.log(res.data.message)
                     this.setState({
-						messageAPI: "Sample already went through this Test"
+						messageAPI: "Sample is not ready for this test"
                     });
                 }
               })
@@ -357,7 +363,7 @@ export default class HeatTest extends React.Component{
                     </div>
                     <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
                     <button
-                    value={samples[5]}
+                        value={samples[5]}
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validSamples && validOp) ? false : true}
