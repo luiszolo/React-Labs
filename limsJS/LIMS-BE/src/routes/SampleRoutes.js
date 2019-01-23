@@ -4,7 +4,7 @@ const SampleController = require('../controllers/SampleController');
 
 router.delete('/:name', SampleController.deleteSample);
 router.get('/', SampleController.getSamples);
-router.get('/:name:test?', SampleController.getSampleByName);
+router.get('/:name/:test?', SampleController.getSampleByName);
 router.post('/add', SampleController.addSample);
 router.put('/:name', SampleController.updateSample);
 
