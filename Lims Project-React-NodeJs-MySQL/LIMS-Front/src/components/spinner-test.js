@@ -14,6 +14,7 @@ export default class SpinnerTest extends React.Component{
             messageSamples: Array(10).fill(""),
             validSamples: undefined,
             velocity: 0,
+            messageVel: "",
             validVel: undefined,
             samples: Array(10).fill(""),
         }
@@ -59,12 +60,7 @@ export default class SpinnerTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/\d\d\d\d\d/.test(operator) && operator.length===5){
-            this.setState({
-                operator: operator,
-                messageOp: "",
-                validOp: true,
-            })
+        if(/[1-99999]/.test(operator)){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
@@ -72,7 +68,7 @@ export default class SpinnerTest extends React.Component{
                         messageOp: "Operator dosent exist",
                         validOp: false,
                     })
-                } else  {
+                } else {
                     this.setState({
                         operator: operator,
                         messageOp: "",
@@ -98,10 +94,15 @@ export default class SpinnerTest extends React.Component{
             this.setState({
                 validVel: true,
             })
+        }else if(this.state.velocity===""){
+            this.setState({
+                messageVel: "",
+                validVel: false,
+            })
         }else{
             this.setState({
+                messageVel: "Must be 5 digits",
                 validVel: false,
-                messageOp: "Must be 5 digits",
             })
         }
     }
@@ -217,6 +218,7 @@ export default class SpinnerTest extends React.Component{
                 messageOp,
                 validOp,
                 validVel,
+                messageVel,
                 messageSamples,
                 validSamples,
                 messageAPI,
@@ -265,7 +267,7 @@ export default class SpinnerTest extends React.Component{
                             onChange={this.handleChangeVelocity}
                             onBlur={validateVelocity}
                         />
-                        <label className="col col-lg-5 col-4">{" "}</label>
+                        <label className={labelClass}>{messageVel}</label>
                     </div>
    
                     <div>

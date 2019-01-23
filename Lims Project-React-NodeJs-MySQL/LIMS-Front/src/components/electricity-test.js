@@ -49,12 +49,7 @@ export default class ElectricityTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/\d\d\d\d\d/.test(operator) && operator.length===5){
-            this.setState({
-                operator: operator,
-                messageOp: "",
-                validOp: true,
-            })
+        if(/[1-99999]/.test(operator)){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
                 if (res.data.message) { 
