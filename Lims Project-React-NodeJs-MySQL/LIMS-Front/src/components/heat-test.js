@@ -51,7 +51,7 @@ export default class HeatTest extends React.Component{
     }
 
     addSample=(e)=>{
-        const sampleNumber =e.target.name.replace("sample","")
+        const sampleNumber = parseInt(e.target.name.replace("sample",""))
         const sample = e.target.value
 
         this.updateSamples(sample,sampleNumber-1)
@@ -94,12 +94,12 @@ export default class HeatTest extends React.Component{
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
             this.updateSamplesMessage("Incorrect syntax", sampleNumber-1)
             this.setState({
                 validSamples: false,
             })
-        }else if(sample==""){
+        }else if(sample===""){
             this.updateSamplesMessage("", sampleNumber-1)
         }else{
             this.updateSamplesMessage("", sampleNumber-1)
@@ -112,12 +112,12 @@ export default class HeatTest extends React.Component{
                     })
                 } else {
                     samples.forEach((value,index)=>{
-                        if(sample==value && index!=sampleNumber-1){
+                        if(sample===value && index!==sampleNumber-1){
                             this.updateSamplesMessage("This sample is repeated", sampleNumber-1)
                             this.setState({
                                 validSamples: false,
                             })
-                        }else if(sample==""){
+                        }else if(sample===""){
                             this.updateSamplesMessage("", sampleNumber-1)
                         }
                     })
@@ -185,7 +185,6 @@ export default class HeatTest extends React.Component{
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
                         validSamples: false,
-                        operator:"",
                     })
       
                 } else {
@@ -198,19 +197,7 @@ export default class HeatTest extends React.Component{
         })
 
     }
-    settingTitle=()=>{
-        const val =this.state.validOp;
-        if(val==true){
-            this.setState({
-                buttonTitle:"Form is Ready"
-            })
-        }
-        else{
-            this.setState({
-            buttonTitle:"Form not ready"
-        })
-        }
-    }
+
     render(){
         const {
             addSample,
@@ -224,14 +211,13 @@ export default class HeatTest extends React.Component{
                 validOp,
                 messageSamples,
                 validSamples,
-                temperature,
                 samples,
                 messageAPI,
                 buttonTitle,
                 
             }
         } = this;
-        const {operator} = this.state;
+
         const format="SA-##-#####"
         const labelClass="col col-lg-4 col-sm-4 text-danger"
 
@@ -255,7 +241,6 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
                         <input 
-                            //value={operator}
                             type="text" 
                             className={operatorClassName}
                             name="operator" 
@@ -268,7 +253,6 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Temperature (C):</label>
                         <input 
-                        //value={temperature}
                             type="number" 
                             className={"sample col-lg-3 col-3 form-control"}
                             placeholder="###"

@@ -19,7 +19,7 @@ export default class ElectricityTest extends React.Component{
     updateSamples=(value,position)=>{
         this.setState(state=>{
             let samples = state.samples.map((sample,i)=>{
-                if(position==i){
+                if(position===i){
                     return sample=value
                 } else {
                     return sample;
@@ -84,18 +84,18 @@ export default class ElectricityTest extends React.Component{
     }
 
     validateSamples=(e)=>{
-        const sampleNumber =e.target.name.replace("sample","")
+        const sampleNumber = parseInt(e.target.name.replace("sample",""))
         const sample = e.target.value
 
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
             this.updateSamplesMessage("Incorrect syntax", sampleNumber-1)
             this.setState({
                 validSamples: false,
             })
-        }else if(sample==""){
+        }else if(sample===""){
             this.updateSamplesMessage("", sampleNumber-1)
         }else{
             this.updateSamplesMessage("", sampleNumber-1)
@@ -108,12 +108,12 @@ export default class ElectricityTest extends React.Component{
                     })
                 } else {
                     samples.forEach((value,index)=>{
-                        if(sample==value && index!=sampleNumber-1){
+                        if(sample===value && index!==sampleNumber-1){
                             this.updateSamplesMessage("This sample is repeated", sampleNumber-1)
                             this.setState({
                                 validSamples: false,
                             })
-                        }else if(sample==""){
+                        }else if(sample===""){
                             this.updateSamplesMessage("", sampleNumber-1)
                         }
                     })
@@ -213,7 +213,7 @@ export default class ElectricityTest extends React.Component{
                 <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
-                        <input 
+                        <input
                             type="text" 
                             className={operatorClassName}
                             name="operator" 

@@ -52,12 +52,12 @@ validateChemistry=(e)=>{
 validateSample=(e)=>{
     const sample = e.target.value
 
-    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=""){
+    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
         this.setState({
             messageSample: "Incorrect syntax",
             validSample: false,
         })
-    }else if(sample==""){
+    }else if(sample===""){
         this.setState({
             messageSample: "",
             validSample: false,
