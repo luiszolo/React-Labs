@@ -119,6 +119,12 @@ async function getTestById (req, res) {
 	});
 };
 
+async function getTestBySample (req, res) {
+	let body = req.body;
+
+	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test}'`);
+}
+
 // Finish
 async function updateTest (req, res) {
 	let params = req.params;
