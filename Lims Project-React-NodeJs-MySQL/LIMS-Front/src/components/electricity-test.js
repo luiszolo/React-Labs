@@ -91,9 +91,10 @@ export default class ElectricityTest extends React.Component{
                 this.updateSamplesMessage("", sampleNumber)
             }else{
                 this.updateSamplesMessage("", sampleNumber)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
                 .then(res => {
-                    if (!res.data.message) {
+                    console.log(res.data)
+                    if (res.data.message) {
                         this.updateSamplesMessage("The sample already exists", sampleNumber)
                         this.setState({
                             validSamples: false,

@@ -22,7 +22,7 @@ class App extends React.Component {
   }
 
    componentWillMount() {
-       fetch("http://10.2.1.94:4000/api/tests/?"+this.state.x+"=true")
+       fetch("http://10.2.1.94:4000/api/tests/?actived=true")
            .then(res => res.json()) 
            .then(data=> this.setState({tests: data.Tests}));
    }

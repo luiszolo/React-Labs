@@ -33,44 +33,43 @@ let GeneralValidator = {
 }
 
 async function SampleValidators (sample, test) {
-	console.log(test, sample)
+	if (test.id != 1) return true;
+	if (sample == undefined) return true;
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
 
-	if(sample == false) {
+	if(sample == false && test.id != 1) {
 		return {
 			message: 'This sample does\'nt exists'
 		};
 	}
-
 	if (test == false) {
 		return { 
 			message: 'Test not exists!'
 		}
 	}
-
-	if (GeneralValidator.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.id} AND test_Id=${test.id}`) == true){
+	console.log(sample, test)
+	if (GeneralValidator.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.id} AND test_Id=${test.id}`) == true && test.id != 1){
 		return {
 			message: `This sample already passed ${test.name}`
 		}
 	}
-
 	for await (const status of prevStatus) {
-		let statusSequence = GeneralValidator.isExists(`
+		let statusSequence = await GeneralValidator.isExists(`
 			SELECT * FROM Status 
 			JOIN StatusSequence ON Status.id = StatusSequence.status_Id WHERE Status.id=${status.prev_State}
 		`);
 		if(statusSequence.pass == true) {
-			if(GeneralValidator.isExists(`
+			if(await GeneralValidator.isExists(`
 				SELECT * FROM Log WHERE status_Id=${statusSequence.result.status_Required} AND sample_Id=${sample.id}
 			`) == false && test.id != 1) {
 				return {
 					message: `This sample need the previous test`
-				}
+				};
 			}
-		} else {
-			if(test.id == 1) return true;
 		}
 	}
+
+	return true;
 }
 
 module.exports = {

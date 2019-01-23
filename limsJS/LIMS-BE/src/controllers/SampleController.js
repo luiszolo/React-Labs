@@ -38,15 +38,12 @@ async function getSamples (req, res) {
 // Finish
 async function getSampleByName (req, res) {
 	let params = req.params;
-	let body = req.body;
-	console.log(body)
-
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.name}'`);
-	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test}'`);
-	const pass = await ValidateController.SampleValidators(sample.result, test.result);
-	if(pass != true) {
+	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${params.test}'`);
+	const result = await ValidateController.SampleValidators(sample.result, test.result);
+	if(result != true) {
 		res.send({
-			message: pass.message
+			message: result.message
 		});
 		return;
 	}

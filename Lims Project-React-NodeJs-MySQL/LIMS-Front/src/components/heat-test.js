@@ -106,7 +106,7 @@ export default class HeatTest extends React.Component{
                 this.updateSamplesMessage("", sampleNumber)
             }else{
                 this.updateSamplesMessage("", sampleNumber)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Heat Test`)
                 .then(res => {
                     if (res.data.message) {
                         this.updateSamplesMessage("The sample does not exists", sampleNumber)

@@ -64,9 +64,7 @@ validateSample=(e)=>{
         })
     }else{
         
-        axios.get(`http://10.2.1.94:4000/api/samples/${sample}`,{
-            test:this.state.name
-        }).then(res => {
+        axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Chemistry Test`).then(res => {
             if (res.data.message) {
                 this.setState({
                     messageSample:res.data.message,
