@@ -13,8 +13,12 @@ export default class HeatTest extends React.Component{
             validOp: undefined,
             messageSamples: Array(5).fill(""),
             validSamples: undefined,
-            temperature: "",
+            temperature: 0,
+            messageTemp: "",
+            validTemp: undefined,
             time: 0,
+            messageTime: "",
+            validTime: undefined,
             samples: Array(5).fill(""),
             buttonTitle:"",
         }
@@ -60,12 +64,7 @@ export default class HeatTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/\d\d\d\d\d/.test(operator) && operator.length===5){
-            this.setState({
-                operator: operator,
-                messageOp: "",
-                validOp: true,
-            })
+        if(/[1-99999]/.test(operator)){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
                 if (res.data.message) { 
@@ -146,15 +145,43 @@ export default class HeatTest extends React.Component{
     }
 
     handleChangeTemperature = event => {
-        this.setState({ 
-            temperature: event.target.value,
-        } );
+        if(event.target.value>0){
+            this.setState({
+                temperature: event.target.value,
+                messageTemp: "",
+                validTemp: true,
+            });
+        }else if(event.target.value===""){
+            this.setState({
+                messageTemp: "",
+                validTime: false,
+            });
+        }else{
+            this.setState({
+                messageTemp: "The value can't be 0",
+                validTemp: false,
+            });
+        }
     }
 
     handleChangeTime = event => {
-        this.setState({ 
-            time: event.target.value,
-        } );
+        if(event.target.value>0){
+            this.setState({
+                time: event.target.value,
+                messageTime: "",
+                validTime: true,
+            });
+        }else if(event.target.value===""){
+            this.setState({
+                messageTime: "",
+                validTime: false,
+            });
+        }else{
+            this.setState({
+                messageTime: "The value can't be 0",
+                validTime: false,
+            });
+        }
     }
 
 
@@ -192,7 +219,6 @@ export default class HeatTest extends React.Component{
 						messageAPI: res.data.message,
                         validSamples: false,
                     })
-      
                 } else {
                     console.log(res.data.message)
                     this.setState({
@@ -215,6 +241,10 @@ export default class HeatTest extends React.Component{
                 name,
                 messageOp,
                 validOp,
+                messageTemp,
+                validTemp,
+                messageTime,
+                validTime,
                 messageSamples,
                 validSamples,
                 samples,
@@ -265,7 +295,7 @@ export default class HeatTest extends React.Component{
                             name="temperature" 
                             onChange={this.handleChangeTemperature}
                         />
-                        <label className="col col-lg-5 col-4">{" "}</label>
+                        <label className={labelClass}>{messageTemp}</label>
                     </div>
                     <div className="row form-inline pb-3">
                         <label className="col col-lg-5 col-4 text-right d-block">Time elapse (sec):</label>
@@ -275,14 +305,14 @@ export default class HeatTest extends React.Component{
                             name="time" 
                             onChange={this.handleChangeTime}
                         />
-                        <label className="col col-lg-5 col-4">{" "}</label>
+                        <label className={labelClass}>{messageTime}</label>
                     </div>
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
                         <input 
-                        //value={samples[0]}
+                            value={samples[0]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample1"} 
@@ -295,7 +325,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
                         <input 
-                        //value={samples[1]}
+                        value={samples[1]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample2"}
@@ -308,7 +338,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
                         <input 
-                        //value={samples[2]}
+                        value={samples[2]}
                             type="text"
                             className={"sample col-lg-3 col-4 form-control"}
                             name={"sample3"} 
@@ -321,7 +351,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
                         <input 
-                        //value={samples[3]}
+                        value={samples[3]}
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample4"} 
@@ -334,7 +364,7 @@ export default class HeatTest extends React.Component{
                     <div className="row form-inline pb-1">
                         <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
                         <input 
-                        //value={samples[4]}
+                        value={samples[4]}
                         type="text"
                         className={"sample col-lg-3 col-4 form-control"}
                         name={"sample5"} 
@@ -350,7 +380,7 @@ export default class HeatTest extends React.Component{
                         value={samples[5]}
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
-                        disabled={(validSamples && validOp) ? false : true}
+                        disabled={(validOp && validTemp && validTime && validSamples) ? false : true}
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >

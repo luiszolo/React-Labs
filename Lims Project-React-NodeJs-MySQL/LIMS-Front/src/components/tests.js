@@ -25,7 +25,7 @@ export default class Tests extends React.Component {
       }
     } = this;
 
-    return (<div className="row root pt-5 m-0">
+    return (<div className="row root m-0">
       <div className="col col-sm-2 p-0 bg-info">
         <nav className="nav flex-column border-right">
           {children.map((child) => {

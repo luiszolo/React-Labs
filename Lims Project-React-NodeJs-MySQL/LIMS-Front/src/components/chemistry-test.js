@@ -83,7 +83,7 @@ validateSample=(e)=>{
 validateOperator=(e)=>{
     const operator = e.target.value
 
-    if(/\d\d\d\d\d/.test(operator) && operator.length===5){
+    if(/[1-99999]/.test(operator)){
         axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
         .then(res => {
             if (res.data.message) { 

@@ -28,14 +28,14 @@ class App extends React.Component {
    }
 
   render() {
-        const title = (<div className="container-fluid position-fixed text-center bg-info text-white "><h1>LIMS</h1></div>)
+        const title = (<div className="container-fluid text-center bg-info text-white "><h1>LIMS</h1></div>)
         const app =["Home"]
         
         const tests = this.state.tests.map((e)=>{
             return e["name"]
         })
-        const menu = app.concat(tests)
-        const comp =[<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
+        const menu = app.concat(tests) //["Home","<ElectricityTest/>","<HeatTest/>","<ChemistryTest/>","<SpinnerTest/>","<GenerateReport/>"] 
+        const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
 
         return(<div className="root">
             {title}
