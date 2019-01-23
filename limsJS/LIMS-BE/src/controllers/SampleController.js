@@ -1,6 +1,7 @@
 const pool = require('./../config/database');
 const regex = require('./../middlewares/regex');
 const dbInteract = require('./../middlewares/db-interact');
+const ValidateController = require('./ValidateController');
 
 // Finish
 async function addSample (req, res) {
@@ -37,12 +38,18 @@ async function getSamples (req, res) {
 // Finish
 async function getSampleByName (req, res) {
 	let params = req.params;
-	const name = params.name;
-	const value = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${name}'`);
-
-	if (value == false) res.send({ message: 'The sample doesn\'t exists' });
-	else res.send({
-		Sample: value.result
+	let body = req.body;
+	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.name}'`);
+	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE id=${body.test}`);
+	const pass = await ValidateController.SampleValidators(sample.result, test.result)
+	if(pass != true) {
+		res.send({
+			message: pass.message
+		});
+		return;
+	}
+	res.send({
+		Sample: sample.result
 	});
 };
 
