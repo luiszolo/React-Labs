@@ -34,10 +34,11 @@ class App extends React.Component {
         const tests = this.state.tests.map((e)=>{
             return e["name"]
         })
-        const menu = app.concat(tests) //["Home","<ElectricityTest/>","<HeatTest/>","<ChemistryTest/>","<SpinnerTest/>","<GenerateReport/>"] 
+        
+        const menu = app.concat(tests) // ["Home","<ElectricityTest/>","<HeatTest/>","<ChemistryTest/>","<SpinnerTest/>","<GenerateReport/>"]
         const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>]
 
-        return(<div className="root">
+        return(<div className="component">
             {title}
             <Tests>
                 {menu.map((t, keyT)=>{

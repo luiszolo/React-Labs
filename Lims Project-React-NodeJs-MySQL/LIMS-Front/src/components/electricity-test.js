@@ -80,9 +80,8 @@ export default class ElectricityTest extends React.Component{
 
     validateSamples=()=>{
         const samples = this.state.samples
-        this.setState({
-            messageAPI:""
-        })
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -91,9 +90,6 @@ export default class ElectricityTest extends React.Component{
                 })
             }else if(sample===""){
                 this.updateSamplesMessage("", sampleNumber)
-                // this.setState({
-                //     validSamples: false, Aqui seria no? pero me desablita por que busca en todas 
-                // })
             }else{
                 this.updateSamplesMessage("", sampleNumber)
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
@@ -122,43 +118,21 @@ export default class ElectricityTest extends React.Component{
                 })
             }
         })
+
+        if(correctSamples.length>0){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
+        
+        this.setState({
+            messageAPI:""
+        })
     }
-
-    // validateSamples=(e)=>{
-    //     const sampleNumber = parseInt(e.target.name.replace("sample",""))
-    //     const sample = e.target.value
-
-    //     const samples = this.state.samples
-    //     const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-
-    //     if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-    //         this.updateSamplesMessage("Incorrect syntax", sampleNumber-1)
-    //         this.setState({
-    //             validSamples: false,
-    //         })
-    //     }else if(sample===""){
-    //         this.updateSamplesMessage("", sampleNumber-1)
-    //     }else{
-    //         this.updateSamplesMessage("", sampleNumber-1)
-    //         axios.get(`http://10.2.1.94:4000/api/samples/${sample}`)
-    //         .then(res => {
-
-    //         })
-    //         this.setState({
-    //             validSamples: true,
-    //         })
-    //     }
-    //     if(correctSamples.length>0){
-    //         this.setState({
-    //             validSamples: true,
-    //         })
-    //     }else{
-    //         this.setState({
-    //             validSamples: false,
-    //         })
-    //     }
-
-    // }
 
     addSample=(e)=>{
         const sampleNumber =e.target.name.replace("sample","")
@@ -217,178 +191,180 @@ export default class ElectricityTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const labelClass="col col-lg-4 col-sm-4 text-danger"
+        const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
+        const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
+        const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
 
-        let operatorClassName="sample col-lg-3 col-3 form-control";
+        let operatorInput= inputs
 
         if(validOp===false){
-            operatorClassName= operatorClassName +=" border-danger"
+            operatorInput= operatorInput += " border-danger"
         }else if(validOp===true){
-            operatorClassName= operatorClassName += " border-success"
-        }
-        else{
-            operatorClassName="sample col-lg-3 col-3 form-control"
+            operatorInput= operatorInput += " border-success"
+        }else{
+            operatorInput = inputs
         }
 
-        return(<div>
-            <div className="col col-12 pb-3">
+        return(<div className="component offset-xl-2">
+            <div className="col col-12 col-xl-10 pb-3">
                 <h1 className="text-center">{name}</h1>
             </div>
-            <div className="col col-12">
+            <div className="col col-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
+                        <label className={regularLabels}>Operator #</label>
                         <input
-                            type="text" 
-                            className={operatorClassName}
+                            type="text"
+                            className={operatorInput}
                             name="operator" 
                             placeholder="#####"
                             onBlur={validateOperator}
                         />
-                        <label className={labelClass}>{messageOp}</label>
+                        <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                            <label className={regularLabels}>{"#1"}</label>
                             <input 
                                 value={samples[0]}
                                 type="text"
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample1"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[0]}</label> 
+                            <label className={warningLabels}>{messageSamples[0]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
+                            <label className={regularLabels}>{"#2"}</label>
                             <input 
                                 value={samples[1]}
                                 type="text"
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample2"}
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[1]}</label> 
+                            <label className={warningLabels}>{messageSamples[1]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
+                            <label className={regularLabels}>{"#3"}</label>
                             <input 
                                 type="text"
                                 value={samples[2]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample3"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[2]}</label> 
+                            <label className={warningLabels}>{messageSamples[2]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
+                            <label className={regularLabels}>{"#4"}</label>
                             <input 
                                 type="text"
                                 value={samples[3]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample4"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[3]}</label> 
+                            <label className={warningLabels}>{messageSamples[3]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
+                            <label className={regularLabels}>{"#5"}</label>
                             <input 
                                 type="text"
                                 value={samples[4]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample5"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[4]}</label> 
+                            <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
+                            <label className={regularLabels}>{"#6"}</label>
                             <input 
                                 type="text"
                                 value={samples[5]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample6"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[5]}</label> 
+                            <label className={warningLabels}>{messageSamples[5]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
+                            <label className={regularLabels}>{"#7"}</label>
                             <input 
                                 type="text"
                                 value={samples[6]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample7"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[6]}</label> 
+                            <label className={warningLabels}>{messageSamples[6]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
+                            <label className={regularLabels}>{"#8"}</label>
                             <input 
                                 type="text"
                                 value={samples[7]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample8"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[7]}</label> 
+                            <label className={warningLabels}>{messageSamples[7]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
+                            <label className={regularLabels}>{"#9"}</label>
                             <input 
                                 type="text"
                                 value={samples[8]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample9"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[8]}</label> 
+                            <label className={warningLabels}>{messageSamples[8]}</label> 
                         </div>
                         <div className="row form-inline pb-1">
-                            <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
+                            <label className={regularLabels}>{"#10"}</label>
                             <input 
                                 type="text"
                                 value={samples[9]}
-                                className={"sample col-lg-3 col-4 form-control"}
+                                className={inputs}
                                 name={"sample10"}
                                 placeholder={format}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
-                            <label className={labelClass}>{messageSamples[9]}</label>
+                            <label className={warningLabels}>{messageSamples[9]}</label>
                         </div>
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>
-                    <p id="succes">{messageAPI}</p></label>
+                    <label id="succes" className={"col-4 offset-4 offset-lg-5 mt-3"}>
+                    {messageAPI}
+                    </label>
                     <button
                         type="submit"
-                        className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
+                        className="btn btn-primary col-4 col-sm-2 col-lg-2 offset-4 offset-sm-5  mt-3"
                         disabled={(validSamples && validOp) ? false : true}
                         title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
                     >
-                    {(validSamples && validOp) ? "Save data" : "Form not ready"}
+                    Save Data
                     </button>
                 </form>
             </div>

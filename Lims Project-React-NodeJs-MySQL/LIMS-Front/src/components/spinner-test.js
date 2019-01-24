@@ -110,9 +110,8 @@ export default class SpinnerTest extends React.Component{
 
     validateSamples=()=>{
         const samples = this.state.samples
-        this.setState({
-            messageAPI:""
-        })
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -148,6 +147,20 @@ export default class SpinnerTest extends React.Component{
                     validSamples: true,
                 })
             }
+        })
+
+        if(correctSamples.length>0){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
+
+        this.setState({
+            messageAPI:""
         })
     }
 
@@ -219,9 +232,11 @@ export default class SpinnerTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const labelClass="col col-lg-4 col-sm-4 text-danger"
-
-        let operatorClassName="sample col-lg-3 col-3 form-control";
+        const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
+        const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
+        const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
+    
+        let operatorClassName = inputs;
 
         if(validOp===false){
             operatorClassName= operatorClassName +=" border-danger"
@@ -229,7 +244,7 @@ export default class SpinnerTest extends React.Component{
             operatorClassName= operatorClassName += " border-success"
         }
         else{
-            operatorClassName="sample col-lg-3 col-3 form-control"
+            operatorClassName = inputs
         }
 
         return(<div>
@@ -239,7 +254,7 @@ export default class SpinnerTest extends React.Component{
             <div className="col col-12">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
+                        <label className={regularLabels}>Operator #</label>
                         <input 
                             type="text" 
                             className={operatorClassName}
@@ -247,152 +262,152 @@ export default class SpinnerTest extends React.Component{
                             placeholder="#####"
                             onBlur={validateOperator}
                         />
-                        <label className={labelClass}>{messageOp}</label>
+                        <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Velocity (RPM):</label>
+                        <label className={regularLabels}>Velocity (RPM):</label>
                         <input 
                             type="number" 
-                            className={"sample col-lg-3 col-3 form-control"}
+                            className={inputs}
                             placeholder="#####"
                             name="velocity" 
                             onChange={this.handleChangeVelocity}
                             onBlur={validateVelocity}
                         />
-                        <label className={labelClass}>{messageVel}</label>
+                        <label className={warningLabels}>{messageVel}</label>
                     </div>
    
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                        <label className={regularLabels}>{"#1"}</label>
                         <input 
                             value={samples[0]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[0]}</label> 
+                        <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
+                        <label className={regularLabels}>{"#2"}</label>
                         <input 
                             value={this.state.samples[1]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample2"}
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[1]}</label> 
+                        <label className={warningLabels}>{messageSamples[1]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
+                        <label className={regularLabels}>{"#3"}</label>
                         <input 
                         value={this.state.samples[2]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample3"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[2]}</label> 
+                        <label className={warningLabels}>{messageSamples[2]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
+                        <label className={regularLabels}>{"#4"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[3]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample4"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[3]}</label> 
+                        <label className={warningLabels}>{messageSamples[3]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
+                        <label className={regularLabels}>{"#5"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[4]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample5"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[4]}</label> 
+                        <label className={warningLabels}>{messageSamples[4]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#6"}</label>
+                        <label className={regularLabels}>{"#6"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[5]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample6"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[5]}</label> 
+                        <label className={warningLabels}>{messageSamples[5]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#7"}</label>
+                        <label className={regularLabels}>{"#7"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[6]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample7"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[6]}</label> 
+                        <label className={warningLabels}>{messageSamples[6]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#8"}</label>
+                        <label className={regularLabels}>{"#8"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[7]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample8"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[7]}</label> 
+                        <label className={warningLabels}>{messageSamples[7]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#9"}</label>
+                        <label className={regularLabels}>{"#9"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[8]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample9"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[8]}</label> 
+                        <label className={warningLabels}>{messageSamples[8]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#10"}</label>
+                        <label className={regularLabels}>{"#10"}</label>
                         <input 
                             type="text"
                             value={this.state.samples[9]}
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample10"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[9]}</label> 
+                        <label className={warningLabels}>{messageSamples[9]}</label> 
                         </div>
                     </div>
                     <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
@@ -402,7 +417,7 @@ export default class SpinnerTest extends React.Component{
                         disabled={(validOp && validVel && validSamples) ? false : true}
                         title={(validSamples && validOp && validVel) ? "Form is ready" : "Form not ready"}
                     >
-                    {(validSamples && validOp && validVel) ? "Save data" : "Form not ready"}
+                    Save Data
                     </button>
                 </form>
             </div>

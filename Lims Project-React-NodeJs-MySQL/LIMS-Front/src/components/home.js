@@ -74,18 +74,16 @@ export default class Home extends React.Component{
     const status = this.state.status
 
     axios.post(`http://localhost:4000/api/tests/add`, {name, samplesLength,status})
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-  }
-    render(){
+        .then(res => {
+            console.log(res);
+            console.log(res.data);
+        })
+    }
 
-        return(<div className="col col-sm-6 offset-sm-4">
-            <div className="col mx-auto d-block component ">
+    render(){
+        return(<div className="col col-12 col-lg-6 offset-lg-3 mx-auto d-block">
                 <img src="images/logo.png" className="logo pb-3"alt="BSI logo"/>
-                </div>
-                </div>)
+        </div>)
                 
     }
 }

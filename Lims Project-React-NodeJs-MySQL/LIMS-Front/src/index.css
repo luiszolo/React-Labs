@@ -22,14 +22,6 @@ img{
     padding-top: 20rem;
 }
 
-.root{
-    height: 100%;
-}
-
-.sample{
-    width: 8rem;
-}
-
 button[disabled]:hover {
     border-color: #dc3545;
     background: #dc3545;
@@ -42,6 +34,7 @@ button[disabled]:hover {
 #succes{
     color:green;
 }
+
 #error{
-    color:red;
+    color: #dc3545;
 }

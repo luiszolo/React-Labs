@@ -24,12 +24,13 @@ export default class NavItem extends React.Component {
     }
 
     return (
-      <button
-        className={className}
-        onClick={onClick}
-      >
+        <button
+            className={className}
+            onClick={onClick}
+            title={label}
+        >
         {label}
-      </button>
+        </button>
     );
   }
 }
