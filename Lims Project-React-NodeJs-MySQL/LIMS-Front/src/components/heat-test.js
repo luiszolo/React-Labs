@@ -95,7 +95,9 @@ export default class HeatTest extends React.Component{
     
     validateSamples=()=>{
         const samples = this.state.samples
-        
+        this.setState({
+            messageAPI:""
+        })
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -142,8 +144,8 @@ export default class HeatTest extends React.Component{
             });
         }else if(event.target.value===""){
             this.setState({
-                messageTemp: "",
-                validTime: false,
+                messageTemp: "Cant be Blank",
+                validTemp: false,
             });
         }else{
             this.setState({
@@ -162,7 +164,7 @@ export default class HeatTest extends React.Component{
             });
         }else if(event.target.value===""){
             this.setState({
-                messageTime: "",
+                messageTime: "Cant be Blank",
                 validTime: false,
             });
         }else{
@@ -364,7 +366,7 @@ export default class HeatTest extends React.Component{
                         <label className={labelClass}>{messageSamples[4]}</label> 
                         </div>
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
+                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
                     <button
                         value={samples[5]}
                         type="submit"
@@ -373,7 +375,7 @@ export default class HeatTest extends React.Component{
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >
-                    Save Data
+                     {(validSamples && validOp) ? "Save data" : "Form not ready"}
                     </button>
                 </form>
             </div>

@@ -90,13 +90,14 @@ export default class SpinnerTest extends React.Component{
     }
 
     validateVelocity=()=>{
-        if(/\d\d\d\d\d/.test(this.state.velocity)){
+        if(/(?:^|\D)(\d{5})(?=\D|$)/g.test(this.state.velocity)){
             this.setState({
                 validVel: true,
+                messageVel: "",
             })
         }else if(this.state.velocity===""){
             this.setState({
-                messageVel: "",
+                messageVel: "Cant be Blank",
                 validVel: false,
             })
         }else{
@@ -109,7 +110,9 @@ export default class SpinnerTest extends React.Component{
 
     validateSamples=()=>{
         const samples = this.state.samples
-        
+        this.setState({
+            messageAPI:""
+        })
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -123,9 +126,10 @@ export default class SpinnerTest extends React.Component{
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Spinner Test`)
                 .then(res => {
                     if (res.data.message) {
-                        this.updateSamplesMessage("The sample does not exists", sampleNumber)
+                        this.updateSamplesMessage(res.data.message, sampleNumber)
                         this.setState({
                             validSamples: false,
+                            messageSample:res.data.message,
                         })
                     } else {
                         samples.forEach((value,index)=>{
@@ -391,14 +395,14 @@ export default class SpinnerTest extends React.Component{
                         <label className={labelClass}>{messageSamples[9]}</label> 
                         </div>
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
+                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                         disabled={(validOp && validVel && validSamples) ? false : true}
-                        title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
+                        title={(validSamples && validOp && validVel) ? "Form is ready" : "Form not ready"}
                     >
-                    {(validSamples && validOp) ? "Save data" : "Form not ready"}
+                    {(validSamples && validOp && validVel) ? "Save data" : "Form not ready"}
                     </button>
                 </form>
             </div>

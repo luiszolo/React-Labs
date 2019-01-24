@@ -51,7 +51,9 @@ validateChemistry=(e)=>{
 
 validateSample=(e)=>{
     const sample = e.target.value
-
+    this.setState({
+        messageAPI:""
+    })
     if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
         this.setState({
             messageSample: "Incorrect syntax",
@@ -229,14 +231,14 @@ render(){
                 </div>
                 
                 </div>
-                <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
+                <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
                 <button
                     type="submit"
                     className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
                     disabled={(validOp && validCh && validSample) ? false : true}
                     title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                 >
-                {(validSample && validOp) ? "Save data" : "Form not ready"}
+                {(validSample && validOp && validCh) ? "Save data" : "Form not ready"}
                 </button>
             </form>
         </div>

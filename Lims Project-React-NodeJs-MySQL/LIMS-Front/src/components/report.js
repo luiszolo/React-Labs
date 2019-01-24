@@ -63,8 +63,7 @@ export default class SampleSearch extends React.Component{
                     else{
             const tests = res.data.Logs;
             const attributes = res.data.Attributes;
-            this.setState({ tests,attributes });}
-            //this.setState({ attributes });}
+            this.setState({ tests,attributes,messageAPI:"" });}
           })
       }
     
@@ -74,7 +73,7 @@ export default class SampleSearch extends React.Component{
 
         console.log(this.state.tests)
 
-        return(<div className="container">
+        return(<div className="container" id="table">
             <div className="offset-3">
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-inline">
@@ -96,6 +95,9 @@ export default class SampleSearch extends React.Component{
                         >
                         Search
                         </button>
+                        <p id="error">
+                        {messageAPI}
+                        </p>
                     </div>
                 </form>
             </div>
@@ -118,9 +120,9 @@ export default class SampleSearch extends React.Component{
                {this.state.attributes ? ( <table class="table table-info">
                     <thead class="thead-gray">
                         <tr>
-                            <th scope="col">User ID</th>
-                            <th scope="col">Status</th>
                             <th scope="col">Test</th>
+                            <th scope="col">Attribute</th>
+                            <th scope="col">Value</th>
                         </tr>
                     </thead>
                     <tbody>

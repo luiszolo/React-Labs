@@ -80,7 +80,9 @@ export default class ElectricityTest extends React.Component{
 
     validateSamples=()=>{
         const samples = this.state.samples
-        
+        this.setState({
+            messageAPI:""
+        })
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -89,6 +91,9 @@ export default class ElectricityTest extends React.Component{
                 })
             }else if(sample===""){
                 this.updateSamplesMessage("", sampleNumber)
+                // this.setState({
+                //     validSamples: false, Aqui seria no? pero me desablita por que busca en todas 
+                // })
             }else{
                 this.updateSamplesMessage("", sampleNumber)
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
@@ -375,7 +380,8 @@ export default class ElectricityTest extends React.Component{
                             <label className={labelClass}>{messageSamples[9]}</label>
                         </div>
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>{messageAPI}</label>
+                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}>
+                    <p id="succes">{messageAPI}</p></label>
                     <button
                         type="submit"
                         className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"

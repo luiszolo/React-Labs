@@ -34,3 +34,14 @@ button[disabled]:hover {
     border-color: #dc3545;
     background: #dc3545;
 }
+
+#table{
+    padding-top: 1%;
+}
+
+#succes{
+    color:green;
+}
+#error{
+    color:red;
+}
