@@ -111,7 +111,8 @@ export default class HeatTest extends React.Component{
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Heat Test`)
                 .then(res => {
                     if (res.data.message) {
-                        this.updateSamplesMessage("The sample does not exists", sampleNumber)
+                        this.updateSamplesMessage(res.data.message, sampleNumber)
+                        console.log(res.data.message)
                         this.setState({
                             validSamples: false,
                         })
@@ -119,6 +120,7 @@ export default class HeatTest extends React.Component{
                         samples.forEach((value,index)=>{
                             if(sample===value && index!==sampleNumber){
                                 this.updateSamplesMessage("This sample is repeated", sampleNumber)
+                                
                                 this.setState({
                                     validSamples: false,
                                 })

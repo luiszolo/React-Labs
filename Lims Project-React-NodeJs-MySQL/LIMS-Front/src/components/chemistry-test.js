@@ -144,6 +144,14 @@ handleSubmit = event => {
             this.setState({
                 messageAPI: "Sample went through the test already "
             });
+
+            
+        }
+
+        else if(res.data.message==="This sample already passed CHEMESTRY TEST") {
+            this.setState({
+                messageAPI: "This sample already passed CHEMESTRY TEST"
+            });
         }
         else {
             console.log(res.data.message)
