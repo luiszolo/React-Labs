@@ -103,6 +103,10 @@ async function getLogBySample (req, res) {
 		result['On Created'] = result['On Created'].toISOString().slice(0, 19).replace('T', ' ');
 		result['Test'] = miscs.capitalizeWord(result['Test']);
 	}
+
+	for await (const attribute of attributes) {
+		attribute['Test'] = miscs.capitalizeWord(attribute['Test']);
+	}
 	
 	if (value[0] == undefined) {
 		res.send({

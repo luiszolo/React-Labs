@@ -1,4 +1,5 @@
 const pool = require('./../config/database');
+const miscs = require('./../middlewares/miscs');
 
 let GeneralValidator = {
 
@@ -46,7 +47,7 @@ async function SampleValidators (sample, test) {
 	const aux = await GeneralValidator.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.id} AND test_Id=${test.id}`)
 	if (aux.pass == true){
 		return {
-			message: `This sample already passed ${test.name}`
+			message: `This sample already passed ${miscs.capitalizeWord(test.name)}`
 		}
 	}
 	for await (const status of prevStatus) {
