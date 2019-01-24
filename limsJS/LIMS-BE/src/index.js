@@ -36,6 +36,12 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(require('./middlewares/cors'));
+app.use(function(error, req, res, next) {
+	console.error(error.stack);
+	res.status(500).send({
+		message: 'Something is wrong'
+	})
+});
 
 // Routes
 app.use('/api', require('./routes'));
@@ -46,4 +52,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Starting Server
 app.listen(app.get('port'), _ => {
 	console.log(`Server started on port ${app.get('port')}`);
+	console.log(new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' '))
 });

@@ -36,7 +36,7 @@ let GeneralValidator = {
 async function SampleValidators (sample, test) {
 	console.log(test, sample)
 	if (test.id == 1 && sample === undefined) return true;
-	if (sample === undefined) return { message: 'This sample does\'nt exists' };
+	if (sample === undefined) return { message: 'This sample doesn\'t exists' };
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
 
 	if (test == false) {
