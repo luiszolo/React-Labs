@@ -40,7 +40,7 @@ async function insertData(req, res) {
 		RepeatSample: [],
 	};
 
-	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples);
+	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
 
 	if(test.result.id == 1) {
 		let reqCopy = req;
