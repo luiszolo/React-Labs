@@ -196,7 +196,7 @@ render(){
         operatorClassName = inputs
     }
 
-    return(<div>
+    return(<div className="component offset-xl-2">
         <div className="col col-12 pb-3">
             <h1 className="text-center">{name}</h1>
         </div>
