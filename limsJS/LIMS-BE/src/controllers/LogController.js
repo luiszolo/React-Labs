@@ -96,7 +96,7 @@ async function getLogBySample (req, res) {
 		SELECT Test.name AS 'Test', Attribute.name AS 'Attribute', SampleValue.value AS 'Value' FROM SampleValue
 		JOIN Test ON Test.id=SampleValue.test_Id
 		JOIN Attribute ON  Attribute.id=SampleValue.attribute_Id
-		WHERE SampleValue.sample_Id=${sample.result.id} ORDER BY SampleValue.id DESC
+		WHERE SampleValue.sample_Id=${sample.result.id} ORDER BY SampleValue.id ASC
 	`);
 
 	for await (const result of value) {
