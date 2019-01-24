@@ -100,7 +100,7 @@ async function getLogBySample (req, res) {
 	`);
 
 	for await (const result of value) {
-		result['On Created'] = result['On Created'];
+		result['On Created'] = result['On Created'].toISOString().slice(0, 19).replace('T', ' ');
 		result['Test'] = miscs.capitalizeWord(result['Test']);
 	}
 	

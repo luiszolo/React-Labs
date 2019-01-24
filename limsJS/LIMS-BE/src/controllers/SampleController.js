@@ -41,7 +41,6 @@ async function getSampleByName (req, res) {
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.name}'`);
 	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${params.test}'`);
 	const result = await ValidateController.SampleValidators(sample.result, test.result);
-	console.log(result)
 	if(result != true) {
 		res.send({
 			message: result.message
