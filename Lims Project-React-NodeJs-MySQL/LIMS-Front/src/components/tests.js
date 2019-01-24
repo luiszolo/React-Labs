@@ -25,8 +25,8 @@ export default class Tests extends React.Component {
       }
     } = this;
 
-    return (<div className="row root m-0">
-      <div className="col col-sm-2 p-0 bg-info">
+    return (<div className="row component m-0">
+      <div className="col col-md-2 p-0 bg-info component">
         <nav className="nav flex-column border-right">
           {children.map((child) => {
             const { label } = child.props;
@@ -41,7 +41,7 @@ export default class Tests extends React.Component {
             );})}
         </nav>
       </div>
-      <div className="col-sm-10 p-0 component">
+      <div className="col-md-10 p-0 component">
           {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;

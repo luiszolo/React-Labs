@@ -173,17 +173,19 @@ render(){
     } = this;
 
     const format="SA-##-#####"
-    const labelClass="col col-lg-4 col-sm-4 text-danger"
+    const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
+    const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
+    const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
 
-    let operatorClassName="sample col-lg-3 col-3 form-control";
+    let operatorClassName = inputs;
 
     if(validOp===false){
-        operatorClassName= operatorClassName +=" border-danger"
+        operatorClassName= operatorClassName += " border-danger"
     }else if(validOp===true){
         operatorClassName= operatorClassName += " border-success"
     }
     else{
-        operatorClassName="sample col-lg-3 col-3 form-control"
+        operatorClassName = inputs
     }
 
     return(<div>
@@ -193,7 +195,7 @@ render(){
         <div className="col col-12">
             <form onSubmit={this.handleSubmit}>
                 <div className="row form-inline pb-3">
-                    <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
+                    <label className={regularLabels}>Operator #</label>
                     <input 
                         type="text" 
                         className={operatorClassName}
@@ -201,13 +203,13 @@ render(){
                         placeholder="#####"
                         onBlur={validateOperator}
                     />
-                    <label className={labelClass}>{messageOp}</label>
+                    <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className="row form-inline pb-3">
-                    <label className="col col-lg-5 col-4 text-right d-block">Chemistry:</label>
+                    <label className={regularLabels}>Chemistry:</label>
                     <input 
                         type="text" 
-                        className={"sample col-lg-3 col-3 form-control"}
+                        className={inputs}
                         name="chemistry"
                         placeholder="CH-##-#####"
                         onBlur={validateChemistry}
@@ -217,17 +219,17 @@ render(){
                 <div>
                     <h5 className="text-center">Sample Barcode</h5>
                 <div className="row form-inline pb-1">
-                    <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                    <label className={regularLabels}>{"#1"}</label>
                     <input 
                         type="text"
-                        className={"sample col-lg-3 col-4 form-control"}
+                        className={inputs}
                         name={"sample1"}
                         value={this.state.sample}
                         placeholder={format}
                         onChange={addSample}
                         onBlur={validateSample}
                     />
-                    <label className={labelClass}>{messageSample}</label> 
+                    <label className={warningLabels}>{messageSample}</label> 
                 </div>
                 
                 </div>
@@ -238,7 +240,7 @@ render(){
                     disabled={(validOp && validCh && validSample) ? false : true}
                     title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                 >
-                {(validSample && validOp && validCh) ? "Save data" : "Form not ready"}
+                Save Data
                 </button>
             </form>
         </div>

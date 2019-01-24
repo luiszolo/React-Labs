@@ -95,9 +95,8 @@ export default class HeatTest extends React.Component{
     
     validateSamples=()=>{
         const samples = this.state.samples
-        this.setState({
-            messageAPI:""
-        })
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
@@ -132,6 +131,19 @@ export default class HeatTest extends React.Component{
                     validSamples: true,
                 })
             }
+        })
+
+        if(correctSamples.length>0){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
+        this.setState({
+            messageAPI:""
         })
     }
 
@@ -241,22 +253,23 @@ export default class HeatTest extends React.Component{
                 samples,
                 messageAPI,
                 buttonTitle,
-                
             }
         } = this;
 
         const format="SA-##-#####"
-        const labelClass="col col-lg-4 col-sm-4 text-danger"
+        const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
+        const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
+        const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
 
-        let operatorClassName="sample col-lg-3 col-3 form-control";
+        let operatorClassName = inputs;
 
         if(validOp===false){
-            operatorClassName= operatorClassName +=" border-danger"
+            operatorClassName= operatorClassName += " border-danger"
         }else if(validOp===true){
             operatorClassName= operatorClassName += " border-success"
         }
         else{
-            operatorClassName="sample col-lg-3 col-3 form-control"
+            operatorClassName = inputs
         }
 
         return(<div>
@@ -266,104 +279,104 @@ export default class HeatTest extends React.Component{
             <div className="col col-12">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Operator #</label>
+                        <label className={regularLabels}>Operator #</label>
                         <input 
                             type="text" 
-                            className={operatorClassName}
+                            className={inputs}
                             name="operator" 
                             placeholder="#####"
                             onBlur={validateOperator}
                             
                         />
-                        <label className={labelClass}>{messageOp}</label>
+                        <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Temperature (C):</label>
+                        <label className={regularLabels}>Temperature (C):</label>
                         <input 
                             type="number" 
-                            className={"sample col-lg-3 col-3 form-control"}
+                            className={inputs}
                             placeholder="###"
                             name="temperature" 
                             onChange={this.handleChangeTemperature}
                         />
-                        <label className={labelClass}>{messageTemp}</label>
+                        <label className={warningLabels}>{messageTemp}</label>
                     </div>
                     <div className="row form-inline pb-3">
-                        <label className="col col-lg-5 col-4 text-right d-block">Time elapse (sec):</label>
+                        <label className={regularLabels}>Time elapse (sec):</label>
                         <input type="number" 
-                            className={"sample col-lg-3 col-3 form-control"}
+                            className={inputs}
                             placeholder="###"
                             name="time" 
                             onChange={this.handleChangeTime}
                         />
-                        <label className={labelClass}>{messageTime}</label>
+                        <label className={warningLabels}>{messageTime}</label>
                     </div>
                     <div>
                         <h5 className="text-center">Sample Barcodes</h5>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#1"}</label>
+                        <label className={regularLabels}>{"#1"}</label>
                         <input 
                             value={samples[0]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[0]}</label> 
+                        <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#2"}</label>
+                        <label className={regularLabels}>{"#2"}</label>
                         <input 
                         value={samples[1]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample2"}
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[1]}</label> 
+                        <label className={warningLabels}>{messageSamples[1]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#3"}</label>
+                        <label className={regularLabels}>{"#3"}</label>
                         <input 
                         value={samples[2]}
                             type="text"
-                            className={"sample col-lg-3 col-4 form-control"}
+                            className={inputs}
                             name={"sample3"} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[2]}</label> 
+                        <label className={warningLabels}>{messageSamples[2]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#4"}</label>
+                        <label className={regularLabels}>{"#4"}</label>
                         <input 
                         value={samples[3]}
                         type="text"
-                        className={"sample col-lg-3 col-4 form-control"}
+                        className={inputs}
                         name={"sample4"} 
                         placeholder={format}
                         onBlur={validateSamples}
                         onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[3]}</label> 
+                        <label className={warningLabels}>{messageSamples[3]}</label> 
                     </div>
                     <div className="row form-inline pb-1">
-                        <label className="col col-lg-5 col-sm-4 text-right d-block">{"#5"}</label>
+                        <label className={regularLabels}>{"#5"}</label>
                         <input 
                         value={samples[4]}
                         type="text"
-                        className={"sample col-lg-3 col-4 form-control"}
+                        className={inputs}
                         name={"sample5"} 
                         placeholder={format}
                         onBlur={validateSamples}
                         onChange={addSample}
                         />
-                        <label className={labelClass}>{messageSamples[4]}</label> 
+                        <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
                     </div>
                     <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
@@ -375,7 +388,7 @@ export default class HeatTest extends React.Component{
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >
-                     {(validSamples && validOp) ? "Save data" : "Form not ready"}
+                    Save Data
                     </button>
                 </form>
             </div>
