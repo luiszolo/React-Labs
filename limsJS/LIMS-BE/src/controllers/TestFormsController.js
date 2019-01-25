@@ -113,9 +113,15 @@ async function insertData(req, res) {
 	} 
 
 	if ((sampleError)) {
+
+		sampleErrorList.NotExists = miscs.getDuplications(sampleErrorList.NotExists).filter(e => e != null && e != "");
+		sampleErrorList.NotPrev = miscs.getDuplications(sampleErrorList.NotPrev).filter(e => e != null && e != "");
+		sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
+		sampleErrorList.RepeatTest = miscs.getDuplications(sampleErrorList.RepeatTest).filter(e => e != null && e != "");
+
 		res.send({
 			message: 'Samples are wrong',
-			test: test.result,
+			test: test.result.name,
 			sampleErrorList: sampleErrorList
 		});
 		return;

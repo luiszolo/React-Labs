@@ -46,8 +46,6 @@ class App extends React.Component {
                         {comp.map((c,keyC)=>{
                             if(keyT===keyC){
                                 return(c)
-                            }else{
-                                return ""
                             }
                         })}
                     </div>)}
