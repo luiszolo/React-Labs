@@ -58,13 +58,15 @@ export default class HeatTest extends React.Component{
         const sampleNumber = parseInt(e.target.name.replace("sample",""))
         const sample = e.target.value
 
-        this.updateSamples(sample,sampleNumber-1)
+        if(sample.length<=11){
+            this.updateSamples(sample,sampleNumber-1)
+        }
     }
 
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/[1-99999]/.test(operator) && operator.length<=5){
+        if(/[1-99999]/.test(operator) && operator.length <= 5){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
                 if (res.data.message) { 
@@ -96,9 +98,11 @@ export default class HeatTest extends React.Component{
     validateSamples=()=>{
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+        const messages = this.state.messageSamples
+        const noMessages = messages.filter((sample)=>{return sample===""})
 
         samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
                 this.setState({
                     validSamples: false,
@@ -135,7 +139,7 @@ export default class HeatTest extends React.Component{
             }
         })
 
-        if(correctSamples.length>0){
+        if(correctSamples.length > 0 && noMessages.length === 10){
             this.setState({
                 validSamples: true,
             })
@@ -263,15 +267,15 @@ export default class HeatTest extends React.Component{
         const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
         const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
 
-        let operatorClassName = inputs;
+        let operatorInput = inputs;
 
         if(validOp===false){
-            operatorClassName= operatorClassName += " border-danger"
+            operatorInput= operatorInput += " border-danger"
         }else if(validOp===true){
-            operatorClassName= operatorClassName += " border-success"
+            operatorInput= operatorInput += " border-success"
         }
         else{
-            operatorClassName = inputs
+            operatorInput = inputs
         }
 
         return(<div className="component offset-xl-2">
@@ -284,7 +288,7 @@ export default class HeatTest extends React.Component{
                         <label className={regularLabels}>Operator #</label>
                         <input 
                             type="text" 
-                            className={inputs}
+                            className={operatorInput}
                             name="operator" 
                             placeholder="#####"
                             onBlur={validateOperator}

@@ -12,7 +12,7 @@ export default class SampleSearch extends React.Component{
 
       handleChangeSample = event => {
         this.setState({ 
-          sample: event.target.value,
+            sample: event.target.value,
         } );
       }
 

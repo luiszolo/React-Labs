@@ -81,9 +81,11 @@ export default class ElectricityTest extends React.Component{
     validateSamples=()=>{
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+        const messages = this.state.messageSamples
+        const noMessages = messages.filter((sample)=>{return sample===""})
 
         samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
                 this.setState({
                     validSamples: false,
@@ -119,7 +121,7 @@ export default class ElectricityTest extends React.Component{
             }
         })
 
-        if(correctSamples.length>0){
+        if(correctSamples.length > 0 && noMessages.length === 10){
             this.setState({
                 validSamples: true,
             })
@@ -138,7 +140,9 @@ export default class ElectricityTest extends React.Component{
         const sampleNumber =e.target.name.replace("sample","")
         const sample = e.target.value
 
-        this.updateSamples(sample,sampleNumber-1)
+        if(sample.length<=11){
+            this.updateSamples(sample,sampleNumber-1)
+        }
     }
 
     handleSubmit = event => {
