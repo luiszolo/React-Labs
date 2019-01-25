@@ -110,7 +110,7 @@ validateOperator=(e)=>{
         })
     }else if(operator===""){
         this.setState({
-            messageOp: "Field can't be blank", //that's racist
+            messageOp: "Field can't be blank", //that's racist // It's normal for comunism
             validOp: undefined,
         })
     }else{
