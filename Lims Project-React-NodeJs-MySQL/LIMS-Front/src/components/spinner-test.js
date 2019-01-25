@@ -60,7 +60,7 @@ export default class SpinnerTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/[1-99999]/.test(operator)){
+        if(/[1-99999]/.test(operator) && operator.length<=5){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) //manda el get con el nombre del operador ejemplo: 12345
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
@@ -78,7 +78,7 @@ export default class SpinnerTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
-                messageOp: "Field can't be blank", //that's racist
+                messageOp: "Field can't be blank",
                 validOp: undefined,
             })
         }else{
@@ -90,7 +90,8 @@ export default class SpinnerTest extends React.Component{
     }
 
     validateVelocity=()=>{
-        if(/(?:^|\D)(\d{5})(?=\D|$)/g.test(this.state.velocity)){
+        const velocity=this.state.velocity
+        if(velocity.length<=5){
             this.setState({
                 validVel: true,
                 messageVel: "",
@@ -102,7 +103,7 @@ export default class SpinnerTest extends React.Component{
             })
         }else{
             this.setState({
-                messageVel: "Must be 5 digits",
+                messageVel: "Must be no more than 5 digits",
                 validVel: false,
             })
         }
@@ -113,7 +114,7 @@ export default class SpinnerTest extends React.Component{
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
         samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
                 this.setState({
                     validSamples: false,
@@ -207,7 +208,7 @@ export default class SpinnerTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              })
+              }).catch( err => this.setState({ messageAPI:'The operation timed out'}));
 
         })
     }

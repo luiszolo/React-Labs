@@ -30,7 +30,7 @@ addSample=(e)=>{
 validateChemistry=(e)=>{
     const chemistry = e.target.value
 
-    if(/CH-\d\d-\d\d\d\d\d/.test(chemistry) && chemistry.length===11){
+    if(/CH-\d\d\d\d\d/.test(chemistry) && chemistry.length===8){
         this.setState({
             chemistry: chemistry,
             validCh: true,
@@ -54,7 +54,7 @@ validateSample=(e)=>{
     this.setState({
         messageAPI:""
     })
-    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
         this.setState({
             messageSample: "Incorrect syntax",
             validSample: false,
@@ -73,7 +73,13 @@ validateSample=(e)=>{
                     messageSample:res.data.message,
                     validSample: false,
                 })
-            } else {
+            } 
+            // // else if(res.data){
+            // //     this.setState({
+            // //         messageSample:"no pasa por el status"
+            // //     })
+            // }
+            else {
                 this.setState({
                     messageSample: "",
                     validSample: true,
@@ -86,12 +92,12 @@ validateSample=(e)=>{
 validateOperator=(e)=>{
     const operator = e.target.value
 
-    if(/[1-99999]/.test(operator)){
+    if(/[1-99999]/.test(operator) && operator.length<=5){
         axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
         .then(res => {
             if (res.data.message) { 
                 this.setState({
-                    messageOp: res.data.message,
+                    messageOp: "Operator dosent exist",
                     validOp: false,
                 })
             } else  {
@@ -104,12 +110,13 @@ validateOperator=(e)=>{
         })
     }else if(operator===""){
         this.setState({
-            messageOp: "",
+            messageOp: "Field can't be blank", //that's racist
             validOp: undefined,
         })
     }else{
         this.setState({
             validOp: false,
+            messageOp: "Invalid Syntax",
         })
     }
 }
@@ -159,7 +166,7 @@ handleSubmit = event => {
                 messageAPI: "Sample is not ready for this test"
             });
         }
-      })
+      }).catch( err => this.setState({ messageAPI:'The operation timed out'}));
 }
 
 render(){
@@ -188,9 +195,9 @@ render(){
     let operatorClassName = inputs;
 
     if(validOp===false){
-        operatorClassName= operatorClassName += " border-danger"
+        operatorClassName= operatorClassName += "border-danger"
     }else if(validOp===true){
-        operatorClassName= operatorClassName += " border-success"
+        operatorClassName= operatorClassName += "border-success"
     }
     else{
         operatorClassName = inputs
@@ -202,24 +209,25 @@ render(){
         </div>
         <div className="col col-12">
             <form onSubmit={this.handleSubmit}>
-                <div className="row form-inline pb-3">
-                    <label className={regularLabels}>Operator #</label>
-                    <input 
-                        type="text" 
-                        className={operatorClassName}
-                        name="operator"
-                        placeholder="#####"
-                        onBlur={validateOperator}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
+            <div className="row form-inline pb-3">
+                        <label className={regularLabels}>Operator #</label>
+                        <input 
+                            type="text" 
+                            className={inputs}
+                            name="operator" 
+                            placeholder="#####"
+                            onBlur={validateOperator}
+                            
+                        />
+                        <label className={warningLabels}>{messageOp}</label>
+                    </div>
                 <div className="row form-inline pb-3">
                     <label className={regularLabels}>Chemistry:</label>
                     <input 
                         type="text" 
                         className={inputs}
                         name="chemistry"
-                        placeholder="CH-##-#####"
+                        placeholder="CH-#####"
                         onBlur={validateChemistry}
                     />
                     <label className="col col-lg-4 col-4 text-danger">{messageCh}</label>

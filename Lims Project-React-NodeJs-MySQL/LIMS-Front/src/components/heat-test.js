@@ -64,7 +64,7 @@ export default class HeatTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/[1-99999]/.test(operator)){
+        if(/[1-99999]/.test(operator) && operator.length<=5){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
                 if (res.data.message) { 
@@ -98,7 +98,7 @@ export default class HeatTest extends React.Component{
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
         samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
                 this.setState({
                     validSamples: false,

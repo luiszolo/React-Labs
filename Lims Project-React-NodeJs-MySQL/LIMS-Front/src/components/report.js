@@ -105,6 +105,7 @@ export default class SampleSearch extends React.Component{
                 <table class="table table-info">
                     <thead class="thead-gray">
                         <tr>
+                            <th scope="col">Samples</th>
                             <th scope="col">User ID</th>
                             <th scope="col">Status</th>
                             <th scope="col">Test</th>
@@ -112,7 +113,7 @@ export default class SampleSearch extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.tests.map(log =><tr><td>{log["UserID"]}</td><td>{log["State"]}</td><td>{log["Test"]}</td><td>{log["On Created"]}</td></tr>)}
+                        {this.state.tests.map(log =><tr><td>{log["Sample"]}</td><td>{log["UserID"]}</td><td>{log["State"]}</td><td>{log["Test"]}</td><td>{log["On Created"]}</td></tr>)}
                         
                     </tbody>
                     

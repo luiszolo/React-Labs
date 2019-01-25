@@ -60,7 +60,7 @@ async function SampleValidators (sample, test) {
 				SELECT * FROM Log WHERE status_Id=${statusSequence.result.status_Required} AND sample_Id=${sample.id}
 			`) == false && test.id != 1) {
 				return {
-					message: `This sample need the previous test`
+					message: `This sample dosent have the status for this test`
 				};
 			}
 		}
