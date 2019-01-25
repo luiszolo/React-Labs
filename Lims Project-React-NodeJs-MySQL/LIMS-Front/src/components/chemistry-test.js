@@ -33,6 +33,7 @@ validateChemistry=(e)=>{
     if(/CH-\d\d\d\d\d/.test(chemistry) && chemistry.length===8){
         this.setState({
             chemistry: chemistry,
+            messageCh: "",
             validCh: true,
         })
     }else if(chemistry===""){
