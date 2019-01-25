@@ -21,10 +21,12 @@ export default class ChemistryTest extends React.Component{
     }
 }
 
-addSample=(e)=>{
-    this.setState({
-        sample: e.target.value,
-    })
+addSample=(e)=>{       
+    if(e.target.value.length<=11){
+        this.setState({
+            sample: e.target.value,
+        })
+    }   
 }
 
 validateChemistry=(e)=>{
@@ -52,10 +54,8 @@ validateChemistry=(e)=>{
 
 validateSample=(e)=>{
     const sample = e.target.value
-    this.setState({
-        messageAPI:""
-    })
-    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!=="" ||  sample.length>11){
+
+    if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
         this.setState({
             messageSample: "Incorrect syntax",
             validSample: false,
@@ -74,13 +74,7 @@ validateSample=(e)=>{
                     messageSample:res.data.message,
                     validSample: false,
                 })
-            } 
-            // // else if(res.data){
-            // //     this.setState({
-            // //         messageSample:"no pasa por el status"
-            // //     })
-            // }
-            else {
+            } else {
                 this.setState({
                     messageSample: "",
                     validSample: true,
@@ -88,6 +82,10 @@ validateSample=(e)=>{
             }
         })
     }
+
+    this.setState({
+        messageAPI:""
+    })
 }
 
 validateOperator=(e)=>{
@@ -111,7 +109,7 @@ validateOperator=(e)=>{
         })
     }else if(operator===""){
         this.setState({
-            messageOp: "Field can't be blank", //that's racist
+            messageOp: "Field can't be blank", //that's racist // It's normal for comunism
             validOp: undefined,
         })
     }else{
@@ -193,15 +191,15 @@ render(){
     const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
     const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
 
-    let operatorClassName = inputs;
+    let operatorInput = inputs;
 
     if(validOp===false){
-        operatorClassName= operatorClassName += "border-danger"
+        operatorInput= operatorInput += "border-danger"
     }else if(validOp===true){
-        operatorClassName= operatorClassName += "border-success"
+        operatorInput= operatorInput += "border-success"
     }
     else{
-        operatorClassName = inputs
+        operatorInput = inputs
     }
 
     return(<div className="component offset-xl-2">
@@ -214,7 +212,7 @@ render(){
                         <label className={regularLabels}>Operator #</label>
                         <input 
                             type="text" 
-                            className={inputs}
+                            className={operatorInput}
                             name="operator" 
                             placeholder="#####"
                             onBlur={validateOperator}
