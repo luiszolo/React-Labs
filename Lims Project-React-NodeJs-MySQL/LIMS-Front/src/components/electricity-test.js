@@ -192,8 +192,8 @@ export default class ElectricityTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const regularLabels = "col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block text-right"
-        const inputs = "col-md-4 col-sm-12 col-lg-5 col-xl-5 form-control"
+        const regularLabels = "col-md-3 col-sm-12 col-lg-2 col-xl-2 d-block"
+        const inputs = "col-md-3 col-sm-12 col-lg-5 col-xl-5 form-control"
         const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput= inputs

@@ -8,7 +8,7 @@ async function addLog (req, res) {
 	console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id='${body.operator}'`);
 	if(operator == false) {
-		res.status(500).send({
+		res.send({
 			message: 'The operator doesn\'t exists'
 		});
 		return;
@@ -16,7 +16,7 @@ async function addLog (req, res) {
 
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.sample.toUpperCase()}'`);
 	if (sample == false) {
-		res.status(500).send({
+		res.send({
 			message: 'The sample doesn\'t exists'
 		});
 		return;
@@ -24,7 +24,7 @@ async function addLog (req, res) {
 
 	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test.toUpperCase()}'`);
 	if (test == false) {
-		res.status(500).send({
+		res.send({
 			message: 'The test doesn\'t exists'
 		});
 		return;
@@ -32,7 +32,7 @@ async function addLog (req, res) {
 	
 	const status = await dbInteract.isExists(`SELECT * FROM Status WHERE name='${body.status.toUpperCase()}'`);
 	if (status == false) {
-		res.status(500).send({
+		res.send({
 			message: 'The status doesn\'t exists'
 		});
 		return;
@@ -59,7 +59,7 @@ async function getLogs (req, res) {
 		JOIN Sample ON Sample.id = Log.sample_Id
 	`);
 	if (value == undefined) {
-		res.status(404).send({
+		res.send({
 			message: "No logs founds"
 		});
 		return;
@@ -78,7 +78,7 @@ async function getLogBySample (req, res) {
 	let params = req.params;
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${params.name}'`);  
 	if (sample == false) {
-		res.status(500).send({
+		res.send({
 			message: 'The sample doesn\'t exists'
 		});
 		return;
