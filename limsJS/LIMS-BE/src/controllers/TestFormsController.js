@@ -41,7 +41,10 @@ async function insertData(req, res) {
 	};
 
 	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
-
+	if (sampleErrorList.RepeatSample.length > 0) {
+		sampleError = true;
+	}
+	
 	if(test.result.id == 1) {
 		let reqCopy = req;
 		for await (const sample of  body.samples) {
