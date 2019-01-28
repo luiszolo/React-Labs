@@ -215,7 +215,7 @@ export default class ElectricityTest extends React.Component{
             <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row justify-content-center form-inline mb-3">
-                        <label className={regularLabels}>Operator #</label>
+                        <label className={regularLabels}>Operator</label>
                         <input
                             type="text"
                             className={operatorInput}
