@@ -89,7 +89,8 @@ async function getLogBySample (req, res) {
 		JOIN Status ON Status.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id 
-		JOIN Sample ON Sample.id = Log.sample_Id WHERE Log.sample_Id=${sample.result.id}
+		JOIN Sample ON Sample.id = Log.sample_Id 
+		WHERE Log.sample_Id=${sample.result.id}
 	`);
 
 	const attributes = await pool.query(`
@@ -115,11 +116,9 @@ async function getLogBySample (req, res) {
 		return;
 	}
 
-	
-
 	res.send({
-		 value,attributes
-		//Attributes: attributes
+		Logs : value,
+		Attributes: attributes
 	});
 };
 

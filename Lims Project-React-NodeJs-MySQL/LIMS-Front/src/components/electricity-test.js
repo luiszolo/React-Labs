@@ -46,6 +46,15 @@ export default class ElectricityTest extends React.Component{
         })
     }
     
+    addSample=(e)=>{
+        const sampleNumber =e.target.name.replace("sample","")
+        const sample = e.target.value
+
+        if(sample.length<=11){
+            this.updateSamples(sample,sampleNumber-1)
+        }
+    }
+
     validateOperator=(e)=>{
         const operator = e.target.value
 
@@ -115,34 +124,22 @@ export default class ElectricityTest extends React.Component{
                         })
                     }
                 })
-                this.setState({
-                    validSamples: true,
-                })
+
+                if(correctSamples.length > 0 && noMessages.length === 10){
+                    this.setState({
+                        validSamples: true,
+                    })
+                }else{
+                    this.setState({
+                        validSamples: false,
+                    })
+                }
             }
         })
 
-        if(correctSamples.length > 0 && noMessages.length === 10){
-            this.setState({
-                validSamples: true,
-            })
-        }else{
-            this.setState({
-                validSamples: false,
-            })
-        }
-        
         this.setState({
             messageAPI:""
         })
-    }
-
-    addSample=(e)=>{
-        const sampleNumber =e.target.name.replace("sample","")
-        const sample = e.target.value
-
-        if(sample.length<=11){
-            this.updateSamples(sample,sampleNumber-1)
-        }
     }
 
     handleSubmit = event => {
@@ -167,18 +164,18 @@ export default class ElectricityTest extends React.Component{
 						messageAPI: res.data.message,
 						validSamples: false,
                     })
-      
                 } else {
                     console.log(res.data.sampleErrorList)
                     this.setState({
 						messageAPI: "Sample already went through this Test"
                     });
                 }
-              }).catch( err => this.setState({ messageAPI:'The operation timed out'}));
+              })
+            .catch( () => this.setState({ messageAPI: 'The operation timed out'}));
 		})
     }
 
-      render(){
+    render(){
         const {
             addSample,
             validateOperator,
@@ -195,8 +192,8 @@ export default class ElectricityTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const regularLabels = " col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = " col-md-5 col-sm-12 col-lg-5 col-xl-3 form-control"
+        const regularLabels = "col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block text-right"
+        const inputs = "col-md-4 col-sm-12 col-lg-5 col-xl-5 form-control"
         const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput= inputs
@@ -211,7 +208,7 @@ export default class ElectricityTest extends React.Component{
 
         return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
-                <h1 className="text-center">Electricity Test</h1>
+                <h1 className="text-center">{name}</h1>
             </div>
             <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
@@ -376,6 +373,6 @@ export default class ElectricityTest extends React.Component{
 					</div>
                 </form>
             </div>
-          </div>)
+        </div>)
     }
 }

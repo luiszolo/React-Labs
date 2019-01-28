@@ -49,14 +49,6 @@ button[disabled]:hover {
 	height: 95vh;
 }
 
-#table{
-    padding-top: 1%;
-}
-
 #succes{
     color:green;
-}
-
-#error{
-    color: #dc3545;
 }
