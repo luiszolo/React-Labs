@@ -115,6 +115,8 @@ async function getLogBySample (req, res) {
 		return;
 	}
 
+	
+
 	res.send({
 		 value,attributes
 		//Attributes: attributes
