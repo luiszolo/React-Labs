@@ -4,6 +4,17 @@
 	}
 }
 
+@media only screen and (min-width: 1200px) {
+	.col-xl-2 {
+		flex: 0 0 10% !important;
+		max-width: 10% !important;
+	}
+
+	label {
+		padding-left: 0 !important;
+	}
+}
+
 h1,h2,h3 {
     margin: 0;
 }

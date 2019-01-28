@@ -196,7 +196,7 @@ export default class ElectricityTest extends React.Component{
 
         const format="SA-##-#####"
         const regularLabels = " col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = " col-md-4 col-sm-12 col-lg-5 col-xl-5 form-control"
+        const inputs = " col-md-5 col-sm-12 col-lg-5 col-xl-3 form-control"
         const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput= inputs
@@ -216,7 +216,7 @@ export default class ElectricityTest extends React.Component{
             <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row justify-content-center form-inline mb-3">
-                        <label className={regularLabels}>Operator #</label>
+                        <label className={regularLabels}>Operator</label>
                         <input
                             type="text"
                             className={operatorInput}
