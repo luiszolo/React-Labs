@@ -148,21 +148,17 @@ export default class SpinnerTest extends React.Component{
                         })
                     }
                 })
-                this.setState({
-                    validSamples: true,
-                })
+                if(correctSamples.length > 0 && noMessages.length === 10){
+                    this.setState({
+                        validSamples: true,
+                    })
+                }else{
+                    this.setState({
+                        validSamples: false,
+                    })
+                }
             }
         })
-
-        if(correctSamples.length > 0 && noMessages.length === 10){
-            this.setState({
-                validSamples: true,
-            })
-        }else{
-            this.setState({
-                validSamples: false,
-            })
-        }
 
         this.setState({
             messageAPI:""

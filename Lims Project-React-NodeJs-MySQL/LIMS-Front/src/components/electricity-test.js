@@ -46,6 +46,15 @@ export default class ElectricityTest extends React.Component{
         })
     }
     
+    addSample=(e)=>{
+        const sampleNumber =e.target.name.replace("sample","")
+        const sample = e.target.value
+
+        if(sample.length<=11){
+            this.updateSamples(sample,sampleNumber-1)
+        }
+    }
+
     validateOperator=(e)=>{
         const operator = e.target.value
 
@@ -115,34 +124,22 @@ export default class ElectricityTest extends React.Component{
                         })
                     }
                 })
-                this.setState({
-                    validSamples: true,
-                })
+
+                if(correctSamples.length > 0 && noMessages.length === 10){
+                    this.setState({
+                        validSamples: true,
+                    })
+                }else{
+                    this.setState({
+                        validSamples: false,
+                    })
+                }
             }
         })
 
-        if(correctSamples.length > 0 && noMessages.length === 10){
-            this.setState({
-                validSamples: true,
-            })
-        }else{
-            this.setState({
-                validSamples: false,
-            })
-        }
-        
         this.setState({
             messageAPI:""
         })
-    }
-
-    addSample=(e)=>{
-        const sampleNumber =e.target.name.replace("sample","")
-        const sample = e.target.value
-
-        if(sample.length<=11){
-            this.updateSamples(sample,sampleNumber-1)
-        }
     }
 
     handleSubmit = event => {
@@ -173,11 +170,12 @@ export default class ElectricityTest extends React.Component{
 						messageAPI: "Sample already went through this Test"
                     });
                 }
-              }).catch( err => this.setState({ messageAPI:'The operation timed out'}));
+              })
+            .catch( () => this.setState({ messageAPI: 'The operation timed out'}));
 		})
     }
 
-      render(){
+    render(){
         const {
             addSample,
             validateOperator,
@@ -375,6 +373,6 @@ export default class ElectricityTest extends React.Component{
 					</div>
                 </form>
             </div>
-          </div>)
+        </div>)
     }
 }

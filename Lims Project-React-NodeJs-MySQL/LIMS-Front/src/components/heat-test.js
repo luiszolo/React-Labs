@@ -54,6 +54,45 @@ export default class HeatTest extends React.Component{
         })
     }
 
+    handleChangeTemperature = event => {
+        if(event.target.value>0){
+            this.setState({
+                temperature: event.target.value,
+                messageTemp: "",
+                validTemp: true,
+            });
+        }else if(event.target.value===""){
+            this.setState({
+                messageTemp: "Cant be Blank",
+                validTemp: false,
+            });
+        }else{
+            this.setState({
+                messageTemp: "The value can't be 0",
+                validTemp: false,
+            });
+        }
+    }
+
+    handleChangeTime = event => {
+        if(event.target.value>0){
+            this.setState({
+                time: event.target.value,
+                messageTime: "",
+                validTime: true,
+            });
+        }else if(event.target.value===""){
+            this.setState({
+                messageTime: "Cant be Blank",
+                validTime: false,
+            });
+        }else{
+            this.setState({
+                messageTime: "The value can't be 0",
+                validTime: false,
+            });
+        }
+    }
     addSample=(e)=>{
         const sampleNumber = parseInt(e.target.name.replace("sample",""))
         const sample = e.target.value
@@ -133,67 +172,22 @@ export default class HeatTest extends React.Component{
                         })
                     }
                 })
-                this.setState({
-                    validSamples: true,
-                })
+                if(correctSamples.length > 0 && noMessages.length === 10){
+                    this.setState({
+                        validSamples: true,
+                    })
+                }else{
+                    this.setState({
+                        validSamples: false,
+                    })
+                }
             }
         })
-
-        if(correctSamples.length > 0 && noMessages.length === 10){
-            this.setState({
-                validSamples: true,
-            })
-        }else{
-            this.setState({
-                validSamples: false,
-            })
-        }
+        
         this.setState({
             messageAPI:""
         })
     }
-
-    handleChangeTemperature = event => {
-        if(event.target.value>0){
-            this.setState({
-                temperature: event.target.value,
-                messageTemp: "",
-                validTemp: true,
-            });
-        }else if(event.target.value===""){
-            this.setState({
-                messageTemp: "Cant be Blank",
-                validTemp: false,
-            });
-        }else{
-            this.setState({
-                messageTemp: "The value can't be 0",
-                validTemp: false,
-            });
-        }
-    }
-
-    handleChangeTime = event => {
-        if(event.target.value>0){
-            this.setState({
-                time: event.target.value,
-                messageTime: "",
-                validTime: true,
-            });
-        }else if(event.target.value===""){
-            this.setState({
-                messageTime: "Cant be Blank",
-                validTime: false,
-            });
-        }else{
-            this.setState({
-                messageTime: "The value can't be 0",
-                validTime: false,
-            });
-        }
-    }
-
-
 
     handleSubmit = event => {
         event.preventDefault();
@@ -398,6 +392,6 @@ export default class HeatTest extends React.Component{
                     </button>
                 </form>
             </div>
-          </div>)
-        }
+        </div>)
     }
+}
