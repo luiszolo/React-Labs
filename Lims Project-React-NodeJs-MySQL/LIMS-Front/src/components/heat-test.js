@@ -154,31 +154,35 @@ export default class HeatTest extends React.Component{
                 .then(res => {
                     if (res.data.message) {
                         this.updateSamplesMessage(res.data.message, sampleNumber)
-                        console.log(res.data.message)
                         this.setState({
                             validSamples: false,
+                            messageSample:res.data.message,
                         })
                     } else {
                         samples.forEach((value,index)=>{
                             if(sample===value && index!==sampleNumber){
                                 this.updateSamplesMessage("This sample is repeated", sampleNumber)
-                                
                                 this.setState({
                                     validSamples: false,
                                 })
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
-                            }else{
-                                this.setState({
-                                    validSamples: true,
-                                })
                             }
                         })
                     }
                 })
+                if(correctSamples.length > 0 && noMessages.length === 10){
+                    this.setState({
+                        validSamples: true,
+                    })
+                }else{
+                    this.setState({
+                        validSamples: false,
+                    })
+                }
             }
         })
-        
+
         this.setState({
             messageAPI:""
         })

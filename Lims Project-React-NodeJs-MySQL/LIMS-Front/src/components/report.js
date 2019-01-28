@@ -45,10 +45,12 @@ export default class SampleSearch extends React.Component{
    
         axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
             .then(res => {
+                console.log(res.data.message)
                 if(res.data.message){
                     this.setState({
                         tests: [],
-                        attributes: []
+                        attributes: [],
+                        sampleSearched: "",
                     });
                     this.setState({    // this is for reseting the inputs
                         messageAPI: res.data.message
