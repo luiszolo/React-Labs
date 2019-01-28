@@ -167,7 +167,6 @@ export default class ElectricityTest extends React.Component{
 						messageAPI: res.data.message,
 						validSamples: false,
                     })
-      
                 } else {
                     console.log(res.data.sampleErrorList)
                     this.setState({
@@ -195,8 +194,8 @@ export default class ElectricityTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const regularLabels = " col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = " col-md-4 col-sm-12 col-lg-5 col-xl-5 form-control"
+        const regularLabels = "col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block text-right"
+        const inputs = "col-md-4 col-sm-12 col-lg-5 col-xl-5 form-control"
         const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput= inputs
@@ -211,7 +210,7 @@ export default class ElectricityTest extends React.Component{
 
         return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
-                <h1 className="text-center">Electricity Test</h1>
+                <h1 className="text-center">{name}</h1>
             </div>
             <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
