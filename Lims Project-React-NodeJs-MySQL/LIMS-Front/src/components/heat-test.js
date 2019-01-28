@@ -171,7 +171,7 @@ export default class HeatTest extends React.Component{
                         })
                     }
                 })
-                if(correctSamples.length > 0 && noMessages.length === 10){
+                if(correctSamples.length > 0 && noMessages.length !== 10){
                     this.setState({
                         validSamples: true,
                     })
