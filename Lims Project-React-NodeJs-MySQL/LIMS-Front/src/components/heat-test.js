@@ -129,12 +129,13 @@ export default class HeatTest extends React.Component{
                                 })
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
+                            }else{
+                                this.setState({
+                                    validSamples: true,
+                                })
                             }
                         })
                     }
-                })
-                this.setState({
-                    validSamples: true,
                 })
             }
         })
