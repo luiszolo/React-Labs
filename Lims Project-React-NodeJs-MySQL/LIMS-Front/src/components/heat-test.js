@@ -252,9 +252,9 @@ export default class HeatTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
-        const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
-        const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
+        const regularLabels = "col-md-3 col-sm-12 col-lg-2 col-xl-2 d-block"
+        const inputs = "col-md-3 col-sm-12 col-lg-5 col-xl-5 form-control"
+        const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput = inputs;
 
@@ -267,14 +267,14 @@ export default class HeatTest extends React.Component{
             operatorInput = inputs
         }
 
-        return(<div className="component offset-xl-2">
-            <div className="col col-12 pb-3">
+        return(<div className="row justify-content-center">
+            <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
-            <div className="col col-12">
+            <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
-                    <div className="row form-inline pb-3">
-                        <label className={regularLabels}>Operator #</label>
+                    <div className="row justify-content-center form-inline mb-3">
+                        <label className={regularLabels}>Operator</label>
                         <input 
                             type="text" 
                             className={operatorInput}
@@ -285,7 +285,7 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
-                    <div className="row form-inline pb-3">
+                    <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Temperature (C):</label>
                         <input 
                             type="number" 
@@ -296,7 +296,7 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageTemp}</label>
                     </div>
-                    <div className="row form-inline pb-3">
+                    <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Time elapse (sec):</label>
                         <input type="number" 
                             className={inputs}
@@ -307,9 +307,9 @@ export default class HeatTest extends React.Component{
                         <label className={warningLabels}>{messageTime}</label>
                     </div>
                     <div>
-                        <h5 className="text-center">Sample Barcodes</h5>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#1"}</label>
+                        <h5 className="text-center m-4">Sample Barcodes</h5>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample 1:</label>
                         <input 
                             value={samples[0]}
                             type="text"
@@ -321,8 +321,8 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#2"}</label>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample 2:</label>
                         <input 
                         value={samples[1]}
                             type="text"
@@ -334,8 +334,8 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageSamples[1]}</label> 
                     </div>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#3"}</label>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample 3:</label>
                         <input 
                         value={samples[2]}
                             type="text"
@@ -347,8 +347,8 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageSamples[2]}</label> 
                     </div>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#4"}</label>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample 4:</label>
                         <input 
                         value={samples[3]}
                         type="text"
@@ -360,8 +360,8 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageSamples[3]}</label> 
                     </div>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#5"}</label>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample 5:</label>
                         <input 
                         value={samples[4]}
                         type="text"
@@ -374,17 +374,21 @@ export default class HeatTest extends React.Component{
                         <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
+					<div className='row justify-content-center'>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+					</div>
+					<div className='row justify-content-center'>
                     <button
                         value={samples[5]}
                         type="submit"
-                        className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
+                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
                         disabled={(validOp && validTemp && validTime && validSamples) ? false : true}
                         onMouseEnter={settingTitle}
                         title={buttonTitle}
                     >
                     Save Data
                     </button>
+					</div>
                 </form>
             </div>
         </div>)
