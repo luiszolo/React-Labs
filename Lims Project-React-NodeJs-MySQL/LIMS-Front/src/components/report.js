@@ -52,7 +52,7 @@ export default class SampleSearch extends React.Component{
                         attributes: [],
                         sampleSearched: "",
                     });
-                    this.setState({    // this is for reseting the inputs
+                    this.setState({
                         messageAPI: res.data.message
                     });
                 }else{
@@ -63,8 +63,7 @@ export default class SampleSearch extends React.Component{
                         sample: "",
                         tests,
                         attributes,
-                        messageAPI:""
-                        
+                        messageAPI: "",
                     })
                 }
             }).catch( () => alert("Conection Timed Out"));
@@ -123,7 +122,8 @@ export default class SampleSearch extends React.Component{
                 attributes,
             }
         } = this;
-        const regularLabels = "col-md-3 col-sm-12 col-lg-4 col-xl-2 d-block"
+
+        const regularLabels = "col-md-3 col-sm-12 col-lg-4 col-xl-3 d-block text-right"
 
         
         return(<div className="container">
