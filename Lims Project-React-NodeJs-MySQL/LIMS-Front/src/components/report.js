@@ -67,7 +67,7 @@ export default class SampleSearch extends React.Component{
                         
                     })
                 }
-            })
+            }).catch( () => alert("Conection Timed Out"));
     }
 
     renderLogs(){

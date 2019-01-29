@@ -171,7 +171,7 @@ export default class ElectricityTest extends React.Component{
                     });
                 }
               })
-            .catch( () => this.setState({ messageAPI: 'The operation timed out'}));
+            .catch( () => alert("Conection Timed Out"));
 		})
     }
 

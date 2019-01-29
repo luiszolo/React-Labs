@@ -227,7 +227,7 @@ export default class HeatTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              })
+              }).catch( () => alert("Conection Timed Out"));
         })
 
     }
@@ -275,7 +275,7 @@ export default class HeatTest extends React.Component{
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
-            <div className="col-sm-12 col-xl-10">
+            <div className="col-sm-12  col-xl-10">
                 <form onSubmit={this.handleSubmit}>
                     <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Operator</label>
