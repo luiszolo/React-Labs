@@ -12,16 +12,11 @@ export default class SampleSearch extends React.Component{
       }
 
     addSample = (e) => {
-        if(e.target.value.length <= 11){
-            this.setState({
-                sample: e.target.value,
-            })
-        }  
-    }
-
-    validateSample = (e) => {
         const sample = e.target.value
-    
+
+        this.setState({
+            sample: sample,
+        })
         if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
             this.setState({
                 messageAPI: "Incorrect syntax",
@@ -38,6 +33,7 @@ export default class SampleSearch extends React.Component{
                 validSample: true,
             })
         }
+
     }
 
     handleSearch = () => {
@@ -45,7 +41,6 @@ export default class SampleSearch extends React.Component{
    
         axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
             .then(res => {
-                console.log(res.data.message)
                 if(res.data.message){
                     this.setState({
                         tests: [],
@@ -147,7 +142,7 @@ export default class SampleSearch extends React.Component{
                 Search
                 </button>
                 <div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p class="Danger">{messageAPI}</p></label>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6 text-danger mt-3"}><p class="Danger">{messageAPI}</p></label>
 					</div>
             </div>
             <h3 className="col-12 text-center pb-2">{sampleSearched}</h3>

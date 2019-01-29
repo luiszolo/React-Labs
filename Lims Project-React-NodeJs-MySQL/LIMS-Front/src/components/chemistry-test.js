@@ -188,14 +188,14 @@ export default class ChemistryTest extends React.Component{
 
         let operatorInput = inputs;
 
-        // if(validOp===false){
-        //     operatorInput= operatorInput += "border-danger"
-        // }else if(validOp===true){
-        //     operatorInput= operatorInput += "border-success"
-        // }
-        // else{
-        //     operatorInput = inputs
-        // }
+        if(validOp===false){
+            operatorInput= operatorInput += " border-danger"
+        }else if(validOp===true){
+            operatorInput= operatorInput += " border-success"
+        }
+        else{
+            operatorInput = inputs
+        }
 
         return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
@@ -228,7 +228,7 @@ export default class ChemistryTest extends React.Component{
                     <div>
                         <h5 className="text-center m-4">Sample Barcode</h5>
                     <div className="row justify-content-center form-inline mb-3">
-                        <label className={regularLabels}>{"Sample 1"}</label>
+                        <label className={regularLabels}>{"Sample 1:"}</label>
                         <input 
                             type="text"
                             className={inputs}
