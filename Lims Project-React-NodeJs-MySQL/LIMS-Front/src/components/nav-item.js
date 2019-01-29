@@ -25,12 +25,13 @@ export default class NavItem extends React.Component {
 
     return (
         <button
-            className={className}
+            className={className}  // nos da los botones cliekables
             onClick={onClick}
             title={label}
         >
         {label}
         </button>
+        
     );
   }
 }
