@@ -1,0 +1,99 @@
+@media only screen and (max-width: 768px) {
+	.nav {
+		height: auto !important;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.col-xl-2 {
+		flex: 0 0 10% !important;
+		max-width: 10% !important;
+	}
+
+	label {
+		padding-left: 0 !important;
+	}
+}
+
+h1,h2,h3 {
+    margin: 0;
+}
+
+html{
+    height: 100%;
+}
+
+#homelogo{
+	width: 100%;
+	margin-top: 45% !important;
+}
+img{
+	width: 100%;
+}
+
+.component{
+    height: auto;
+}
+
+.logo{
+	margin-top: auto;
+	margin-right: 0;
+}
+
+button[disabled]:hover {
+    border-color: #dc3545;
+    background: #dc3545;
+}
+
+.text-danger {
+	font-size: 0.80rem
+}
+.nav{
+	height: 95vh;
+}
+
+#succes{
+    color:green;
+}
+
+#menuButton{
+	background-color: transparent;
+	border-color: transparent;
+	width: 20% !important;
+}
+
+
+@media(max-width:768px){
+	header .breadcrumb {
+	  display: none;
+	}
+  }
+  @media(min-width:769px){
+	header .navbar {
+	  display: none;   
+	}
+  }
+  /* DEMO ONLY */
+  .breadcrumb {
+	margin-bottom: 0;
+	border-radius: 0;
+  }
+  body {
+	background: white;
+  }
+   header:after {
+	 content: ":: Resize this window to test the menu in various viewpoint breakpoints ::";
+	 text-align: center;
+	 margin: 0px auto 0;
+	 display: table;
+	 color: #FFF;
+	 
+	}
+	.breadcrumb{
+		padding: 0%;
+	}
+
+	#navMobil{
+		padding: 0;
+	}
+

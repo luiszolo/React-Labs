@@ -1,0 +1,41 @@
+body{
+    height: 100%;
+}
+
+h1,h2,h3 {
+    margin: 0;
+}
+
+html{
+    height: 100%;
+}
+
+
+/* 
+	Custom Mods
+*/
+
+header {
+	height: 4rem;
+	padding: 0.5rem;
+	overflow: hidden !important;
+}
+
+.sidebar {
+	height: 100%;
+	overflow: hidden !important;
+	position: absolute !important;
+	padding: 0;
+	padding-top: 4rem;
+	margin: 0;
+}
+
+
+.btn {
+	width: 100%;
+}
+
+#content {
+	height: auto;
+	overflow: auto;
+}
