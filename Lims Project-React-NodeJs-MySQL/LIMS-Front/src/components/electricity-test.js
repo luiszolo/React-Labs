@@ -53,6 +53,7 @@ export default class ElectricityTest extends React.Component{
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber-1)
         }
+        
     }
 
     validateOperator=(e)=>{
@@ -109,6 +110,7 @@ export default class ElectricityTest extends React.Component{
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
                 .then(res => {
                     if (res.data.message) {
+                        console.log(res.data.message)
                         this.updateSamplesMessage(res.data.message, sampleNumber)
                         this.setState({
                             validSamples: false,
@@ -124,12 +126,15 @@ export default class ElectricityTest extends React.Component{
                                 
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
+                                this.setState({
+                                    validSamples: true,
+                                })
                             }
                         })
                     }
                 })
 
-                if(correctSamples.length !== 0 && noMessages.length === 9){
+                if(correctSamples.length !== 0 && noMessages.length >= 9){
                     this.setState({
                         validSamples: true,
                     })
