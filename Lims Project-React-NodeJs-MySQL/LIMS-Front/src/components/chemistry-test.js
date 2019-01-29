@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import '../index.css';
-
 export default class ChemistryTest extends React.Component{
     constructor(props){
         super(props);
@@ -127,7 +125,6 @@ export default class ChemistryTest extends React.Component{
         const chemistry = this.state.chemistry
         const sample =this.state.sample
         
-
         axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
             operator,
             test: this.state.name,
@@ -150,8 +147,6 @@ export default class ChemistryTest extends React.Component{
                 this.setState({
                     messageAPI: "Sample went through the test already "
                 });
-
-                
             }
 
             else if(res.data.message==="This sample already passed CHEMESTRY TEST") {

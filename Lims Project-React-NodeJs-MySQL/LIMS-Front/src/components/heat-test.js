@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import '../index.css';
-
 export default class HeatTest extends React.Component{
     constructor(props){
         super(props);
@@ -167,6 +165,10 @@ export default class HeatTest extends React.Component{
                                 })
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
+                            }else{
+                                this.setState({
+                                    validSamples: true,
+                                })
                             }
                         })
                     }

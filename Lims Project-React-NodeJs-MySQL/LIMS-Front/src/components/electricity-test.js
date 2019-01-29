@@ -88,6 +88,7 @@ export default class ElectricityTest extends React.Component{
     }
 
     validateSamples=()=>{
+        
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
         const messages = this.state.messageSamples
@@ -99,18 +100,19 @@ export default class ElectricityTest extends React.Component{
                 this.setState({
                     validSamples: false,
                 })
+                
             }else if(sample===""){
                 this.updateSamplesMessage("", sampleNumber)
             }else{
                 this.updateSamplesMessage("", sampleNumber)
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
                 .then(res => {
-                    console.log(res.data)
                     if (res.data.message) {
                         this.updateSamplesMessage(res.data.message, sampleNumber)
                         this.setState({
                             validSamples: false,
                         })
+                        
                     } else {
                         samples.forEach((value,index)=>{
                             if(sample===value && index!==sampleNumber){
@@ -118,21 +120,28 @@ export default class ElectricityTest extends React.Component{
                                 this.setState({
                                     validSamples: false,
                                 })
+                                
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
+                            }else{
+                                this.setState({
+                                    validSamples: true,
+                                })
                             }
                         })
                     }
                 })
 
-                if(correctSamples.length > 0 && noMessages.length === 10){
+                if(correctSamples.length !== 0 && noMessages.length === 10){
                     this.setState({
                         validSamples: true,
                     })
+                    
                 }else{
                     this.setState({
                         validSamples: false,
                     })
+                    
                 }
             }
         })
