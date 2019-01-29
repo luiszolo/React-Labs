@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const concatFiles = require('concat-files');
 const express = require('express');
 const fs = require('fs');
+const moment = require('moment-timezone');
 const morgan = require('morgan');
 const path = require('path');
 const util = require('util');
@@ -52,5 +53,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Starting Server
 app.listen(app.get('port'), _ => {
 	console.log(`Server started on port ${app.get('port')}`);
-	console.log(new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' '))
 });

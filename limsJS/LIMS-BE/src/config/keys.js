@@ -7,7 +7,8 @@ module.exports = {
 		connectionLimit: 5,
 		host: 'localhost',
 		user: 'root',
-		database: 'lims'
+		database: 'lims',
+		timezone: 'utc'
 	},
 	Ip: myIp
 };

@@ -1,6 +1,7 @@
 const pool = require('./../config/database');
 const miscs = require('./../middlewares/miscs');
 const dbInteract = require('./../middlewares/db-interact');
+const moment = require('moment-timezone');
 
 // Finish
 async function addLog (req, res) {
@@ -39,8 +40,9 @@ async function addLog (req, res) {
 	}
 	await pool.query(`INSERT INTO Log SET 
 		operator_Id = ${operator.result.id}, sample_Id = ${sample.result.id},
-		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${new Date(Date.now()).toISOString().slice(0, 19).replace('T', ' ')}"
+		test_Id = ${test.result.id}, status_Id = ${status.result.id}, onCreated="${moment().tz("America/Los_Angeles").format().slice(0,19).replace('T', ' ')}"
 	`);
+	
 };
 
 // Unnecessary
@@ -101,6 +103,7 @@ async function getLogBySample (req, res) {
 	`);
 
 	for await (const result of value) {
+		
 		result['On Created'] = result['On Created'].toISOString().slice(0, 19).replace('T', ' ');
 		result['Test'] = miscs.capitalizeWord(result['Test']);
 	}
