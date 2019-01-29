@@ -32,7 +32,7 @@ export default class ChemistryTest extends React.Component{
     validateOperator=(e)=>{
         const operator = e.target.value
 
-        if(/[1-99999]/.test(operator) && operator.length<=5){
+        if(/[1-99999]/.test(operator) && operator.length <= 5){
             axios.get(`http://10.2.1.94:4000/api/operators/` + operator) 
             .then(res => {
                 if (res.data.message) { 
@@ -50,7 +50,7 @@ export default class ChemistryTest extends React.Component{
             })
         }else if(operator===""){
             this.setState({
-                messageOp: "Field can't be blank", //that's racist // It's normal for comunism
+                messageOp: "Field can't be blank", //that's racist
                 validOp: undefined,
             })
         }else{
@@ -68,6 +68,7 @@ export default class ChemistryTest extends React.Component{
             this.setState({
                 chemistry: chemistry,
                 validCh: true,
+                messageCh: "",
             })
         }else if(chemistry===""){
             this.setState({
@@ -186,40 +187,39 @@ export default class ChemistryTest extends React.Component{
         } = this;
 
         const format="SA-##-#####"
-        const regularLabels = "col col-3 col-sm-4 col-lg-5 col-xl-4 text-right d-block"
-        const inputs = "col col-4 col-sm-3 col-lg-3 col-xl-3 form-control"
-        const warningLabels = "col col-4 col-sm-5 col-lg-4 col-xl-3 text-danger"
+        const regularLabels = "col-md-3 col-sm-12 col-lg-2 col-xl-2 d-block"
+        const inputs = "col-md-3 col-sm-12 col-lg-5 col-xl-5 form-control"
+        const warningLabels = "col-md-5 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput = inputs;
 
-        if(validOp===false){
-            operatorInput= operatorInput += "border-danger"
-        }else if(validOp===true){
-            operatorInput= operatorInput += "border-success"
-        }
-        else{
-            operatorInput = inputs
-        }
+        // if(validOp===false){
+        //     operatorInput= operatorInput += "border-danger"
+        // }else if(validOp===true){
+        //     operatorInput= operatorInput += "border-success"
+        // }
+        // else{
+        //     operatorInput = inputs
+        // }
 
-        return(<div className="component offset-xl-2">
-            <div className="col col-12 pb-3">
+        return(<div className="row justify-content-center">
+            <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
-            <div className="col col-12">
+            <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
-                <div className="row form-inline pb-3">
-                            <label className={regularLabels}>Operator #</label>
-                            <input 
-                                type="text" 
-                                className={operatorInput}
-                                name="operator" 
-                                placeholder="#####"
-                                onBlur={validateOperator}
-                                
-                            />
-                            <label className={warningLabels}>{messageOp}</label>
-                        </div>
-                    <div className="row form-inline pb-3">
+                <div className="row justify-content-center form-inline mb-3">
+                        <label className={regularLabels}>Operator</label>
+                        <input 
+                            type="text" 
+                            className={operatorInput}
+                            name="operator" 
+                            placeholder="#####"
+                            onBlur={validateOperator}
+                        />
+                        <label className={warningLabels}>{messageOp}</label>
+                    </div>
+                    <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Chemistry:</label>
                         <input 
                             type="text" 
@@ -228,12 +228,12 @@ export default class ChemistryTest extends React.Component{
                             placeholder="CH-#####"
                             onBlur={validateChemistry}
                         />
-                        <label className="col col-lg-4 col-4 text-danger">{messageCh}</label>
+                        <label className={warningLabels}>{messageCh}</label>
                     </div>
                     <div>
-                        <h5 className="text-center">Sample Barcode</h5>
-                    <div className="row form-inline pb-1">
-                        <label className={regularLabels}>{"#1"}</label>
+                        <h5 className="text-center m-4">Sample Barcode</h5>
+                    <div className="row justify-content-center form-inline mb-3">
+                        <label className={regularLabels}>{"Sample 1"}</label>
                         <input 
                             type="text"
                             className={inputs}
@@ -247,15 +247,19 @@ export default class ChemistryTest extends React.Component{
                     </div>
                     
                     </div>
-                    <label className={"col-4 offset-4 offset-lg-5 mt-3"}><p id="succes">{messageAPI}</p></label>
+					<div className='row justify-content-center'>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+					</div>
+                    <div className='row justify-content-center'>
                     <button
                         type="submit"
-                        className="btn btn-primary col-4 col-lg-2 offset-4 offset-lg-5 mt-3"
+                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
                         disabled={(validOp && validCh && validSample) ? false : true}
                         title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
                     </button>
+                    </div>
                 </form>
             </div>
         </div>)

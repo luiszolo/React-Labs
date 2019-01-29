@@ -123,28 +123,32 @@ export default class SampleSearch extends React.Component{
                 attributes,
             }
         } = this;
+        const regularLabels = "col-md-3 col-sm-12 col-lg-4 col-xl-2 d-block"
 
+        
         return(<div className="container">
-            <div className="pb-3 form-inline">
-                <label className="col-md-4 col-sm-12 col-lg-2 col-xl-2 d-block text-right" htmlFor="sample">Search Sample:</label>
+                    <div className="row justify-content-center form-inline mb-2">
+                        <label className={regularLabels}>Sample Search: </label>
                 <input
                     id="sample"
                     type="text"
                     name="sample"
-                    className={"col-md-4 col-sm-12 col-lg-5 col-xl-3 form-control"}
+                    className={"col-md-4 col-sm-12 col-lg-4 col-xl-3 form-control"}
                     placeholder="SA-##-#####"
                     value={sample}
                     onChange={addSample}
                     onBlur={validateSample}
                 />
                 <button
-                    className="btn btn-primary col-lg-2 col-4"
+                    className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
                     onClick={handleSearch}
                     disabled={!validSample}
                 >
                 Search
                 </button>
-                <label className={"text-danger"}>{messageAPI}</label>
+                <div className='row justify-content-center'>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p class="Danger">{messageAPI}</p></label>
+					</div>
             </div>
             <h3 className="col-12 text-center pb-2">{sampleSearched}</h3>
             <div>
