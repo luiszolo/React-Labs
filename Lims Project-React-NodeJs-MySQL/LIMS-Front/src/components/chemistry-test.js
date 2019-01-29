@@ -160,7 +160,7 @@ export default class ChemistryTest extends React.Component{
                     messageAPI: "Sample is not ready for this test"
                 });
             }
-        }).catch( () => this.setState({ messageAPI:'The operation timed out'}));
+        }).catch( () => alert("Conection Timed Out"));
     }
 
     render(){

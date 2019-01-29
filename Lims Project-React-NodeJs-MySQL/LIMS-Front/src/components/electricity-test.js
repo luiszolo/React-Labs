@@ -92,14 +92,15 @@ export default class ElectricityTest extends React.Component{
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
         const messages = this.state.messageSamples
-        const noMessages = messages.filter((sample)=>{return sample===""})
-
+        const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
+        console.log(noMessages)
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-                this.updateSamplesMessage("Incorrect syntax", sampleNumber)
                 this.setState({
                     validSamples: false,
                 })
+                this.updateSamplesMessage("Incorrect syntax", sampleNumber)
+
                 
             }else if(sample===""){
                 this.updateSamplesMessage("", sampleNumber)
@@ -123,16 +124,12 @@ export default class ElectricityTest extends React.Component{
                                 
                             }else if(sample===""){
                                 this.updateSamplesMessage("", sampleNumber)
-                            }else{
-                                this.setState({
-                                    validSamples: true,
-                                })
                             }
                         })
                     }
                 })
 
-                if(correctSamples.length !== 0 && noMessages.length === 10){
+                if(correctSamples.length !== 0 && noMessages.length === 9){
                     this.setState({
                         validSamples: true,
                     })
@@ -180,7 +177,7 @@ export default class ElectricityTest extends React.Component{
                     });
                 }
               })
-            .catch( () => this.setState({ messageAPI: 'The operation timed out'}));
+            .catch( () => alert("Conection Timed Out"));
 		})
     }
 

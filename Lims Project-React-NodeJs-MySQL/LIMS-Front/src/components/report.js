@@ -61,7 +61,7 @@ export default class SampleSearch extends React.Component{
                         messageAPI: "",
                     })
                 }
-            })
+            }).catch( () => alert("Conection Timed Out"));
     }
 
     renderLogs(){

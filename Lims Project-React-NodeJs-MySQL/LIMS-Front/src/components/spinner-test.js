@@ -210,7 +210,7 @@ export default class SpinnerTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              }).catch( err => this.setState({ messageAPI:'The operation timed out'}));
+              }).catch( () => alert("Conection Timed Out"));
 
         })
     }
@@ -257,7 +257,7 @@ export default class SpinnerTest extends React.Component{
             <div className="col-sm-12 col-xl-10">
                 <form onSubmit={this.handleSubmit}>
                 <div className="row justify-content-center form-inline mb-3">
-                        <label className={regularLabels}>Operator #</label>
+                        <label className={regularLabels}>Operator </label>
                         <input 
                             type="text" 
                             className={operatorInput}
