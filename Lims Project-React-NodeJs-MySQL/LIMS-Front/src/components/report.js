@@ -38,7 +38,7 @@ export default class SampleSearch extends React.Component{
 
     handleSearch = () => {
         const sample =  this.state.sample
-   
+        
         axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
             .then(res => {
                 if(res.data.message){
@@ -59,6 +59,7 @@ export default class SampleSearch extends React.Component{
                         tests,
                         attributes,
                         messageAPI: "",
+                        validSample: false
                     })
                 }
             }).catch( () => alert("Conection Timed Out"));
@@ -118,31 +119,36 @@ export default class SampleSearch extends React.Component{
             }
         } = this;
 
-        const regularLabels = "col-md-3 col-sm-12 col-lg-4 col-xl-3 d-block text-right"
+        const regularLabels = "col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center"
 
         
         return(<div className="container">
                     <div className="row justify-content-center form-inline mb-2">
+                       <div className="col-12 row justify-content-center form-inline mb-2">
                         <label className={regularLabels}>Sample Search: </label>
-                <input
-                    id="sample"
-                    type="text"
-                    name="sample"
-                    className={"col-md-4 col-sm-12 col-lg-4 col-xl-3 form-control"}
-                    placeholder="SA-##-#####"
-                    value={sample}
-                    onChange={addSample}
-                    onBlur={validateSample}
-                />
-                <button
-                    className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
-                    onClick={handleSearch}
-                    disabled={!validSample}
-                >
-                Search
-                </button>
+                        <input
+                            id="sample"
+                            type="text"
+                            name="sample"
+                            className={"col-md-6 col-sm-12 col-lg-4 col-xl-3 form-control"}
+                            placeholder="SA-##-#####"
+                            value={sample}
+                            onChange={addSample}
+                            onBlur={validateSample}
+                            />
+                       </div>
+                
+                <div className="row col-12 justify-content-center form-inline mb-2">
+                    <button
+                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
+                        onClick={handleSearch}
+                        disabled={!validSample}
+                    >
+                    Search
+                    </button>
+                </div>
                 <div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6 text-danger mt-3"}><p class="Danger">{messageAPI}</p></label>
+                    <label className={"col-lg-3 col-sm-12 col-md-12 text-center text-danger mt-3"}><p class="Danger">{messageAPI}</p></label>
 					</div>
             </div>
             <h3 className="col-12 text-center pb-2">{sampleSearched}</h3>

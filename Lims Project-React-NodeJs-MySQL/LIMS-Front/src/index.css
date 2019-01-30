@@ -25,19 +25,13 @@ html{
 
 #homelogo{
 	width: 100%;
-	margin-top: 45% !important;
 }
 img{
 	width: 100%;
 }
 
 .component{
-    height: auto;
-}
-
-.logo{
-	margin-top: auto;
-	margin-right: 0;
+    height: 94.9vh;
 }
 
 button[disabled]:hover {
@@ -45,11 +39,17 @@ button[disabled]:hover {
     background: #dc3545;
 }
 
+.navbar {
+	padding: 0 !important;
+}
+.container-fluid {
+	padding: 0 !important;
+}
 .text-danger {
 	font-size: 0.80rem
 }
 .nav{
-	height: 95vh;
+	height: auto;
 }
 
 #succes{
@@ -62,13 +62,27 @@ button[disabled]:hover {
 	width: 20% !important;
 }
 
+/* @media(min-width:426px) {
+	#homelogo {
+		margin-top: 20%;
+		margin-left: 20%;
+	}
+} */
 
 @media(max-width:768px){
 	header .breadcrumb {
 	  display: none;
 	}
+	.component{
+    height: auto;
+}
+
+
   }
   @media(min-width:769px){
+		.component{
+			height: 94.9vh;
+	}
 	header .navbar {
 	  display: none;   
 	}
@@ -82,7 +96,6 @@ button[disabled]:hover {
 	background: white;
   }
    header:after {
-	 content: ":: Resize this window to test the menu in various viewpoint breakpoints ::";
 	 text-align: center;
 	 margin: 0px auto 0;
 	 display: table;

@@ -32,8 +32,8 @@ export default class Tests extends React.Component {
 
 
 <header>
-    <div className="row component m-0" >
-      <div className="col-lg-2 col-xl-2 col-md-3 col-sm-12 p-0 bg-info" id="menuMobilDiv" >
+    <div className="row justify-content-center component m-0" >
+      <div className="col-lg-2 col-xl-2 col-md-12 col-sm-12 p-0 bg-info" id="menuMobilDiv" >
         
       <ul class="breadcrumb">
 
