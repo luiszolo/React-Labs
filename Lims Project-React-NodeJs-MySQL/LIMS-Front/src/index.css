@@ -15,19 +15,30 @@ h1,h2,h3 {
     margin: 0;
 }
 
-html{
+header{
+	height: 3rem;
+}
+
+html, body{
     height: 100%;
 }
 
-#homelogo{
-	width: 100%;
-}
 img{
 	width: 100%;
 }
 
-.component{
-    height: 94.9vh;
+nav{
+	/* border-right: 1px solid white; */
+	height: 100%;
+	padding: 0 !important;
+}
+
+nav ul{
+	padding: 0;
+}
+
+.navbar-header{
+	height: 3rem;
 }
 
 button[disabled]:hover {
@@ -44,65 +55,32 @@ button[disabled]:hover {
 .text-danger {
 	font-size: 0.80rem
 }
-.nav{
-	height: auto;
-}
 
 #succes{
-    color:green;
+    color: #28a745;
 }
 
 #menuButton{
+	padding: 0;
 	background-color: transparent;
-	border-color: transparent;
-	width: 20% !important;
+	border: none;
+	width: 12.5%;
 }
 
-/* @media(min-width:426px) {
-	#homelogo {
-		margin-top: 20%;
-		margin-left: 20%;
+@media(max-width: 767px){
+	nav{
+		height: auto;
 	}
-} */
 
-@media(max-width:768px){
-	header .breadcrumb {
+	.breadcrumb {
 	  display: none;
 	}
-	.component{
-    height: auto;
 }
 
+@media(min-width: 768px){
 
-  }
-  @media(min-width:769px){
-		.component{
-			height: 94.9vh;
-	}
-	header .navbar {
+	.navbar {
 	  display: none;   
 	}
-  }
-  /* DEMO ONLY */
-  .breadcrumb {
-	margin-bottom: 0;
-	border-radius: 0;
-  }
-  body {
-	background: white;
-  }
-   header:after {
-	 text-align: center;
-	 margin: 0px auto 0;
-	 display: table;
-	 color: #FFF;
-	 
-	}
-	.breadcrumb{
-		padding: 0%;
-	}
-
-	#navMobil{
-		padding: 0;
-	}
+}
 

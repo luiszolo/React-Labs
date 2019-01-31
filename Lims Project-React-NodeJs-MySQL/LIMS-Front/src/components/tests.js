@@ -25,99 +25,54 @@ export default class Tests extends React.Component {
       }
     } = this;
 
-    return (
-
-
-
-
-
-<header>
-    <div className="row justify-content-center component m-0" >
-      <div className="col-lg-2 col-xl-2 col-md-12 col-sm-12 p-0 bg-info" id="menuMobilDiv" >
-        
-      <ul class="breadcrumb">
-
-
-          {children.map((child) => {
-            const { label } = child.props;
-        
-            return (
-              <NavItem
-                activeTest={activeTest}
-                key={label}
-                label={label}
-                onClick={onClickTest}
-              />
-            );})}
-
-
-
-
-
-  </ul>
-  <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
-    <div class="container-fluid">
-      
-      <div class="navbar-header" classname="col-sm-1">
-      
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
-       
-        <img src="images/menu.png"  />
-        </button>
-      
-      </div>
-      
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="navbar navbar-nav">
-
-          {children.map((child) => {
-            const { label } = child.props;
-        
-            return (
-              <NavItem
-                activeTest={activeTest}
-                key={label}
-                label={label}
-                onClick={onClickTest}
-              />
-            );})}
-        </ul>
-      </div>
-    </div>
-  </nav>
-        
-        {/* <nav className="nav flex-column ">
-          {children.map((child) => {
-            const { label } = child.props;
-        
-            return (
-              <NavItem
-                activeTest={activeTest}
-                key={label}
-                label={label}
-                onClick={onClickTest}
-              />
-            );})}
-        </nav> */}
-
-
-
-
-
-
-
-
-
-
-      </div>
-      <div className="col-lg-10 col-xl-10 col-md-9 col-sm-12 p-4">
-          {children.map((child) => {
+    return (<div className="row m-0" >
+        <nav className = 'col-lg-2 col-xl-2 col-md-2 col-sm-12 fixed-top bg-info' id="menuMobilDiv">
+            <div className='breadcrumb p-0'>
+                <h1 className='text-center bg-info text-white w-100'>LIMS</h1>
+                <ul>
+                    {children.map((child) => {
+                        const { label } = child.props;
+                        return (
+                        <NavItem
+                            activeTest={activeTest}
+                            key={label}
+                            label={label}
+                            onClick={onClickTest}
+                        />
+                        );})}
+                </ul>
+            </div>
+            <div class="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
+                <div class="navbar-header w-100" classname="col-sm-1">
+                    <button type="button" class="navbar-toggle collapsed float-left" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
+                        <img src="images/menu.png" alt='button menu'/>
+                    </button>
+                    <h3 className='text-center bg-info text-white'>LIMS</h3>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="navbar navbar-nav">
+                    {children.map((child) => {
+                        const { label } = child.props;
+                    
+                        return (
+                        <NavItem
+                            activeTest={activeTest}
+                            key={label}
+                            label={label}
+                            onClick={onClickTest}
+                        />
+                        );})}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div className="col-lg-10 col-xl-10 col-md-9 col-sm-12 offset-md-2">
+            {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;
-          })}
+            })}
         </div>
     </div>
-    </header>
     );
   }
 }

@@ -28,6 +28,9 @@ export default class NavItem extends React.Component {
             className={className}  // nos da los botones cliekables
             onClick={onClick}
             title={label}
+            data-toggle="collapse" 
+            data-target="#bs-example-navbar-collapse-1" 
+            aria-expanded="false"
         >
         {label}
         </button>
