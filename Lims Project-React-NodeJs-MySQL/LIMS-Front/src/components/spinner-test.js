@@ -269,7 +269,7 @@ export default class SpinnerTest extends React.Component{
                 <h1 className="text-center">{name}</h1>
             </div>
             <div className="col-sm-12 col-xl-10">
-                <form onSubmit={this.handleSubmit}>
+                <form  onSubmit={this.handleSubmit}>
                 <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Operator </label>
                         <input 
@@ -429,9 +429,6 @@ export default class SpinnerTest extends React.Component{
                         </div>
                     </div>
 					<div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
-					</div>
-					<div className='row justify-content-center'>
                     <button
                         type="submit"
                         className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
@@ -442,6 +439,10 @@ export default class SpinnerTest extends React.Component{
                     {data}
                     </button>
                     </div>
+
+					<div className='row justify-content-center'>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+					</div>
                 </form>
             </div>
           </div>)

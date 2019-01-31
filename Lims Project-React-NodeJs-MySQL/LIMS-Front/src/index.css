@@ -27,7 +27,7 @@ img{
 }
 
 .component{
-    height: 94.9vh;
+    height: 100%;
 }
 
 button[disabled]:hover {
