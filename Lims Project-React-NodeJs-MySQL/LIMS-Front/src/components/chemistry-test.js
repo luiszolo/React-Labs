@@ -15,7 +15,8 @@ export default class ChemistryTest extends React.Component{
             sample: "",
             validSample: undefined,
             messageSample: "",
-            messageAPI: ""
+            messageAPI: "",
+            loading: false,
         }
     }
 
@@ -124,7 +125,9 @@ export default class ChemistryTest extends React.Component{
         const operator= this.state.operator
         const chemistry = this.state.chemistry
         const sample =this.state.sample
-        
+        this.setState({
+            loading:true
+        })
         axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
             operator,
             test: this.state.name,
@@ -141,6 +144,7 @@ export default class ChemistryTest extends React.Component{
                     sample: "",
                     messageAPI: res.data.message,
                     validSamples: false,
+                    loading: false,
                 })
             }
             else if(res.data.message==="Samples are wrong") {
@@ -160,7 +164,12 @@ export default class ChemistryTest extends React.Component{
                     messageAPI: "Sample is not ready for this test"
                 });
             }
-        }).catch( () => alert("Conection Timed Out"));
+        }).catch( () => {
+            alert("Conection Timed Out");
+            this.setState({
+                loading: false
+            });
+        });
     }
 
     render(){
@@ -187,6 +196,11 @@ export default class ChemistryTest extends React.Component{
         const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput = inputs;
+
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
 
         if(validOp===false){
             operatorInput= operatorInput += " border-danger"
@@ -253,6 +267,7 @@ export default class ChemistryTest extends React.Component{
                         title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
+                    {data}
                     </button>
                     </div>
                 </form>

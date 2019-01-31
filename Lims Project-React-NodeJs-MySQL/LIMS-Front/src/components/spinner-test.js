@@ -15,6 +15,7 @@ export default class SpinnerTest extends React.Component{
             messageVel: "",
             validVel: undefined,
             samples: Array(10).fill(""),
+            loading: false,
         }
     }
 
@@ -91,7 +92,7 @@ export default class SpinnerTest extends React.Component{
 
     validateVelocity=()=>{
         const velocity=this.state.velocity
-        if(velocity.length<=5){
+        if(velocity.length <= 5){
             this.setState({
                 validVel: true,
                 messageVel: "",
@@ -182,6 +183,9 @@ export default class SpinnerTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
+        this.setState({
+            loading:true
+        })
 
         const operator= this.state.operator
         const velocity = this.state.velocity
@@ -206,7 +210,8 @@ export default class SpinnerTest extends React.Component{
 						operator: 0, 
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
-						validSamples: false,
+                        validSamples: false,
+                        loading: false,
                     })
       
                 } else {
@@ -215,7 +220,12 @@ export default class SpinnerTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              }).catch( () => alert("Conection Timed Out"));
+              }).catch( () => {
+                alert("Conection Timed Out");
+                this.setState({
+                    loading: false
+                });
+            });
 
         })
     }
@@ -254,7 +264,10 @@ export default class SpinnerTest extends React.Component{
         else{
             operatorInput = inputs
         }
-
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
         return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
@@ -429,6 +442,7 @@ export default class SpinnerTest extends React.Component{
                         title={(validSamples && validOp && validVel) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
+                    {data}
                     </button>
                     </div>
                 </form>

@@ -19,6 +19,7 @@ export default class HeatTest extends React.Component{
             validTime: undefined,
             samples: Array(5).fill(""),
             buttonTitle:"",
+            loading: false,
         }
     }
 
@@ -197,7 +198,9 @@ export default class HeatTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
-
+        this.setState({
+            loading:true
+        })
         const operator= this.state.operator
         const temperature = this.state.temperature
         const time = this.state.time
@@ -227,6 +230,7 @@ export default class HeatTest extends React.Component{
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
                         validSamples: false,
+                        loading:false,
                     })
                 } else {
                     console.log(res.data.message)
@@ -234,7 +238,12 @@ export default class HeatTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              }).catch( () => alert("Conection Timed Out"));
+              }).catch( () => {
+                alert("Conection Timed Out");
+                this.setState({
+                    loading: false
+                });
+            });
         })
 
     }
@@ -268,6 +277,11 @@ export default class HeatTest extends React.Component{
         const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput = inputs;
+
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
 
         if(validOp===false){
             operatorInput= operatorInput += " border-danger"
@@ -398,6 +412,7 @@ export default class HeatTest extends React.Component{
                         title={buttonTitle}
                     >
                     Save Data
+                    {data}
                     </button>
 					</div>
                 </form>

@@ -13,6 +13,7 @@ export default class ElectricityTest extends React.Component{
             validSamples: undefined,
             samples: Array(10).fill(""),
             messageAPI: "",
+            loading:false,
         }
     }
     
@@ -155,7 +156,9 @@ export default class ElectricityTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
-
+        this.setState({
+            loading:true
+        })
         const operator= this.state.operator
 
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
@@ -173,16 +176,21 @@ export default class ElectricityTest extends React.Component{
 						operator: 0, 
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
-						validSamples: false,
+                        validSamples: false,
+                        loading:false
                     })
                 } else {
-                    console.log(res.data.sampleErrorList)
                     this.setState({
-						messageAPI: "Sample already went through this Test"
-                    });
+                        loading:false,
+                    })
                 }
               })
-            .catch( () => alert("Conection Timed Out"));
+            .catch( () => {
+                alert("Conection Timed Out");
+                this.setState({
+                    loading: false
+                });
+            });
 		})
     }
 
@@ -216,6 +224,11 @@ export default class ElectricityTest extends React.Component{
         }else{
             operatorInput = inputs
         }
+
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
 
         return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
@@ -374,11 +387,18 @@ export default class ElectricityTest extends React.Component{
                         disabled={(validSamples && validOp) ? false : true}
                         title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
                     >
+                
                     Save Data
+                    {data}
                     </button>
 					</div>
 					<div className='row justify-content-center'>
 					<label id="succes" className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}>
+
+
+
+
+                    
                     {messageAPI}
                     </label>
 					</div>
