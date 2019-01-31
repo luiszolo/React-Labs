@@ -157,7 +157,6 @@ export default class SpinnerTest extends React.Component{
                 this.setState({
                     validSamples: false,
                 })
-                
             }
         })
 
@@ -218,6 +217,7 @@ export default class SpinnerTest extends React.Component{
     render(){
         const {
             addSample,
+            handleChangeVelocity,
             validateOperator,
             validateVelocity,
             validateSamples,
@@ -225,6 +225,7 @@ export default class SpinnerTest extends React.Component{
                 name,
                 messageOp,
                 validOp,
+                velocity,
                 validVel,
                 messageVel,
                 messageSamples,
@@ -269,12 +270,13 @@ export default class SpinnerTest extends React.Component{
                     </div>
                     <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Velocity (RPM):</label>
-                        <input 
+                        <input
                             type="number" 
                             className={inputs}
+                            value={velocity}
                             placeholder="#####"
                             name="velocity" 
-                            onChange={this.handleChangeVelocity}
+                            onChange={handleChangeVelocity}
                             onBlur={validateVelocity}
                         />
                         <label className={warningLabels}>{messageVel}</label>
