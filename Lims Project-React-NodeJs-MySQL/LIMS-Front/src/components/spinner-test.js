@@ -92,7 +92,12 @@ export default class SpinnerTest extends React.Component{
 
     validateVelocity=()=>{
         const velocity=this.state.velocity
+<<<<<<< HEAD
         if(velocity.length <= 5){
+=======
+
+        if(velocity.length>0){
+>>>>>>> 2be06fb5aad59b52b88bcbe783c5ad418aa3d580
             this.setState({
                 validVel: true,
                 messageVel: "",
@@ -111,20 +116,16 @@ export default class SpinnerTest extends React.Component{
     }
 
     validateSamples=()=>{
-        
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-        const messages = this.state.messageSamples
         const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
-        console.log(noMessages)
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.setState({
                     validSamples: false,
                 })
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
-
-                
             }else if(sample===""){
                 this.updateSamplesMessage("", sampleNumber)
             }else{
@@ -151,18 +152,16 @@ export default class SpinnerTest extends React.Component{
                         })
                     }
                 })
-
-                if(correctSamples.length !== 0 && noMessages.length >= 4){
-                    this.setState({
-                        validSamples: true,
-                    })
-                    
-                }else{
-                    this.setState({
-                        validSamples: false,
-                    })
-                    
-                }
+            }
+            if(correctSamples.length !== 0 && noMessages.length > 9){
+                this.setState({
+                    validSamples: true,
+                })
+                
+            }else{
+                this.setState({
+                    validSamples: false,
+                })
             }
         })
 
@@ -171,15 +170,14 @@ export default class SpinnerTest extends React.Component{
         })
     }
 
-
-
     handleChangeVelocity = event => {
-        this.setState({ 
-            velocity: event.target.value,
-        } );
-    }
+        if(event.target.value.length <= 5){
+            this.setState({ 
+                velocity: event.target.value,
+            });
+        }
 
- 
+    }
 
     handleSubmit = event => {
         event.preventDefault();
@@ -233,6 +231,7 @@ export default class SpinnerTest extends React.Component{
     render(){
         const {
             addSample,
+            handleChangeVelocity,
             validateOperator,
             validateVelocity,
             validateSamples,
@@ -240,6 +239,7 @@ export default class SpinnerTest extends React.Component{
                 name,
                 messageOp,
                 validOp,
+                velocity,
                 validVel,
                 messageVel,
                 messageSamples,
@@ -287,12 +287,13 @@ export default class SpinnerTest extends React.Component{
                     </div>
                     <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Velocity (RPM):</label>
-                        <input 
+                        <input
                             type="number" 
                             className={inputs}
+                            value={velocity}
                             placeholder="#####"
                             name="velocity" 
-                            onChange={this.handleChangeVelocity}
+                            onChange={handleChangeVelocity}
                             onBlur={validateVelocity}
                         />
                         <label className={warningLabels}>{messageVel}</label>
