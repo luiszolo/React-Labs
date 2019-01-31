@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class HeatTest extends React.Component{
@@ -110,7 +109,7 @@ export default class HeatTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else  {
@@ -225,8 +224,7 @@ export default class HeatTest extends React.Component{
 
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
-					console.log(res.data.message)
-					ReactDOM.findDOMNode(this.refs.firstSample).focus();
+                    console.log(res.data.message)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(""),
@@ -344,8 +342,7 @@ export default class HeatTest extends React.Component{
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
-							onChange={addSample}
-							ref='firstSample'
+                            onChange={addSample}
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>

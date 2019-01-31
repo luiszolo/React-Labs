@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class SpinnerTest extends React.Component{
@@ -67,7 +66,7 @@ export default class SpinnerTest extends React.Component{
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else {
@@ -200,8 +199,6 @@ export default class SpinnerTest extends React.Component{
 
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
-					
-					ReactDOM.findDOMNode(this.refs.firstSample).focus();
                     console.log(res.data.message)
                     this.setState({
 						operator: 0, 
@@ -309,8 +306,7 @@ export default class SpinnerTest extends React.Component{
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
-							onChange={addSample}
-							ref='firstSample'
+                            onChange={addSample}
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
