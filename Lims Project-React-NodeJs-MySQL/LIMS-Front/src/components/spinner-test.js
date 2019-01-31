@@ -92,12 +92,8 @@ export default class SpinnerTest extends React.Component{
 
     validateVelocity=()=>{
         const velocity=this.state.velocity
-<<<<<<< HEAD
-        if(velocity.length <= 5){
-=======
 
         if(velocity.length>0){
->>>>>>> 2be06fb5aad59b52b88bcbe783c5ad418aa3d580
             this.setState({
                 validVel: true,
                 messageVel: "",
