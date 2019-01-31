@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class SpinnerTest extends React.Component{
@@ -199,6 +200,8 @@ export default class SpinnerTest extends React.Component{
 
             .then( res=> {
                 if (res.data.message==="Insertion completed") {
+					
+					ReactDOM.findDOMNode(this.refs.firstSample).focus();
                     console.log(res.data.message)
                     this.setState({
 						operator: 0, 
@@ -306,7 +309,8 @@ export default class SpinnerTest extends React.Component{
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
-                            onChange={addSample}
+							onChange={addSample}
+							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class ChemistryTest extends React.Component{
@@ -139,7 +140,9 @@ export default class ChemistryTest extends React.Component{
         })
         .then( res=> {
             if (res.data.message==="Insertion completed") {
-                console.log(res.data.message)
+				console.log(res.data.message)
+				
+				ReactDOM.findDOMNode(this.refs.firstSample).focus();
                 this.setState({
                     sample: "",
                     messageAPI: res.data.message,
@@ -250,7 +253,8 @@ export default class ChemistryTest extends React.Component{
                             value={this.state.sample}
                             placeholder={format}
                             onChange={addSample}
-                            onBlur={validateSample}
+							onBlur={validateSample}
+							ref='fisrtSample'
                         />
                         <label className={warningLabels}>{messageSample}</label> 
                     </div>
