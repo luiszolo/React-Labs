@@ -36,7 +36,7 @@ export default class ChemistryTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else  {
@@ -161,7 +161,7 @@ export default class ChemistryTest extends React.Component{
             else {
                 console.log(res.data.message)
                 this.setState({
-                    messageAPI: "Sample is not ready for this test"
+                    messageAPI: "The sample is not ready for this test"
                 });
             }
         }).catch( () => {

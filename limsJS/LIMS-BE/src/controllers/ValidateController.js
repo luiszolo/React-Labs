@@ -36,12 +36,12 @@ let GeneralValidator = {
 async function SampleValidators (sample, test) {
 	console.log(test, sample)
 	if (test.id == 1 && sample === undefined) return true;
-	if (sample === undefined) return { message: 'This sample doesn\'t exists' };
+	if (sample === undefined) return { message: 'This sample doesn\'t exist' };
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
 
 	if (test == false) {
 		return { 
-			message: 'Test not exists!'
+			message: 'The test didn\'t exist!'
 		}
 	}
 	const aux = await GeneralValidator.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.id} AND test_Id=${test.id}`)
@@ -60,7 +60,7 @@ async function SampleValidators (sample, test) {
 				SELECT * FROM Log WHERE status_Id=${statusSequence.result.status_Required} AND sample_Id=${sample.id}
 			`) == false && test.id != 1) {
 				return {
-					message: `This sample dosent have the status for this test`
+					message: `This sample doesn't have the status of this test`
 				};
 			}
 		}
