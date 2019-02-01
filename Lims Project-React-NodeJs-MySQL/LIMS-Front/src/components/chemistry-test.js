@@ -141,14 +141,13 @@ export default class ChemistryTest extends React.Component{
         .then( res=> {
             if (res.data.message==="Insertion completed") {
 				console.log(res.data.message)
-				
-				ReactDOM.findDOMNode(this.refs.firstSample).focus();
                 this.setState({
                     sample: "",
                     messageAPI: res.data.message,
                     validSamples: false,
                     loading: false,
-                })
+				});
+				ReactDOM.findDOMNode(this.refs.firstSample).focus();
             }
             else if(res.data.message==="Samples are wrong") {
                 this.setState({
@@ -167,7 +166,7 @@ export default class ChemistryTest extends React.Component{
                     messageAPI: "The sample is not ready for this test"
                 });
             }
-        }).catch( () => {
+        }).catch( err => {
             alert("Conection Timed Out");
             this.setState({
                 loading: false
@@ -254,7 +253,7 @@ export default class ChemistryTest extends React.Component{
                             placeholder={format}
                             onChange={addSample}
 							onBlur={validateSample}
-							ref='fisrtSample'
+							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSample}</label> 
                     </div>
