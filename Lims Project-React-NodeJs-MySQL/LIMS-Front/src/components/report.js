@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 
-import TableResponsive from './table-responsive';
+import ResponsiveTable from './ResponsiveTable';
 
 
 export default class SampleSearch extends React.Component{
@@ -120,7 +120,7 @@ export default class SampleSearch extends React.Component{
             <div>
 				{
 					this.state.tests && this.state.tests.length === 0 ? ('') : (
-						<TableResponsive title='Sample logs' cols={{
+						<ResponsiveTable title='Sample logs' cols={{
 							userID: 'User ID',
 							sample: 'Sample',
 							state: 'State',
@@ -131,7 +131,7 @@ export default class SampleSearch extends React.Component{
 				}
 				{
 					this.state.attributes && this.state.attributes.length === 0 ? ('') : (
-						<TableResponsive title='Sample attributes' cols={{
+						<ResponsiveTable title='Sample attributes' cols={{
 							test: 'Test',
 							attribute: 'Attribute',
 							value: 'Value'
