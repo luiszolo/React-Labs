@@ -27,9 +27,9 @@ export default class Tests extends React.Component {
 
     return (<div className="row m-0" >
         <nav className = 'col-lg-2 col-xl-2 col-md-2 col-sm-12 fixed-top bg-info' id="menuMobilDiv">
-            <div className='breadcrumb p-0'>
+            <div className='breadcrumb'>
                 <h1 className='text-center bg-info text-white w-100'>LIMS</h1>
-                <ul>
+                <ul className='m-0'>
                     {children.map((child) => {
                         const { label } = child.props;
                         return (
@@ -43,11 +43,11 @@ export default class Tests extends React.Component {
                 </ul>
             </div>
             <div class="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
-                <div class="navbar-header w-100" classname="col-sm-1">
-                    <button type="button" class="navbar-toggle collapsed float-left" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
+                <div class="container-fluid navbar-header m-0" classname="col-sm-1">
+                    <button type="button" className="navbar-toggle collapsed col-1" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
                         <img src="images/menu.png" alt='button menu'/>
                     </button>
-                    <h3 className='text-center bg-info text-white'>LIMS</h3>
+                    <h3 className='col-11 text-center bg-info text-white'>LIMS</h3>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="navbar navbar-nav">
@@ -66,7 +66,7 @@ export default class Tests extends React.Component {
                 </div>
             </div>
         </nav>
-        <div className="col-lg-10 col-xl-10 col-md-9 col-sm-12 offset-md-2">
+        <div className="col-lg-10 col-xl-10 col-md-10 col-sm-12 offset-md-2">
             {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;
