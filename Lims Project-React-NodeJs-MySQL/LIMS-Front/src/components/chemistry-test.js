@@ -201,7 +201,7 @@ export default class ChemistryTest extends React.Component{
 
         let data;
         if (this.state.loading) {
-          data = <img src='/images/spinner.gif' id='spinner'/>
+          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
 
         if(validOp===false){

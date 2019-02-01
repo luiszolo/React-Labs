@@ -138,9 +138,8 @@ export default class HeatTest extends React.Component{
         
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-        const messages = this.state.messageSamples
         const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
-        console.log(noMessages)
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.setState({
@@ -282,7 +281,7 @@ export default class HeatTest extends React.Component{
 
         let data;
         if (this.state.loading) {
-          data = <img src='/images/spinner.gif' id='spinner'/>
+          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
 
         if(validOp===false){
@@ -294,7 +293,7 @@ export default class HeatTest extends React.Component{
             operatorInput = inputs
         }
 
-        return(<div className="content row justify-content-center">
+        return(<div className="content content row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>

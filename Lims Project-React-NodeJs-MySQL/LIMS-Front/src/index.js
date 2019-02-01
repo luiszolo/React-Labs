@@ -40,7 +40,7 @@ class App extends React.Component {
             return e['name']
         })
         
-        const menu = ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] //Adding "Home" to the menu app.concat(tests)
+        const menu = app.concat(tests) //Adding "Home" to the menu  ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
         const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
 
         return(<div>

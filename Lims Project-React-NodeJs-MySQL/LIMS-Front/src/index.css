@@ -31,7 +31,6 @@ img{
 	width: 100%;
 }
 
-<<<<<<< HEAD
 nav{
 	/* border-right: 1px solid white; */
 	height: 100%;
@@ -44,10 +43,6 @@ nav ul{
 
 .navbar-header{
 	height: 3rem;
-=======
-.component{
-    height: 100%;
->>>>>>> 4ff3c4e12e87874866dcc3079ea0f33397277b46
 }
 
 button[disabled]:hover {
@@ -93,41 +88,11 @@ button[disabled]:hover {
 	}
 }
 
-<<<<<<< HEAD
 @media(min-width: 768px){
 	.breadcrumb {
 		display: block;
 		margin: 0 !important;
 		padding: 0 !important;
-=======
-
-  }
-  @media(min-width:769px){
-		.component{
-			min-height: 95vh;
-	}
-	header .navbar {
-	  display: none;   
-	}
-  }
-  /* DEMO ONLY */
-  .breadcrumb {
-	margin-bottom: 0;
-	border-radius: 0;
-  }
-  body {
-	background: white;
-  }
-   header:after {
-	 text-align: center;
-	 margin: 0px auto 0;
-	 display: table;
-	 color: #FFF;
-	 
-	}
-	.breadcrumb{
-		padding: 0%;
->>>>>>> 4ff3c4e12e87874866dcc3079ea0f33397277b46
 	}
 
 	.navbar {

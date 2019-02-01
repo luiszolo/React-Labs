@@ -264,9 +264,9 @@ export default class SpinnerTest extends React.Component{
         }
         let data;
         if (this.state.loading) {
-          data = <img src='/images/spinner.gif' id='spinner'/>
+          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
-        return(<div className="row justify-content-center">
+        return(<div className="content row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>

@@ -42,15 +42,15 @@ export default class Tests extends React.Component {
                         );})}
                 </ul>
             </div>
-            <div class="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
-                <div class="container-fluid navbar-header m-0" classname="col-sm-1">
+            <div className="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
+                <div className="container-fluid navbar-header col-sm-1 m-0">
                     <button type="button" className="navbar-toggle collapsed col-1" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
                         <img src="images/menu.png" alt='button menu'/>
                     </button>
                     <h3 className='col-11 text-center bg-info text-white'>LIMS</h3>
                 </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="navbar navbar-nav">
+                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul className="navbar navbar-nav">
                     {children.map((child) => {
                         const { label } = child.props;
                     

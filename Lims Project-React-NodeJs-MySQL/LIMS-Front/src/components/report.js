@@ -79,8 +79,6 @@ export default class SampleSearch extends React.Component{
                 validSample,
                 messageAPI,
                 sampleSearched,
-                tests,
-                attributes,
             }
         } = this;
 

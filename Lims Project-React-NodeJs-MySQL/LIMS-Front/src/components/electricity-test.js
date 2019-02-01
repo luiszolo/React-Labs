@@ -94,9 +94,8 @@ export default class ElectricityTest extends React.Component{
         
         const samples = this.state.samples
         const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-        const messages = this.state.messageSamples
         const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
-        console.log(noMessages)
+
         samples.forEach((sample,sampleNumber)=>{
             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
                 this.setState({
@@ -229,10 +228,9 @@ export default class ElectricityTest extends React.Component{
 
         let data;
         if (this.state.loading) {
-          data = <img src='/images/spinner.gif' id='spinner'/>
+          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
-
-        return(<div className="row justify-content-center">
+        return(<div className="content row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
@@ -390,18 +388,12 @@ export default class ElectricityTest extends React.Component{
                         disabled={(validSamples && validOp) ? false : true}
                         title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
                     >
-                
                     Save Data
                     {data}
                     </button>
 					</div>
 					<div className='row justify-content-center'>
 					<label id="succes" className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}>
-
-
-
-
-                    
                     {messageAPI}
                     </label>
 					</div>
