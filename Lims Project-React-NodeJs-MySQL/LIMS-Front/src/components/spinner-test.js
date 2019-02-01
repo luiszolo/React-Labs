@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class SpinnerTest extends React.Component{
@@ -15,6 +16,7 @@ export default class SpinnerTest extends React.Component{
             messageVel: "",
             validVel: undefined,
             samples: Array(10).fill(""),
+            loading: false,
         }
     }
 
@@ -65,7 +67,7 @@ export default class SpinnerTest extends React.Component{
             .then(res => {
                 if (res.data.message) { //si devuelve el no existe se pone que no valida por que pues no existe XD
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else {
@@ -176,6 +178,9 @@ export default class SpinnerTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
+        this.setState({
+            loading:true
+        })
 
         const operator= this.state.operator
         const velocity = this.state.velocity
@@ -200,8 +205,10 @@ export default class SpinnerTest extends React.Component{
 						operator: 0, 
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
-						validSamples: false,
-                    })
+                        validSamples: false,
+                        loading: false,
+					});
+					ReactDOM.findDOMNode(this.refs.firstSample).focus();
       
                 } else {
                     console.log(res.data.message)
@@ -209,7 +216,12 @@ export default class SpinnerTest extends React.Component{
 						messageAPI: "Sample is not ready for this test"
                     });
                 }
-              }).catch( () => alert("Conection Timed Out"));
+              }).catch( () => {
+                alert("Conection Timed Out");
+                this.setState({
+                    loading: false
+                });
+            });
 
         })
     }
@@ -250,13 +262,16 @@ export default class SpinnerTest extends React.Component{
         else{
             operatorInput = inputs
         }
-
-        return(<div className="content row justify-content-center">
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
+        return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
             <div className="col-sm-12 col-xl-10">
-                <form onSubmit={this.handleSubmit}>
+                <form  onSubmit={this.handleSubmit}>
                 <div className="row justify-content-center form-inline mb-3">
                         <label className={regularLabels}>Operator </label>
                         <input 
@@ -293,7 +308,8 @@ export default class SpinnerTest extends React.Component{
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
-                            onChange={addSample}
+							onChange={addSample}
+							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
@@ -416,9 +432,6 @@ export default class SpinnerTest extends React.Component{
                         </div>
                     </div>
 					<div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
-					</div>
-					<div className='row justify-content-center'>
                     <button
                         type="submit"
                         className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
@@ -426,8 +439,13 @@ export default class SpinnerTest extends React.Component{
                         title={(validSamples && validOp && validVel) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
+                    {data}
                     </button>
                     </div>
+
+					<div className='row justify-content-center'>
+                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+					</div>
                 </form>
             </div>
           </div>)

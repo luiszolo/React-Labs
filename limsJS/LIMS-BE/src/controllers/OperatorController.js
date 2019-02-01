@@ -30,7 +30,7 @@ async function addOperator (req, res) {
 	}
 	await pool.query('INSERT INTO Operator SET ?', [newOperator]);
 	res.send({
-		message: 'Insertion successfull'
+		message: 'Insertion successful'
 	});
 };
 
@@ -39,7 +39,7 @@ async function deleteOperator (req, res) {
 	let params = req.params;
 	await pool.query('DELETE FROM Operator WHERE id= ?', [params.id]);
 	res.send({
-		message: 'Delete successfull'
+		message: 'Delete successful'
 	});
 };
 
@@ -59,7 +59,7 @@ async function getOperatorById (req, res) {
 	let params = req.params;
 	const value = await pool.query(`SELECT * FROM Operator WHERE id = ${params.id}`);
 	if (value.length == 0) { 
-		res.send({ message: "Operator doesn't exists" }); 
+		res.send({ message: "The operator doesn't exist" }); 
 		return;
 	}
 	value[0].name = miscs.capitalizeWord(value[0].name);
@@ -93,7 +93,7 @@ async function updateOperator (req, res) {
 	}
 	await pool.query(`UPDATE Operator SET id=${body.id}, name='${body.name.toUpperCase()}' WHERE id=${params.id}`);
 	res.send({
-		message: 'Update successfull'
+		message: 'Update successful'
 	})
 }
 

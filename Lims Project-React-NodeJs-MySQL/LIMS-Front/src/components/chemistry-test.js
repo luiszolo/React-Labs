@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class ChemistryTest extends React.Component{
@@ -15,7 +16,8 @@ export default class ChemistryTest extends React.Component{
             sample: "",
             validSample: undefined,
             messageSample: "",
-            messageAPI: ""
+            messageAPI: "",
+            loading: false,
         }
     }
 
@@ -35,7 +37,7 @@ export default class ChemistryTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else  {
@@ -124,7 +126,9 @@ export default class ChemistryTest extends React.Component{
         const operator= this.state.operator
         const chemistry = this.state.chemistry
         const sample =this.state.sample
-        
+        this.setState({
+            loading:true
+        })
         axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
             operator,
             test: this.state.name,
@@ -136,12 +140,14 @@ export default class ChemistryTest extends React.Component{
         })
         .then( res=> {
             if (res.data.message==="Insertion completed") {
-                console.log(res.data.message)
+				console.log(res.data.message)
                 this.setState({
                     sample: "",
                     messageAPI: res.data.message,
                     validSamples: false,
-                })
+                    loading: false,
+				});
+				ReactDOM.findDOMNode(this.refs.firstSample).focus();
             }
             else if(res.data.message==="Samples are wrong") {
                 this.setState({
@@ -157,10 +163,15 @@ export default class ChemistryTest extends React.Component{
             else {
                 console.log(res.data.message)
                 this.setState({
-                    messageAPI: "Sample is not ready for this test"
+                    messageAPI: "The sample is not ready for this test"
                 });
             }
-        }).catch( () => alert("Conection Timed Out"));
+        }).catch( err => {
+            alert("Conection Timed Out");
+            this.setState({
+                loading: false
+            });
+        });
     }
 
     render(){
@@ -187,6 +198,11 @@ export default class ChemistryTest extends React.Component{
         const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
 
         let operatorInput = inputs;
+
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
 
         if(validOp===false){
             operatorInput= operatorInput += " border-danger"
@@ -236,7 +252,8 @@ export default class ChemistryTest extends React.Component{
                             value={this.state.sample}
                             placeholder={format}
                             onChange={addSample}
-                            onBlur={validateSample}
+							onBlur={validateSample}
+							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSample}</label> 
                     </div>
@@ -253,6 +270,7 @@ export default class ChemistryTest extends React.Component{
                         title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
+                    {data}
                     </button>
                     </div>
                 </form>

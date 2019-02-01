@@ -25,7 +25,7 @@ async function addAttribute (req, res) {
 	}
 	await pool.query('INSERT INTO Attribute SET ?', [newAttribute]);
 	res.send({
-		message: 'Insertion successfull'
+		message: 'Insertion successful'
 	});
 };
 
@@ -34,7 +34,7 @@ async function deleteAttribute (req, res) {
 	let params = req.params;
 	await pool.query('DELETE FROM Attribute WHERE id= ?', [params.id]);
 	res.send({
-		message: 'Delete successfull'
+		message: 'Delete successful'
 	});
 };
 
@@ -80,7 +80,7 @@ async function updateAttribute (req, res) {
 	}
 	await pool.query(`UPDATE Attribute SET name='${body.name.toUpperCase()}', unit='${body.unit.toUpperCase()}' WHERE id='${params.id}'`);
 	res.send({
-		message: 'Update successfull'
+		message: 'Update successful'
 	});
 }
 

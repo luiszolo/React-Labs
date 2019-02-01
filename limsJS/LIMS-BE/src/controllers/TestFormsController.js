@@ -23,7 +23,7 @@ async function insertData(req, res) {
 	const bothStatus = await dbInteract.isExists(`SELECT * FROM TestStatus WHERE test_Id=${test.result.id}`);
 	if (bothStatus == false) {
 		res.send({
-			message: 'The test doesn\'t have status' 
+			message: 'The test doesn\'t have a status' 
 		});
 		return;
 	} 
@@ -132,7 +132,7 @@ async function insertData(req, res) {
 
 	if(attributeError) {
 		res.send({
-			message: 'The attributes are diferent!'
+			message: 'The attributes are different!'
 		});
 		return;
 	}

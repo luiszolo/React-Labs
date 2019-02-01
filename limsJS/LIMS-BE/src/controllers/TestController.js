@@ -24,7 +24,7 @@ async function addTest (req, res) {
 	}
 	if (!regex.notNumber(newTest.name)) {
 		res.send({
-			message: 'Cannot add test with numbers'
+			message: 'Cannot add a test with numbers'
 		});
 		return;
 	}
@@ -65,7 +65,7 @@ async function addTest (req, res) {
 		return;
 	}
 	res.send({
-		message: "Insertion successfull"
+		message: "Insertion successful"
 	});
 };
 
@@ -138,7 +138,7 @@ async function updateTest (req, res) {
 	}
 	if (!regex.notNumber(body.name)) {
 		res.send({
-			message: 'Cannot add test with numbers'
+			message: 'Cannot add a test with numbers'
 		});
 		return;
 	}

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class ElectricityTest extends React.Component{
@@ -13,6 +14,7 @@ export default class ElectricityTest extends React.Component{
             validSamples: undefined,
             samples: Array(10).fill(""),
             messageAPI: "",
+            loading:false,
         }
     }
     
@@ -64,7 +66,7 @@ export default class ElectricityTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "Operator dosent exist",
+                        messageOp: "The operator doesn't exist",
                         validOp: false,
                     })
                 } else  {
@@ -155,7 +157,9 @@ export default class ElectricityTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
-
+        this.setState({
+            loading:true
+        })
         const operator= this.state.operator
 
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
@@ -173,16 +177,22 @@ export default class ElectricityTest extends React.Component{
 						operator: 0, 
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
-						validSamples: false,
-                    })
+                        validSamples: false,
+                        loading:false
+					})
+					ReactDOM.findDOMNode(this.refs.firstSample).focus();
                 } else {
-                    console.log(res.data.sampleErrorList)
                     this.setState({
-						messageAPI: "Sample already went through this Test"
-                    });
+                        loading:false,
+                    })
                 }
               })
-            .catch( () => alert("Conection Timed Out"));
+            .catch( () => {
+                alert("Conection Timed Out");
+                this.setState({
+                    loading: false
+                });
+            });
 		})
     }
 
@@ -217,7 +227,12 @@ export default class ElectricityTest extends React.Component{
             operatorInput = inputs
         }
 
-        return(<div className="row content justify-content-center ">
+        let data;
+        if (this.state.loading) {
+          data = <img src='/images/spinner.gif' id='spinner'/>
+        } 
+
+        return(<div className="row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
@@ -245,7 +260,8 @@ export default class ElectricityTest extends React.Component{
                                 name={"sample1"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+								onChange={addSample}
+								ref='firstSample'
                             />
 							<label className={warningLabels}>{messageSamples[0]}</label>
                         </div>
@@ -374,11 +390,18 @@ export default class ElectricityTest extends React.Component{
                         disabled={(validSamples && validOp) ? false : true}
                         title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
                     >
+                
                     Save Data
+                    {data}
                     </button>
 					</div>
 					<div className='row justify-content-center'>
 					<label id="succes" className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}>
+
+
+
+
+                    
                     {messageAPI}
                     </label>
 					</div>
