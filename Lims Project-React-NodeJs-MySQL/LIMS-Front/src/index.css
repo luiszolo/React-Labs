@@ -49,9 +49,15 @@ button[disabled]:hover {
 .navbar {
 	padding: 0 !important;
 }
+
+.content{
+	padding: 0 3rem !important;
+}
+
 .container-fluid {
 	padding: 0 !important;
 }
+
 .text-danger {
 	font-size: 0.80rem
 }

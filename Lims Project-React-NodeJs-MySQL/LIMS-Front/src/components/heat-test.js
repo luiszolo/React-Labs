@@ -278,7 +278,7 @@ export default class HeatTest extends React.Component{
             operatorInput = inputs
         }
 
-        return(<div className="row justify-content-center">
+        return(<div className="content row justify-content-center">
             <div className="col-lg-4 col-sm-12 m-4">
                 <h1 className="text-center">{name}</h1>
             </div>
