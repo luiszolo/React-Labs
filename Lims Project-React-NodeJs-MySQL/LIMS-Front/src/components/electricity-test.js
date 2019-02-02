@@ -47,15 +47,62 @@ export default class ElectricityTest extends React.Component{
             };
         })
     }
-    
+
     addSample=(e)=>{
         const sampleNumber =e.target.name.replace("sample","")
         const sample = e.target.value
 
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber-1)
+
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+                this.setState({
+                    validSamples: false,
+                })
+                this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
+            }else{
+                console.log('Success')
+                this.updateSamplesMessage("", sampleNumber - 1)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+                .then(res => {
+                    if (res.data.message) {
+                        this.updateSamplesMessage(res.data.message, sampleNumber - 1)
+                        this.setState({
+                            validSamples: false,
+                        })
+                    } else {
+                        this.state.samples.forEach((value,index)=>{
+                            if(sample===value && index!==sampleNumber - 1){
+                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1)
+                                this.setState({
+                                    validSamples: false,
+                                })
+                            }else{
+                                this.updateSamplesMessage("", sampleNumber - 1)
+                                this.setState({
+                                    validSamples: true,
+                                })
+                            }
+                        })
+                    }
+                })
+            }
         }
-        
+    }
+
+    validateSamples=()=>{
+        const correctSamples = this.state.samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
+        console.log(correctSamples)
+        if(correctSamples.length > 0 && this.state.validSamples === true){
+            this.setState({
+                validSamples: true,
+            })
+        }else{
+            this.setState({
+                validSamples: false,
+            })
+        }
     }
 
     validateOperator=(e)=>{
@@ -88,70 +135,6 @@ export default class ElectricityTest extends React.Component{
                 messageOp: "Invalid Syntax",
             })
         }
-    }
-
-    validateSamples=()=>{
-        
-        const samples = this.state.samples
-        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-        const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
-
-        samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-                this.setState({
-                    validSamples: false,
-                })
-                this.updateSamplesMessage("Incorrect syntax", sampleNumber)
-
-                
-            }else if(sample===""){
-                this.updateSamplesMessage("", sampleNumber)
-            }else{
-                this.updateSamplesMessage("", sampleNumber)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
-                .then(res => {
-                    if (res.data.message) {
-                        console.log(res.data.message)
-                        this.updateSamplesMessage(res.data.message, sampleNumber)
-                        this.setState({
-                            validSamples: false,
-                        })
-                        
-                    } else {
-                        samples.forEach((value,index)=>{
-                            if(sample===value && index!==sampleNumber){
-                                this.updateSamplesMessage("This sample is repeated", sampleNumber)
-                                this.setState({
-                                    validSamples: false,
-                                })
-                                
-                            }else if(sample===""){
-                                this.updateSamplesMessage("", sampleNumber)
-                                this.setState({
-                                    validSamples: true,
-                                })
-                            }
-                        })
-                    }
-                })
-
-                if(correctSamples.length !== 0 && noMessages.length >= 9){
-                    this.setState({
-                        validSamples: true,
-                    })
-                    
-                }else{
-                    this.setState({
-                        validSamples: false,
-                    })
-                    
-                }
-            }
-        })
-
-        this.setState({
-            messageAPI:""
-        })
     }
 
     handleSubmit = event => {
@@ -265,12 +248,13 @@ export default class ElectricityTest extends React.Component{
                         </div>
                         <div className="row justify-content-center form-inline mb-2">
                             <label className={regularLabels}>Sample 2:</label>
-                            <input 
+                            <input
                                 value={samples[1]}
                                 type="text"
                                 className={inputs}
                                 name={"sample2"}
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -284,6 +268,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample3"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -297,6 +282,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample4"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -310,6 +296,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample5"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -323,6 +310,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample6"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[4]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -336,6 +324,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample7"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[5]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -349,6 +338,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample8"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[6]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -362,6 +352,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample9"} 
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[7]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
@@ -375,6 +366,7 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={"sample10"}
                                 placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[8]))? false : true}
                                 onBlur={validateSamples}
                                 onChange={addSample}
                             />
