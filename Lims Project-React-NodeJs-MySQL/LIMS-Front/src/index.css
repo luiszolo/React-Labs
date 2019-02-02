@@ -20,6 +20,10 @@ button[disabled]:hover {
     background: #dc3545;
 }
 
+.buttonImage{
+	height: 3rem
+}
+
 .content{
 	padding: 0 3rem !important;
 }
@@ -40,7 +44,7 @@ html, body{
     height: 100%;
 }
 
-img{
+.logo{
 	width: 100%;
 }
 
@@ -71,6 +75,8 @@ nav ul{
 }
 
 #menuButton{
+	display: flex;
+	flex-wrap: wrap;
 	padding: 0;
 	background-color: transparent;
 	border: none;

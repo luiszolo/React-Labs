@@ -44,10 +44,17 @@ export default class Tests extends React.Component {
             </div>
             <div className="navbar navbar-default navbar-inverse navbar-fixed-top" id="navMobil">
                 <div className="container-fluid navbar-header col-sm-1 m-0">
-                    <button type="button" className="navbar-toggle collapsed col-1" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" id="menuButton">
-                        <img src="images/menu.png" alt='button menu'/>
+                    <button 
+                        type="button" 
+                        className="navbar-toggle collapsed w-100" 
+                        data-toggle="collapse" 
+                        data-target="#bs-example-navbar-collapse-1" 
+                        aria-expanded="false" 
+                        id="menuButton"
+                    >
+                        <h3 className='mx-auto text-white'>LIMS</h3>
+                        <img src="images/menu.png" className='buttonImage' alt='button menu'/>
                     </button>
-                    <h3 className='col-11 text-center bg-info text-white'>LIMS</h3>
                 </div>
                 <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul className="navbar navbar-nav">
