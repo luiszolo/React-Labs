@@ -49,59 +49,69 @@ export default class ElectricityTest extends React.Component{
     }
 
     addSample=(e)=>{
-        const sampleNumber =e.target.name.replace("sample","")
+        const sampleNumber = e.target.name.replace("sample","")
         const sample = e.target.value
 
         if(sample.length<=11){
-            this.updateSamples(sample,sampleNumber-1)
-
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-                this.setState({
-                    validSamples: false,
-                })
+            this.updateSamples(sample,sampleNumber - 1)
+            if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
-            }else{
-                console.log('Success')
-                this.updateSamplesMessage("", sampleNumber - 1)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
-                .then(res => {
-                    if (res.data.message) {
-                        this.updateSamplesMessage(res.data.message, sampleNumber - 1)
-                        this.setState({
-                            validSamples: false,
-                        })
-                    } else {
-                        this.state.samples.forEach((value,index)=>{
-                            if(sample===value && index!==sampleNumber - 1){
-                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1)
-                                this.setState({
-                                    validSamples: false,
-                                })
-                            }else{
-                                this.updateSamplesMessage("", sampleNumber - 1)
-                                this.setState({
-                                    validSamples: true,
-                                })
-                            }
-                        })
-                    }
-                })
+            } else {
+                this.updateSamplesMessage("", sampleNumber)
             }
         }
+        
     }
 
-    validateSamples=()=>{
-        const correctSamples = this.state.samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+    validateSamples=(e)=>{
+        const sampleNum = e.target.name.replace("sample","")
+        const samples = this.state.samples
+        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
 
-        console.log(correctSamples)
-        if(correctSamples.length > 0 && this.state.validSamples === true){
+        if(correctSamples.length !== 0){
+            samples.forEach((sample,sampleNumber)=>{
+                if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+                    this.setState({
+                        validSamples: false,
+                    })
+                    this.updateSamplesMessage("Incorrect syntax", sampleNumber)
+                }else if(sample===""){
+                    this.updateSamplesMessage("", sampleNumber)
+                }else{
+                    this.updateSamplesMessage("", sampleNumber)
+                    axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+                    .then(res => {
+                        if (res.data.message) {
+                            this.updateSamplesMessage(res.data.message, sampleNumber)
+                            this.setState({
+                                validSamples: false,
+                            })
+                        } else {
+                            samples.forEach((value,index)=>{
+                                if(sample===value && index!==sampleNumber){
+                                    this.updateSamplesMessage("This sample is repeated", sampleNumber)
+                                    this.setState({
+                                        validSamples: false,
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    this.setState({
+                        validSamples: true,
+                    })
+                }
+            })
+        }else if(e.target.value===""){
+            this.updateSamplesMessage("", sampleNum - 1)
             this.setState({
-                validSamples: true,
+                validSamples: false,
             })
         }else{
             this.setState({
                 validSamples: false,
             })
+            
         }
     }
 

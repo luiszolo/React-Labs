@@ -15,6 +15,19 @@ body{
 	}
 }
 
+button[disabled]:hover {
+    border-color: #dc3545;
+    background: #dc3545;
+}
+
+.content{
+	padding: 0 3rem !important;
+}
+
+.container-fluid {
+	padding: 0 !important;
+}
+
 h1,h2,h3 {
     margin: 0;
 }
@@ -45,20 +58,7 @@ nav ul{
 	height: 3rem;
 }
 
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
-}
-
 .navbar {
-	padding: 0 !important;
-}
-
-.content{
-	padding: 0 3rem !important;
-}
-
-.container-fluid {
 	padding: 0 !important;
 }
 
