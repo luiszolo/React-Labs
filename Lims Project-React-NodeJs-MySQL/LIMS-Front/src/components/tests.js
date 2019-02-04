@@ -52,7 +52,7 @@ export default class Tests extends React.Component {
                         aria-expanded="false" 
                         id="menuButton"
                     >
-                        <h3 className='mx-auto text-white'>LIMS</h3>
+                        <h3 className='mx-auto text-white pt-1'>LIMS</h3>
                         <img src="images/menu.png" className='buttonImage' alt='button menu'/>
                     </button>
                 </div>
