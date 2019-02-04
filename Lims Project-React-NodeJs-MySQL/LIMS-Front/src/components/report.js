@@ -7,10 +7,10 @@ import ResponsiveTable from './ResponsiveTable';
 
 export default class SampleSearch extends React.Component{
     state = {
-        sample:"",
+        sample:'',
         validSample: false,
-        messageAPI: "",
-        sampleSearched: "",
+        messageAPI: '',
+        sampleSearched: '',
         tests: [],
         attributes: [],
       }
@@ -21,19 +21,19 @@ export default class SampleSearch extends React.Component{
         this.setState({
             sample: sample,
         })
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==''){
             this.setState({
-                messageAPI: "Incorrect syntax",
+                messageAPI: 'Incorrect syntax',
                 validSample: false,
             })
-        }else if(sample===""){
+        }else if(sample===''){
             this.setState({
-                messageAPI: "",
+                messageAPI: '',
                 validSample: false,
             })
         }else{
             this.setState({
-                messageAPI: "",
+                messageAPI: '',
                 validSample: true,
             })
         }
@@ -49,7 +49,7 @@ export default class SampleSearch extends React.Component{
                     this.setState({
                         tests: [],
                         attributes: [],
-                        sampleSearched: "",
+                        sampleSearched: '',
                     });
                     this.setState({
                         messageAPI: res.data.message
@@ -59,14 +59,14 @@ export default class SampleSearch extends React.Component{
                     const attributes = res.data.Attributes;
                     this.setState({
                         sampleSearched: this.state.sample,
-                        sample: "",
+                        sample: '',
                         tests,
                         attributes,
-                        messageAPI: "",
+                        messageAPI: '',
                         validSample: false
                     })
                 }
-            }).catch( () => alert("Conection Timed Out"));
+            }).catch( () => alert('Conection Timed Out'));
 	}
 	
     render() {
@@ -82,28 +82,28 @@ export default class SampleSearch extends React.Component{
             }
         } = this;
 
-        const regularLabels = "col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center"
+        const regularLabels = 'col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center'
 
         
-        return(<div className="content">
-                    <div className="row justify-content-center form-inline mb-2">
-                       <div className="col-12 row justify-content-center form-inline mb-2">
+        return(<div className='content'>
+                    <div className='row justify-content-center form-inline mb-2'>
+                       <div className='col-12 row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample Search: </label>
                         <input
-                            id="sample"
-                            type="text"
-                            name="sample"
-                            className={"col-md-6 col-sm-12 col-lg-4 col-xl-3 form-control"}
-                            placeholder="SA-##-#####"
+                            id='sample'
+                            type='text'
+                            name='sample'
+                            className={'col-md-6 col-sm-12 col-lg-4 col-xl-3 form-control'}
+                            placeholder='SA-##-#####'
                             value={sample}
                             onChange={addSample}
                             onBlur={validateSample}
                             />
                        </div>
                 
-                <div className="row col-12 justify-content-center form-inline mb-2">
+                <div className='row col-12 justify-content-center form-inline mb-2'>
                     <button
-                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
+                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
                         onClick={handleSearch}
                         disabled={!validSample}
                     >
@@ -111,10 +111,10 @@ export default class SampleSearch extends React.Component{
                     </button>
                 </div>
                 <div className='row justify-content-center'>
-                    <label className={"col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3"}><p class="Danger">{messageAPI}</p></label>
+                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p class='Danger'>{messageAPI}</p></label>
 					</div>
             </div>
-            <h3 className="col-12 text-center pb-2">{sampleSearched}</h3>
+            <h3 className='col-12 text-center pb-2'>{sampleSearched}</h3>
             <div>
 				{
 					this.state.tests && this.state.tests.length === 0 ? ('') : (

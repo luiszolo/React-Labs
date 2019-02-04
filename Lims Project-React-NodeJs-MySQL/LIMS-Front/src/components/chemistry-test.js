@@ -6,17 +6,17 @@ export default class ChemistryTest extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            name: "Chemistry Test",
-            operator: "",
-            messageOp: "",
+            name: 'Chemistry Test',
+            operator: '',
+            messageOp: '',
             validOp: undefined,
-            chemistry: "",
-            messageCh: "",
+            chemistry: '',
+            messageCh: '',
             validCh: undefined,
-            sample: "",
+            sample: '',
             validSample: undefined,
-            messageSample: "",
-            messageAPI: "",
+            messageSample: '',
+            messageAPI: '',
             loading: false,
         }
     }
@@ -37,26 +37,26 @@ export default class ChemistryTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "The operator doesn't exist",
+                        messageOp: 'The operator doesn\'t exist',
                         validOp: false,
                     })
                 } else  {
                     this.setState({
                         operator: operator,
-                        messageOp: "",
+                        messageOp: '',
                         validOp: true,
                     })
                 }
             })
-        }else if(operator===""){
+        }else if(operator===''){
             this.setState({
-                messageOp: "Field can't be blank", //that's racist
+                messageOp: 'Field can\'t be blank', //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
-                messageOp: "Invalid Syntax",
+                messageOp: 'Invalid Syntax',
             })
         }
     }
@@ -68,17 +68,17 @@ export default class ChemistryTest extends React.Component{
             this.setState({
                 chemistry: chemistry,
                 validCh: true,
-                messageCh: "",
+                messageCh: '',
             })
-        }else if(chemistry===""){
+        }else if(chemistry===''){
             this.setState({
-                messageCh: "",
+                messageCh: '',
                 validCh: false,
             })
         }else{
             this.setState({
-                chemistry: "",
-                messageCh: "Invalid syntax",
+                chemistry: '',
+                messageCh: 'Invalid syntax',
                 validCh: false,
             })
         }
@@ -87,14 +87,14 @@ export default class ChemistryTest extends React.Component{
     validateSample=(e)=>{
         const sample = e.target.value
 
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==''){
             this.setState({
-                messageSample: "Incorrect syntax",
+                messageSample: 'Incorrect syntax',
                 validSample: false,
             })
-        }else if(sample===""){
+        }else if(sample===''){
             this.setState({
-                messageSample: "",
+                messageSample: '',
                 validSample: false,
             })
         }else{
@@ -108,7 +108,7 @@ export default class ChemistryTest extends React.Component{
                     })
                 } else {
                     this.setState({
-                        messageSample: "",
+                        messageSample: '',
                         validSample: true,
                     })
                 }
@@ -116,7 +116,7 @@ export default class ChemistryTest extends React.Component{
         }
 
         this.setState({
-            messageAPI:""
+            messageAPI:''
         })
     }
 
@@ -134,40 +134,40 @@ export default class ChemistryTest extends React.Component{
             test: this.state.name,
             samples: [sample],
             attributes:[{
-                name: "Chemistry",
+                name: 'Chemistry',
                 value: chemistry
             }]
         })
         .then( res=> {
-            if (res.data.message==="Insertion completed") {
+            if (res.data.message==='Insertion completed') {
 				console.log(res.data.message)
                 this.setState({
-                    sample: "",
+                    sample: '',
                     messageAPI: res.data.message,
                     validSamples: false,
                     loading: false,
 				});
 				ReactDOM.findDOMNode(this.refs.firstSample).focus();
             }
-            else if(res.data.message==="Samples are wrong") {
+            else if(res.data.message==='Samples are wrong') {
                 this.setState({
-                    messageAPI: "Sample went through the test already "
+                    messageAPI: 'Sample went through the test already '
                 });
             }
 
-            else if(res.data.message==="This sample already passed CHEMESTRY TEST") {
+            else if(res.data.message==='This sample already passed CHEMESTRY TEST') {
                 this.setState({
-                    messageAPI: "This sample already passed CHEMESTRY TEST"
+                    messageAPI: 'This sample already passed CHEMESTRY TEST'
                 });
             }
             else {
                 console.log(res.data.message)
                 this.setState({
-                    messageAPI: "The sample is not ready for this test"
+                    messageAPI: 'The sample is not ready for this test'
                 });
             }
         }).catch( err => {
-            alert("Conection Timed Out");
+            alert('Conection Timed Out');
             this.setState({
                 loading: false
             });
@@ -192,10 +192,10 @@ export default class ChemistryTest extends React.Component{
             }
         } = this;
 
-        const format="SA-##-#####"
-        const regularLabels = "col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = "col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control"
-        const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
+        const format='SA-##-#####'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
+        const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
         let operatorInput = inputs;
 
@@ -205,50 +205,50 @@ export default class ChemistryTest extends React.Component{
         } 
 
         if(validOp===false){
-            operatorInput= operatorInput += " border-danger"
+            operatorInput= operatorInput += ' border-danger'
         }else if(validOp===true){
-            operatorInput= operatorInput += " border-success"
+            operatorInput= operatorInput += ' border-success'
         }
         else{
             operatorInput = inputs
         }
 
-        return(<div className="content row justify-content-center">
-            <div className="col-lg-4 col-sm-12 m-4">
-                <h1 className="text-center">{name}</h1>
+        return(<div className='content row justify-content-center'>
+            <div className='col-lg-4 col-sm-12 m-4'>
+                <h1 className='text-center'>{name}</h1>
             </div>
-            <div className="col-sm-12 col-xl-10">
+            <div className='col-sm-12 col-xl-10'>
                 <form onSubmit={this.handleSubmit}>
-                <div className="row justify-content-center form-inline mb-3">
+                <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input 
-                            type="text" 
+                            type='text' 
                             className={operatorInput}
-                            name="operator" 
-                            placeholder="#####"
+                            name='operator' 
+                            placeholder='#####'
                             onBlur={validateOperator}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
-                    <div className="row justify-content-center form-inline mb-3">
+                    <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Chemistry:</label>
                         <input 
-                            type="text" 
+                            type='text' 
                             className={inputs}
-                            name="chemistry"
-                            placeholder="CH-#####"
+                            name='chemistry'
+                            placeholder='CH-#####'
                             onBlur={validateChemistry}
                         />
                         <label className={warningLabels}>{messageCh}</label>
                     </div>
                     <div>
-                        <h5 className="text-center m-4">Sample Barcode</h5>
-                    <div className="row justify-content-center form-inline mb-3">
-                        <label className={regularLabels}>{"Sample 1:"}</label>
+                        <h5 className='text-center m-4'>Sample Barcode</h5>
+                    <div className='row justify-content-center form-inline mb-3'>
+                        <label className={regularLabels}>{'Sample 1:'}</label>
                         <input 
-                            type="text"
+                            type='text'
                             className={inputs}
-                            name={"sample1"}
+                            name={'sample1'}
                             value={this.state.sample}
                             placeholder={format}
                             onChange={addSample}
@@ -260,14 +260,14 @@ export default class ChemistryTest extends React.Component{
                     
                     </div>
 					<div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+                    <label className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}><p id='succes'>{messageAPI}</p></label>
 					</div>
                     <div className='row justify-content-center'>
                     <button
-                        type="submit"
-                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
+                        type='submit'
+                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
                         disabled={(validOp && validCh && validSample) ? false : true}
-                        title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
+                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}

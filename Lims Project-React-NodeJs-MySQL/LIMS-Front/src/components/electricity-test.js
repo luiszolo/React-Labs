@@ -6,14 +6,14 @@ export default class ElectricityTest extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            name: "Electricity Test",
+            name: 'Electricity Test',
             operator: 0,
-            messageOp: "",
+            messageOp: '',
             validOp: undefined,
-            messageSamples: Array(10).fill(""),
+            messageSamples: Array(10).fill(''),
             validSample: false,
-            samples: Array(10).fill(""),
-            messageAPI: "",
+            samples: Array(10).fill(''),
+            messageAPI: '',
             loading: false,
         }
     }
@@ -49,21 +49,21 @@ export default class ElectricityTest extends React.Component{
     }
 
     handleSample=(e)=>{
-        const sampleNumber = parseInt(e.target.name.replace("sample",""),10)
+        const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
         const sample = e.target.value
 
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber - 1)
-            if(sample===""){
-                this.updateSamplesMessage("", sampleNumber - 1)
+            if(sample===''){
+                this.updateSamplesMessage('', sampleNumber - 1)
                 this.clearSamples(sampleNumber)
             }else if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
-                this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
+                this.updateSamplesMessage('Incorrect syntax', sampleNumber - 1)
                 this.setState({
                     validSample: false,
                 })
             } else {
-                this.updateSamplesMessage("", sampleNumber - 1)
+                this.updateSamplesMessage('', sampleNumber - 1)
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
                 .then(res => {
                     if (res.data.message) {
@@ -74,7 +74,7 @@ export default class ElectricityTest extends React.Component{
                     }else {
                         this.state.samples.forEach((value,index)=>{
                             if(sample===value && index!==sampleNumber - 1){
-                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1 )
+                                this.updateSamplesMessage('This sample is repeated', sampleNumber - 1 )
                                 this.setState({
                                     validSample: false,
                                 })
@@ -91,8 +91,8 @@ export default class ElectricityTest extends React.Component{
 
     clearSamples=(sampleNumber)=>{
         if (sampleNumber < this.state.samples.length){
-            this.updateSamples("", sampleNumber)
-            this.updateSamplesMessage("", sampleNumber)
+            this.updateSamples('', sampleNumber)
+            this.updateSamplesMessage('', sampleNumber)
             this.clearSamples(sampleNumber + 1)
         }
     }
@@ -105,26 +105,26 @@ export default class ElectricityTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "The operator doesn't exist",
+                        messageOp: 'The operator doesn\'t exist',
                         validOp: false,
                     })
                 } else  {
                     this.setState({
                         operator: operator,
-                        messageOp: "",
+                        messageOp: '',
                         validOp: true,
                     })
                 }
             })
-        }else if(operator===""){
+        }else if(operator===''){
             this.setState({
-                messageOp: "Field can't be blank", //that's racist
+                messageOp: 'Field can\'t be blank', //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
-                messageOp: "Invalid Syntax",
+                messageOp: 'Invalid Syntax',
             })
         }
     }
@@ -145,11 +145,11 @@ export default class ElectricityTest extends React.Component{
                 samples: [sample],
             })
             .then( res=> {
-                if (res.data.message==="Insertion completed") {
+                if (res.data.message==='Insertion completed') {
                     console.log(res.data.sampleErrorList)
                     this.setState({
 						operator: 0, 
-						samples: Array(10).fill(""),
+						samples: Array(10).fill(''),
 						messageAPI: res.data.message,
                         validSample: false,
                         loading:false
@@ -162,7 +162,7 @@ export default class ElectricityTest extends React.Component{
                 }
               })
             .catch( () => {
-                alert("Conection Timed Out");
+                alert('Conection Timed Out');
                 this.setState({
                     loading: false
                 });
@@ -186,17 +186,17 @@ export default class ElectricityTest extends React.Component{
             }
         } = this;
 
-        const format="SA-##-#####"
-        const regularLabels = "col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = "col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control"
-        const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
+        const format='SA-##-#####'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
+        const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
         let operatorInput= inputs
 
         if(validOp===false){
-            operatorInput= operatorInput += " border-danger"
+            operatorInput= operatorInput += ' border-danger'
         }else if(validOp===true){
-            operatorInput= operatorInput += " border-success"
+            operatorInput= operatorInput += ' border-success'
         }else{
             operatorInput = inputs
         }
@@ -205,32 +205,32 @@ export default class ElectricityTest extends React.Component{
         if (this.state.loading) {
           data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
-        return(<div className="content row justify-content-center">
-            <div className="col-lg-4 col-sm-12 m-4">
-                <h1 className="text-center">{name}</h1>
+        return(<div className='content row justify-content-center'>
+            <div className='col-lg-4 col-sm-12 m-4'>
+                <h1 className='text-center'>{name}</h1>
             </div>
-            <div className="col-sm-12 col-xl-10">
+            <div className='col-sm-12 col-xl-10'>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="row justify-content-center form-inline mb-3">
+                    <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input
-                            type="text"
+                            type='text'
                             className={operatorInput}
-                            name="operator" 
-                            placeholder="#####"
+                            name='operator' 
+                            placeholder='#####'
                             onBlur={validateOperator}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div>
-                        <h5 className="text-center m-4">Sample Barcodes</h5>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <h5 className='text-center m-4'>Sample Barcodes</h5>
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 1:</label>
                             <input 
                                 value={samples[0]}
-                                type="text"
+                                type='text'
                                 className={inputs}
-                                name={"sample1"} 
+                                name={'sample1'} 
                                 placeholder={format}
                                 onBlur={validateSamples}
 								onChange={handleSample}
@@ -238,13 +238,13 @@ export default class ElectricityTest extends React.Component{
                             />
 							<label className={warningLabels}>{messageSamples[0]}</label>
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 2:</label>
                             <input
                                 value={samples[1]}
-                                type="text"
+                                type='text'
                                 className={inputs}
-                                name={"sample2"}
+                                name={'sample2'}
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
                                 onBlur={validateSamples}
@@ -252,13 +252,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[1]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 3:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[2]}
                                 className={inputs}
-                                name={"sample3"} 
+                                name={'sample3'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
                                 onBlur={validateSamples}
@@ -266,13 +266,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[2]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 4:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[3]}
                                 className={inputs}
-                                name={"sample4"} 
+                                name={'sample4'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
                                 onBlur={validateSamples}
@@ -280,13 +280,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[3]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 5:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[4]}
                                 className={inputs}
-                                name={"sample5"} 
+                                name={'sample5'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
                                 onBlur={validateSamples}
@@ -294,13 +294,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 6:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[5]}
                                 className={inputs}
-                                name={"sample6"} 
+                                name={'sample6'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[4]))? false : true}
                                 onBlur={validateSamples}
@@ -308,13 +308,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[5]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 7:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[6]}
                                 className={inputs}
-                                name={"sample7"} 
+                                name={'sample7'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[5]))? false : true}
                                 onBlur={validateSamples}
@@ -322,13 +322,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[6]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 8:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[7]}
                                 className={inputs}
-                                name={"sample8"} 
+                                name={'sample8'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[6]))? false : true}
                                 onBlur={validateSamples}
@@ -336,13 +336,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[7]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 9:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[8]}
                                 className={inputs}
-                                name={"sample9"} 
+                                name={'sample9'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[7]))? false : true}
                                 onBlur={validateSamples}
@@ -350,13 +350,13 @@ export default class ElectricityTest extends React.Component{
                             />
                             <label className={warningLabels}>{messageSamples[8]}</label> 
                         </div>
-                        <div className="row justify-content-center form-inline mb-2">
+                        <div className='row justify-content-center form-inline mb-2'>
                             <label className={regularLabels}>Sample 10:</label>
                             <input 
-                                type="text"
+                                type='text'
                                 value={samples[9]}
                                 className={inputs}
-                                name={"sample10"}
+                                name={'sample10'}
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[8]))? false : true}
                                 onBlur={validateSamples}
@@ -367,17 +367,17 @@ export default class ElectricityTest extends React.Component{
                     </div>
                     <div className='row justify-content-center'>
 					<button
-                        type="submit"
-                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
+                        type='submit'
+                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
                         disabled={(validSample && validOp) ? false : true}
-                        title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
+                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}
                     </button>
 					</div>
 					<div className='row justify-content-center'>
-					<label id="succes" className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}>
+					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                     {messageAPI}
                     </label>
 					</div>

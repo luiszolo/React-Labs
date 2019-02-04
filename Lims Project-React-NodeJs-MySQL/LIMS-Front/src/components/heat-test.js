@@ -6,20 +6,20 @@ export default class HeatTest extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            name: "Heat Test",
+            name: 'Heat Test',
             operator: '',
-            messageOp: "",
+            messageOp: '',
             validOp: undefined,
-            messageSamples: Array(5).fill(""),
+            messageSamples: Array(5).fill(''),
             validSamples: undefined,
             temperature: 0,
-            messageTemp: "",
+            messageTemp: '',
             validTemp: undefined,
             time: 0,
-            messageTime: "",
+            messageTime: '',
             validTime: undefined,
-            samples: Array(5).fill(""),
-            buttonTitle:"",
+            samples: Array(5).fill(''),
+            buttonTitle:'',
             loading: false,
         }
     }
@@ -55,21 +55,21 @@ export default class HeatTest extends React.Component{
     }
 
     handleSample=(e)=>{
-        const sampleNumber = parseInt(e.target.name.replace("sample",""),10)
+        const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
         const sample = e.target.value
 
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber - 1)
-            if(sample===""){
-                this.updateSamplesMessage("", sampleNumber - 1)
+            if(sample===''){
+                this.updateSamplesMessage('', sampleNumber - 1)
                 this.clearSamples(sampleNumber)
             }else if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
-                this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
+                this.updateSamplesMessage('Incorrect syntax', sampleNumber - 1)
                 this.setState({
                     validSample: false,
                 })
             } else {
-                this.updateSamplesMessage("", sampleNumber - 1)
+                this.updateSamplesMessage('', sampleNumber - 1)
                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
                 .then(res => {
                     if (res.data.message) {
@@ -80,7 +80,7 @@ export default class HeatTest extends React.Component{
                     }else {
                         this.state.samples.forEach((value,index)=>{
                             if(sample===value && index!==sampleNumber - 1){
-                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1 )
+                                this.updateSamplesMessage('This sample is repeated', sampleNumber - 1 )
                                 this.setState({
                                     validSample: false,
                                 })
@@ -97,8 +97,8 @@ export default class HeatTest extends React.Component{
 
     clearSamples=(sampleNumber)=>{
         if (sampleNumber < this.state.samples.length){
-            this.updateSamples("", sampleNumber)
-            this.updateSamplesMessage("", sampleNumber)
+            this.updateSamples('', sampleNumber)
+            this.updateSamplesMessage('', sampleNumber)
             this.clearSamples(sampleNumber + 1)
         }
     }
@@ -107,17 +107,17 @@ export default class HeatTest extends React.Component{
         if(event.target.value>0){
             this.setState({
                 temperature: event.target.value,
-                messageTemp: "",
+                messageTemp: '',
                 validTemp: true,
             });
-        }else if(event.target.value===""){
+        }else if(event.target.value===''){
             this.setState({
-                messageTemp: "Cant be Blank",
+                messageTemp: 'Cant be Blank',
                 validTemp: false,
             });
         }else{
             this.setState({
-                messageTemp: "The value can't be 0",
+                messageTemp: 'The value can\'t be 0',
                 validTemp: false,
             });
         }
@@ -127,17 +127,17 @@ export default class HeatTest extends React.Component{
         if(event.target.value>0){
             this.setState({
                 time: event.target.value,
-                messageTime: "",
+                messageTime: '',
                 validTime: true,
             });
-        }else if(event.target.value===""){
+        }else if(event.target.value===''){
             this.setState({
-                messageTime: "Cant be Blank",
+                messageTime: 'Cant be Blank',
                 validTime: false,
             });
         }else{
             this.setState({
-                messageTime: "The value can't be 0",
+                messageTime: 'The value can\'t be 0',
                 validTime: false,
             });
         }
@@ -151,26 +151,26 @@ export default class HeatTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: "The operator doesn't exist",
+                        messageOp: 'The operator doesn\'t exist',
                         validOp: false,
                     })
                 } else  {
                     this.setState({
                         operator: operator,
-                        messageOp: "",
+                        messageOp: '',
                         validOp: true,
                     })
                 }
             })
-        }else if(operator===""){
+        }else if(operator===''){
             this.setState({
-                messageOp: "Field can't be blank", //that's racist
+                messageOp: 'Field can\'t be blank', //that's racist
                 validOp: undefined,
             })
         }else{
             this.setState({
                 validOp: false,
-                messageOp: "Invalid Syntax",
+                messageOp: 'Invalid Syntax',
             })
         }
     }
@@ -192,21 +192,21 @@ export default class HeatTest extends React.Component{
                 test:this.state.name,
                 samples:[sample],
                 attributes:[{
-                    name: "Temperature",
+                    name: 'Temperature',
                     value: temperature
                 },
                 {
-                    name: "Time Elapse",
+                    name: 'Time Elapse',
                     value: time
                 }]
             })
 
             .then( res=> {
-                if (res.data.message==="Insertion completed") {
+                if (res.data.message==='Insertion completed') {
                     console.log(res.data.message)
                     this.setState({
 						operator: 0, 
-						samples: Array(10).fill(""),
+						samples: Array(10).fill(''),
 						messageAPI: res.data.message,
                         validSamples: false,
                         loading:false,
@@ -215,11 +215,11 @@ export default class HeatTest extends React.Component{
                 } else {
                     console.log(res.data.message)
                     this.setState({
-						messageAPI: "Sample is not ready for this test"
+						messageAPI: 'Sample is not ready for this test'
                     });
                 }
               }).catch( () => {
-                alert("Conection Timed Out");
+                alert('Conection Timed Out');
                 this.setState({
                     loading: false
                 });
@@ -251,10 +251,10 @@ export default class HeatTest extends React.Component{
             }
         } = this;
 
-        const format="SA-##-#####"
-        const regularLabels = "col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block"
-        const inputs = "col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control"
-        const warningLabels = "col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center"
+        const format='SA-##-#####'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
+        const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
         let operatorInput = inputs;
 
@@ -264,62 +264,62 @@ export default class HeatTest extends React.Component{
         } 
 
         if(validOp===false){
-            operatorInput= operatorInput += " border-danger"
+            operatorInput= operatorInput += ' border-danger'
         }else if(validOp===true){
-            operatorInput= operatorInput += " border-success"
+            operatorInput= operatorInput += ' border-success'
         }
         else{
             operatorInput = inputs
         }
 
-        return(<div className="content content row justify-content-center">
-            <div className="col-lg-4 col-sm-12 m-4">
-                <h1 className="text-center">{name}</h1>
+        return(<div className='content content row justify-content-center'>
+            <div className='col-lg-4 col-sm-12 m-4'>
+                <h1 className='text-center'>{name}</h1>
             </div>
-            <div className="col-sm-12  col-xl-10">
+            <div className='col-sm-12  col-xl-10'>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="row justify-content-center form-inline mb-3">
+                    <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input 
-                            type="text" 
+                            type='text' 
                             className={operatorInput}
-                            name="operator" 
-                            placeholder="#####"
+                            name='operator' 
+                            placeholder='#####'
                             onBlur={validateOperator}
                             
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
-                    <div className="row justify-content-center form-inline mb-3">
+                    <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Temperature (C):</label>
                         <input 
-                            type="number" 
+                            type='number' 
                             className={inputs}
-                            placeholder="###"
-                            name="temperature" 
+                            placeholder='###'
+                            name='temperature' 
                             onChange={this.handleChangeTemperature}
                         />
                         <label className={warningLabels}>{messageTemp}</label>
                     </div>
-                    <div className="row justify-content-center form-inline mb-3">
+                    <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Time elapse (sec):</label>
-                        <input type="number" 
+                        <input type='number' 
                             className={inputs}
-                            placeholder="###"
-                            name="time" 
+                            placeholder='###'
+                            name='time' 
                             onChange={this.handleChangeTime}
                         />
                         <label className={warningLabels}>{messageTime}</label>
                     </div>
                     <div>
-                        <h5 className="text-center m-4">Sample Barcodes</h5>
-                    <div className="row justify-content-center form-inline mb-2">
+                        <h5 className='text-center m-4'>Sample Barcodes</h5>
+                    <div className='row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample 1:</label>
                         <input 
                             value={samples[0]}
-                            type="text"
+                            type='text'
                             className={inputs}
-                            name={"sample1"} 
+                            name={'sample1'} 
                             placeholder={format}
                             onBlur={validateSamples}
 							onChange={handleSample}
@@ -327,52 +327,52 @@ export default class HeatTest extends React.Component{
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
-                    <div className="row justify-content-center form-inline mb-2">
+                    <div className='row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample 2:</label>
                         <input 
                         value={samples[1]}
-                            type="text"
+                            type='text'
                             className={inputs}
-                            name={"sample2"}
+                            name={'sample2'}
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[1]}</label> 
                     </div>
-                    <div className="row justify-content-center form-inline mb-2">
+                    <div className='row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample 3:</label>
                         <input 
                         value={samples[2]}
-                            type="text"
+                            type='text'
                             className={inputs}
-                            name={"sample3"} 
+                            name={'sample3'} 
                             placeholder={format}
                             onBlur={validateSamples}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[2]}</label> 
                     </div>
-                    <div className="row justify-content-center form-inline mb-2">
+                    <div className='row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample 4:</label>
                         <input 
                         value={samples[3]}
-                        type="text"
+                        type='text'
                         className={inputs}
-                        name={"sample4"} 
+                        name={'sample4'} 
                         placeholder={format}
                         onBlur={validateSamples}
                         onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[3]}</label> 
                     </div>
-                    <div className="row justify-content-center form-inline mb-2">
+                    <div className='row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample 5:</label>
                         <input 
                         value={samples[4]}
-                        type="text"
+                        type='text'
                         className={inputs}
-                        name={"sample5"} 
+                        name={'sample5'} 
                         placeholder={format}
                         onBlur={validateSamples}
                         onChange={handleSample}
@@ -381,13 +381,13 @@ export default class HeatTest extends React.Component{
                         </div>
                     </div>
 					<div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6  mt-3"}><p id="succes">{messageAPI}</p></label>
+                    <label className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}><p id='succes'>{messageAPI}</p></label>
 					</div>
 					<div className='row justify-content-center'>
                     <button
                         value={samples[5]}
-                        type="submit"
-                        className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
+                        type='submit'
+                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
                         disabled={(validOp && validTemp && validTime && validSamples) ? false : true}
                         onMouseEnter={settingTitle}
                         title={buttonTitle}

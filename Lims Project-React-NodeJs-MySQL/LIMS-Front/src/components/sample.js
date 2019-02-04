@@ -15,7 +15,7 @@ export default class Sample extends React.Component{
             this.setState({
                 validated: true,
             })
-        }else if(e.target.value===""){
+        }else if(e.target.value===''){
             this.setState({
                 validated: undefined,
             })
@@ -38,32 +38,32 @@ export default class Sample extends React.Component{
             }
           } = this;
 
-        let message=" ";
+        let message=' ';
 
-        let inputClassName="sample col-lg-3 col-6 form-control";
+        let inputClassName='sample col-lg-3 col-6 form-control';
 
         if(validated===false){
-            inputClassName= "sample col-lg-3 col-6 form-control border-danger"
-            message="Incorret syntax"
+            inputClassName= 'sample col-lg-3 col-6 form-control border-danger'
+            message='Incorret syntax'
         }else if(validated===true){
-            inputClassName= "sample col-lg-3 col-6 form-control border-success"
-            message=" "
+            inputClassName= 'sample col-lg-3 col-6 form-control border-success'
+            message=' '
         }
         else{
-            inputClassName="sample col-lg-3 col-6 form-control"
+            inputClassName='sample col-lg-3 col-6 form-control'
         }
 
-        return (<div className="row mb-1 form-inline">
-                    <label className="col col-lg-5 col-sm-2 text-right d-block">{"#"+number}</label>
+        return (<div className='row mb-1 form-inline'>
+                    <label className='col col-lg-5 col-sm-2 text-right d-block'>{'#'+number}</label>
                     <input 
-                        type="text" 
+                        type='text' 
                         className={inputClassName}
-                        name={"sample"+number} 
+                        name={'sample'+number} 
                         placeholder={format}
                         onBlur={handleOnBlur}
                         required
                     />
-                    <label className="col col-lg-4 col-sm-4">{message}</label>
+                    <label className='col col-lg-4 col-sm-4'>{message}</label>
         </div>)
     }
 }
