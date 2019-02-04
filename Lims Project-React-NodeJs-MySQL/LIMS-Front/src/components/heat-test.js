@@ -54,6 +54,55 @@ export default class HeatTest extends React.Component{
         })
     }
 
+    handleSample=(e)=>{
+        const sampleNumber = parseInt(e.target.name.replace("sample",""),10)
+        const sample = e.target.value
+
+        if(sample.length<=11){
+            this.updateSamples(sample,sampleNumber - 1)
+            if(sample===""){
+                this.updateSamplesMessage("", sampleNumber - 1)
+                this.clearSamples(sampleNumber)
+            }else if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
+                this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
+                this.setState({
+                    validSample: false,
+                })
+            } else {
+                this.updateSamplesMessage("", sampleNumber - 1)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+                .then(res => {
+                    if (res.data.message) {
+                        this.updateSamplesMessage(res.data.message, sampleNumber - 1)
+                        this.setState({
+                            validSample: false,
+                        });
+                    }else {
+                        this.state.samples.forEach((value,index)=>{
+                            if(sample===value && index!==sampleNumber - 1){
+                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1 )
+                                this.setState({
+                                    validSample: false,
+                                })
+                            }
+                        })
+                    }
+                })
+                this.setState({
+                    validSample: true,
+                })
+            }
+        }
+    }
+
+    clearSamples=(sampleNumber)=>{
+        if (sampleNumber < this.state.samples.length){
+            this.updateSamples("", sampleNumber)
+            this.updateSamplesMessage("", sampleNumber)
+            this.clearSamples(sampleNumber + 1)
+        }
+    }
+
     handleChangeTemperature = event => {
         if(event.target.value>0){
             this.setState({
@@ -93,14 +142,6 @@ export default class HeatTest extends React.Component{
             });
         }
     }
-    addSample=(e)=>{
-        const sampleNumber = parseInt(e.target.name.replace("sample",""))
-        const sample = e.target.value
-
-        if(sample.length<=11){
-            this.updateSamples(sample,sampleNumber-1)
-        }
-    }
 
     validateOperator=(e)=>{
         const operator = e.target.value
@@ -133,68 +174,6 @@ export default class HeatTest extends React.Component{
             })
         }
     }
-    
-    validateSamples=()=>{
-        
-        const samples = this.state.samples
-        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-        const noMessages = this.state.messageSamples.filter((sample)=>{return sample===""})
-
-        samples.forEach((sample,sampleNumber)=>{
-            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-                this.setState({
-                    validSamples: false,
-                })
-                this.updateSamplesMessage("Incorrect syntax", sampleNumber)
-
-                
-            }else if(sample===""){
-                this.updateSamplesMessage("", sampleNumber)
-            }else{
-                this.updateSamplesMessage("", sampleNumber)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Heat Test`)
-                .then(res => {
-                    if (res.data.message) {
-                        this.updateSamplesMessage(res.data.message, sampleNumber)
-                        this.setState({
-                            validSamples: false,
-                        })
-                        
-                    } else {
-                        samples.forEach((value,index)=>{
-                            if(sample===value && index!==sampleNumber){
-                                this.updateSamplesMessage("This sample is repeated", sampleNumber)
-                                this.setState({
-                                    validSamples: false,
-                                })
-                                
-                            }else if(sample===""){
-                                this.updateSamplesMessage("", sampleNumber)
-                            }
-                        })
-                    }
-                })
-
-                if(correctSamples.length !== 0 && noMessages.length >= 4){
-                    this.setState({
-                        validSamples: true,
-                    })
-                    
-                }else{
-                    this.setState({
-                        validSamples: false,
-                    })
-                    
-                }
-            }
-        })
-
-        this.setState({
-            messageAPI:""
-        })
-    }
-
-
 
     handleSubmit = event => {
         event.preventDefault();
@@ -251,7 +230,7 @@ export default class HeatTest extends React.Component{
 
     render(){
         const {
-            addSample,
+            handleSample,
             validateOperator,
             validateSamples,
             settingTitle,
@@ -343,7 +322,7 @@ export default class HeatTest extends React.Component{
                             name={"sample1"} 
                             placeholder={format}
                             onBlur={validateSamples}
-							onChange={addSample}
+							onChange={handleSample}
 							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
@@ -357,7 +336,7 @@ export default class HeatTest extends React.Component{
                             name={"sample2"}
                             placeholder={format}
                             onBlur={validateSamples}
-                            onChange={addSample}
+                            onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[1]}</label> 
                     </div>
@@ -370,7 +349,7 @@ export default class HeatTest extends React.Component{
                             name={"sample3"} 
                             placeholder={format}
                             onBlur={validateSamples}
-                            onChange={addSample}
+                            onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[2]}</label> 
                     </div>
@@ -383,7 +362,7 @@ export default class HeatTest extends React.Component{
                         name={"sample4"} 
                         placeholder={format}
                         onBlur={validateSamples}
-                        onChange={addSample}
+                        onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[3]}</label> 
                     </div>
@@ -396,7 +375,7 @@ export default class HeatTest extends React.Component{
                         name={"sample5"} 
                         placeholder={format}
                         onBlur={validateSamples}
-                        onChange={addSample}
+                        onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
