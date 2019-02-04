@@ -11,10 +11,10 @@ export default class ElectricityTest extends React.Component{
             messageOp: "",
             validOp: undefined,
             messageSamples: Array(10).fill(""),
-            validSamples: undefined,
+            validSample: false,
             samples: Array(10).fill(""),
             messageAPI: "",
-            loading:false,
+            loading: false,
         }
     }
     
@@ -48,72 +48,116 @@ export default class ElectricityTest extends React.Component{
         })
     }
 
-    addSample=(e)=>{
-        const sampleNumber = e.target.name.replace("sample","")
+    handleSample=(e)=>{
+        const sampleNumber = parseInt(e.target.name.replace("sample",""),10)
         const sample = e.target.value
 
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber - 1)
-            if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
+            if(sample===""){
+                this.updateSamplesMessage("", sampleNumber - 1)
+                this.clearSamples(sampleNumber)
+            }else if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
                 this.updateSamplesMessage("Incorrect syntax", sampleNumber - 1)
+                this.setState({
+                    validSample: false,
+                })
             } else {
-                this.updateSamplesMessage("", sampleNumber)
+                this.updateSamplesMessage("", sampleNumber - 1)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+                .then(res => {
+                    if (res.data.message) {
+                        this.updateSamplesMessage(res.data.message, sampleNumber - 1)
+                        this.setState({
+                            validSample: false,
+                        });
+                    }else {
+                        this.state.samples.forEach((value,index)=>{
+                            if(sample===value && index!==sampleNumber - 1){
+                                this.updateSamplesMessage("This sample is repeated", sampleNumber - 1 )
+                                this.setState({
+                                    validSample: false,
+                                })
+                            }
+                        })
+                    }
+                })
+                this.setState({
+                    validSample: true,
+                })
             }
         }
-        
     }
 
-    validateSamples=(e)=>{
-        const sampleNum = e.target.name.replace("sample","")
-        const samples = this.state.samples
-        const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
-
-        if(correctSamples.length !== 0){
-            samples.forEach((sample,sampleNumber)=>{
-                if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
-                    this.setState({
-                        validSamples: false,
-                    })
-                    this.updateSamplesMessage("Incorrect syntax", sampleNumber)
-                }else if(sample===""){
-                    this.updateSamplesMessage("", sampleNumber)
-                }else{
-                    this.updateSamplesMessage("", sampleNumber)
-                    axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
-                    .then(res => {
-                        if (res.data.message) {
-                            this.updateSamplesMessage(res.data.message, sampleNumber)
-                            this.setState({
-                                validSamples: false,
-                            })
-                        } else {
-                            samples.forEach((value,index)=>{
-                                if(sample===value && index!==sampleNumber){
-                                    this.updateSamplesMessage("This sample is repeated", sampleNumber)
-                                    this.setState({
-                                        validSamples: false,
-                                    })
-                                }
-                            })
-                        }
-                    })
-                    this.setState({
-                        validSamples: true,
-                    })
-                }
-            })
-        }else if(e.target.value===""){
-            this.updateSamplesMessage("", sampleNum - 1)
-            this.setState({
-                validSamples: false,
-            })
-        }else{
-            this.setState({
-                validSamples: false,
-            })
-            
+    clearSamples=(sampleNumber)=>{
+        if (sampleNumber < this.state.samples.length){
+            this.updateSamples("", sampleNumber)
+            this.updateSamplesMessage("", sampleNumber)
+            this.clearSamples(sampleNumber + 1)
         }
     }
+
+    // validateSamples=(e)=>{
+    //     const sampleNumber = e.target.name.replace("sample","")
+    //     const sample = e.target.value
+
+    //     if(sample===""){
+    //         console.log(parseInt(sampleNumber,10))
+    //         this.updateSamples("", parseInt(sampleNumber,10))
+    //     }
+    // }
+
+    // validateSamples=(e)=>{
+    //     const sampleNum = e.target.name.replace("sample","")
+    //     const samples = this.state.samples
+    //     const correctSamples = samples.filter((sample)=>{return /SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11})
+
+    //     if(correctSamples.length !== 0){
+    //         samples.forEach((sample,sampleNumber)=>{
+    //             if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+    //                 this.setState({
+    //                     validSample: false,
+    //                 })
+    //                 this.updateSamplesMessage("Incorrect syntax", sampleNumber)
+    //             }else if(sample===""){
+    //                 this.updateSamplesMessage("", sampleNumber)
+    //                 this.updateSamples("", sampleNumber + 1)
+    //             }else{
+    //                 this.updateSamplesMessage("", sampleNumber)
+    //                 axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+    //                 .then(res => {
+    //                     if (res.data.message) {
+    //                         this.updateSamplesMessage(res.data.message, sampleNumber)
+    //                         this.setState({
+    //                             validSample: false,
+    //                         })
+    //                     } else {
+    //                         samples.forEach((value,index)=>{
+    //                             if(sample===value && index!==sampleNumber){
+    //                                 this.updateSamplesMessage("This sample is repeated", sampleNumber)
+    //                                 this.setState({
+    //                                     validSample: false,
+    //                                 })
+    //                             }
+    //                         })
+    //                     }
+    //                 })
+    //                 this.setState({
+    //                     validSample: true,
+    //                 })
+    //             }
+    //         })
+    //     }else if(e.target.value===""){
+    //         this.updateSamplesMessage("", sampleNum - 1)
+    //         this.setState({
+    //             validSample: false,
+    //         })
+    //     }else{
+    //         this.setState({
+    //             validSample: false,
+    //         })
+    //     }
+    // }
 
     validateOperator=(e)=>{
         const operator = e.target.value
@@ -169,7 +213,7 @@ export default class ElectricityTest extends React.Component{
 						operator: 0, 
 						samples: Array(10).fill(""),
 						messageAPI: res.data.message,
-                        validSamples: false,
+                        validSample: false,
                         loading:false
 					})
 					ReactDOM.findDOMNode(this.refs.firstSample).focus();
@@ -190,7 +234,7 @@ export default class ElectricityTest extends React.Component{
 
     render(){
         const {
-            addSample,
+            handleSample,
             validateOperator,
             validateSamples,
             state: {
@@ -198,7 +242,7 @@ export default class ElectricityTest extends React.Component{
                 messageOp,
                 validOp,
                 messageSamples,
-                validSamples,
+                validSample,
                 messageAPI,
                 samples,
             }
@@ -251,7 +295,7 @@ export default class ElectricityTest extends React.Component{
                                 name={"sample1"} 
                                 placeholder={format}
                                 onBlur={validateSamples}
-								onChange={addSample}
+								onChange={handleSample}
 								ref='firstSample'
                             />
 							<label className={warningLabels}>{messageSamples[0]}</label>
@@ -266,7 +310,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[1]}</label> 
                         </div>
@@ -280,7 +324,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[2]}</label> 
                         </div>
@@ -294,7 +338,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[3]}</label> 
                         </div>
@@ -308,7 +352,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[4]}</label> 
                         </div>
@@ -322,7 +366,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[4]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[5]}</label> 
                         </div>
@@ -336,7 +380,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[5]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[6]}</label> 
                         </div>
@@ -350,7 +394,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[6]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[7]}</label> 
                         </div>
@@ -364,7 +408,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[7]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[8]}</label> 
                         </div>
@@ -378,7 +422,7 @@ export default class ElectricityTest extends React.Component{
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[8]))? false : true}
                                 onBlur={validateSamples}
-                                onChange={addSample}
+                                onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[9]}</label>
                         </div>
@@ -387,8 +431,8 @@ export default class ElectricityTest extends React.Component{
 					<button
                         type="submit"
                         className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
-                        disabled={(validSamples && validOp) ? false : true}
-                        title={(validSamples && validOp) ? "Form is ready" : "Form not ready"}
+                        disabled={(validSample && validOp) ? false : true}
+                        title={(validSample && validOp) ? "Form is ready" : "Form not ready"}
                     >
                     Save Data
                     {data}
