@@ -11,7 +11,7 @@ export default class HeatTest extends React.Component{
             messageOp: '',
             validOp: undefined,
             messageSamples: Array(5).fill(''),
-            validSamples: undefined,
+            validSample: undefined,
             temperature: 0,
             messageTemp: '',
             validTemp: undefined,
@@ -177,6 +177,7 @@ export default class HeatTest extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
+
         this.setState({
             loading:true
         })
@@ -203,17 +204,15 @@ export default class HeatTest extends React.Component{
 
             .then( res=> {
                 if (res.data.message==='Insertion completed') {
-                    console.log(res.data.message)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(''),
 						messageAPI: res.data.message,
-                        validSamples: false,
+                        validSample: false,
                         loading:false,
 					})
 					ReactDOM.findDOMNode(this.refs.firstSample).focus();
                 } else {
-                    console.log(res.data.message)
                     this.setState({
 						messageAPI: 'Sample is not ready for this test'
                     });
@@ -230,6 +229,7 @@ export default class HeatTest extends React.Component{
 
     render(){
         const {
+            handleSubmit,
             handleOperator,
             handleTemperature,
             handleTime,
@@ -244,10 +244,9 @@ export default class HeatTest extends React.Component{
                 messageTime,
                 validTime,
                 messageSamples,
-                validSamples,
+                validSample,
                 samples,
                 messageAPI,
-                buttonTitle,
             }
         } = this;
 
@@ -277,7 +276,7 @@ export default class HeatTest extends React.Component{
                 <h1 className='text-center'>{name}</h1>
             </div>
             <div className='col-sm-12  col-xl-10'>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input 
@@ -384,12 +383,11 @@ export default class HeatTest extends React.Component{
 					</div>
 					<div className='row justify-content-center'>
                     <button
-                        value={samples[5]}
                         type='submit'
                         className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(validOp && validTemp && validTime && validSamples) ? false : true}
+                        disabled={(validOp && validTemp && validTime && validSample) ? false : true}
                         onMouseEnter={settingTitle}
-                        title={buttonTitle}
+                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}

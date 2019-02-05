@@ -11,7 +11,7 @@ export default class SpinnerTest extends React.Component{
             messageOp: '',
             validOp: undefined,
             messageSamples: Array(10).fill(''),
-            validSamples: undefined,
+            validSample: undefined,
             velocity: 0,
             messageVel: '',
             validVel: undefined,
@@ -132,10 +132,11 @@ export default class SpinnerTest extends React.Component{
     }
 
     handleVelocity = (event) => {
-        const velocity = this.state.velocity
+        const velocity = event.target.value
+
         if(velocity.length <= 5){
             this.setState({ 
-                velocity: event.target.value,
+                velocity: velocity,
             });
             if(velocity.length>0){
                 this.setState({
@@ -182,18 +183,16 @@ export default class SpinnerTest extends React.Component{
 
             .then( res=> {
                 if (res.data.message==='Insertion completed') {
-                    console.log(res.data.message)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(''),
 						messageAPI: res.data.message,
-                        validSamples: false,
+                        validSample: false,
                         loading: false,
 					});
 					ReactDOM.findDOMNode(this.refs.firstSample).focus();
       
                 } else {
-                    console.log(res.data.message)
                     this.setState({
 						messageAPI: 'Sample is not ready for this test'
                     });
@@ -210,10 +209,10 @@ export default class SpinnerTest extends React.Component{
 
     render(){
         const {
+            handleSubmit,
             handleSample,
             handleVelocity,
             handleOperator,
-            validateVelocity,
             state: {
                 name,
                 messageOp,
@@ -222,7 +221,7 @@ export default class SpinnerTest extends React.Component{
                 validVel,
                 messageVel,
                 messageSamples,
-                validSamples,
+                validSample,
                 messageAPI,
                 samples,
             }
@@ -252,11 +251,11 @@ export default class SpinnerTest extends React.Component{
                 <h1 className='text-center'>{name}</h1>
             </div>
             <div className='col-sm-12 col-xl-10'>
-                <form  onSubmit={this.handleSubmit}>
+                <form  onSubmit={handleSubmit}>
                 <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator </label>
                         <input 
-                            type='text' 
+                            type='text'
                             className={operatorInput}
                             name='operator' 
                             placeholder='#####'
@@ -414,16 +413,15 @@ export default class SpinnerTest extends React.Component{
                     <button
                         type='submit'
                         className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(validOp && validVel && validSamples) ? false : true}
-                        title={(validSamples && validOp && validVel) ? 'Form is ready' : 'Form not ready'}
+                        disabled={(validOp && validVel && validSample) ? false : true}
+                        title={(validSample && validOp && validVel) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}
                     </button>
                     </div>
-
 					<div className='row justify-content-center'>
-                    <label className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}><p id='succes'>{messageAPI}</p></label>
+                        <label className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}><p id='succes'>{messageAPI}</p></label>
 					</div>
                 </form>
             </div>

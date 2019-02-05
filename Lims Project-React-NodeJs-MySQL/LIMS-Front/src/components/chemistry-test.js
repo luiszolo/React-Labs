@@ -135,7 +135,7 @@ export default class ChemistryTest extends React.Component{
                 this.setState({
                     sample: '',
                     messageAPI: res.data.message,
-                    validSamples: false,
+                    validSample: false,
                     loading: false,
 				});
 				ReactDOM.findDOMNode(this.refs.firstSample).focus();
@@ -167,9 +167,10 @@ export default class ChemistryTest extends React.Component{
 
     render(){
         const {
-            handleSample,
+            handleSubmit,
             handleOperator,
             handleChemistry,
+            handleSample,
             state: {
                 name,
                 messageOp,
@@ -208,7 +209,7 @@ export default class ChemistryTest extends React.Component{
                 <h1 className='text-center'>{name}</h1>
             </div>
             <div className='col-sm-12 col-xl-10'>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={handleSubmit}>
                 <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input 

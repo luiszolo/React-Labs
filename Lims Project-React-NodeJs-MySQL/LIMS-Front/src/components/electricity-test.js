@@ -146,7 +146,6 @@ export default class ElectricityTest extends React.Component{
             })
             .then( res=> {
                 if (res.data.message==='Insertion completed') {
-                    console.log(res.data.sampleErrorList)
                     this.setState({
 						operator: 0, 
 						samples: Array(10).fill(''),
@@ -172,8 +171,9 @@ export default class ElectricityTest extends React.Component{
 
     render(){
         const {
-            handleSample,
+            handleSubmit,
             handleOperator,
+            handleSample,
             state: {
                 name,
                 messageOp,
@@ -210,7 +210,7 @@ export default class ElectricityTest extends React.Component{
                 <h1 className='text-center'>{name}</h1>
             </div>
             <div className='col-sm-12 col-xl-10'>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Operator</label>
                         <input
