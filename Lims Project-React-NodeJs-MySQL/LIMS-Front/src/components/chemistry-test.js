@@ -21,15 +21,42 @@ export default class ChemistryTest extends React.Component{
         }
     }
 
-    addSample=(e)=>{       
-        if(e.target.value.length<=11){
+    handleSample=(e)=>{
+        const sample = e.target.value
+
+        if(sample.length<=11){
             this.setState({
-                sample: e.target.value,
+                sample: sample,
             })
+            if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==''){
+                this.setState({
+                    messageSample: 'Incorrect syntax',
+                    validSample: false,
+                })
+            }else if(sample===''){
+                this.setState({
+                    messageSample: '',
+                    validSample: false,
+                })
+            }else{
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Chemistry Test`).then(res => {
+                    if (res.data.message) {
+                        this.setState({
+                            messageSample:res.data.message,
+                            validSample: false,
+                        })
+                    } else {
+                        this.setState({
+                            messageSample: '',
+                            validSample: true,
+                        })
+                    }
+                })
+            }
         }   
     }
 
-    validateOperator=(e)=>{
+    handleOperator=(e)=>{
         const operator = e.target.value
 
         if(/[1-99999]/.test(operator) && operator.length <= 5){
@@ -37,7 +64,7 @@ export default class ChemistryTest extends React.Component{
             .then(res => {
                 if (res.data.message) { 
                     this.setState({
-                        messageOp: 'The operator doesn\'t exist',
+                        messageOp: res.data.message,
                         validOp: false,
                     })
                 } else  {
@@ -61,7 +88,7 @@ export default class ChemistryTest extends React.Component{
         }
     }
 
-    validateChemistry=(e)=>{
+    handleChemistry=(e)=>{
         const chemistry = e.target.value
 
         if(/CH-\d\d\d\d\d/.test(chemistry) && chemistry.length===8){
@@ -82,42 +109,6 @@ export default class ChemistryTest extends React.Component{
                 validCh: false,
             })
         }
-    }
-
-    validateSample=(e)=>{
-        const sample = e.target.value
-
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==''){
-            this.setState({
-                messageSample: 'Incorrect syntax',
-                validSample: false,
-            })
-        }else if(sample===''){
-            this.setState({
-                messageSample: '',
-                validSample: false,
-            })
-        }else{
-            
-            axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Chemistry Test`).then(res => {
-                console.log(res.data)
-                if (res.data.message) {
-                    this.setState({
-                        messageSample:res.data.message,
-                        validSample: false,
-                    })
-                } else {
-                    this.setState({
-                        messageSample: '',
-                        validSample: true,
-                    })
-                }
-            })
-        }
-
-        this.setState({
-            messageAPI:''
-        })
     }
 
     handleSubmit = event => {
@@ -176,10 +167,9 @@ export default class ChemistryTest extends React.Component{
 
     render(){
         const {
-            addSample,
-            validateOperator,
-            validateChemistry,
-            validateSample,
+            handleSample,
+            handleOperator,
+            handleChemistry,
             state: {
                 name,
                 messageOp,
@@ -226,7 +216,7 @@ export default class ChemistryTest extends React.Component{
                             className={operatorInput}
                             name='operator' 
                             placeholder='#####'
-                            onBlur={validateOperator}
+                            onChange={handleOperator}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
@@ -237,7 +227,7 @@ export default class ChemistryTest extends React.Component{
                             className={inputs}
                             name='chemistry'
                             placeholder='CH-#####'
-                            onBlur={validateChemistry}
+                            onChange={handleChemistry}
                         />
                         <label className={warningLabels}>{messageCh}</label>
                     </div>
@@ -251,8 +241,7 @@ export default class ChemistryTest extends React.Component{
                             name={'sample1'}
                             value={this.state.sample}
                             placeholder={format}
-                            onChange={addSample}
-							onBlur={validateSample}
+                            onChange={handleSample}
 							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSample}</label> 

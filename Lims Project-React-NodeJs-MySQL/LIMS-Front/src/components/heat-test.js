@@ -103,7 +103,7 @@ export default class HeatTest extends React.Component{
         }
     }
 
-    handleChangeTemperature = event => {
+    handleTemperature = event => {
         if(event.target.value>0){
             this.setState({
                 temperature: event.target.value,
@@ -123,7 +123,7 @@ export default class HeatTest extends React.Component{
         }
     }
 
-    handleChangeTime = event => {
+    handleTime = event => {
         if(event.target.value>0){
             this.setState({
                 time: event.target.value,
@@ -143,7 +143,7 @@ export default class HeatTest extends React.Component{
         }
     }
 
-    validateOperator=(e)=>{
+    handleOperator=(e)=>{
         const operator = e.target.value
 
         if(/[1-99999]/.test(operator) && operator.length <= 5){
@@ -230,11 +230,11 @@ export default class HeatTest extends React.Component{
 
     render(){
         const {
+            handleOperator,
+            handleTemperature,
+            handleTime,
             handleSample,
-            validateOperator,
-            validateSamples,
             settingTitle,
-          
             state: {
                 name,
                 messageOp,
@@ -285,7 +285,7 @@ export default class HeatTest extends React.Component{
                             className={operatorInput}
                             name='operator' 
                             placeholder='#####'
-                            onBlur={validateOperator}
+                            onChange={handleOperator}
                             
                         />
                         <label className={warningLabels}>{messageOp}</label>
@@ -297,7 +297,7 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             placeholder='###'
                             name='temperature' 
-                            onChange={this.handleChangeTemperature}
+                            onChange={handleTemperature}
                         />
                         <label className={warningLabels}>{messageTemp}</label>
                     </div>
@@ -307,7 +307,7 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             placeholder='###'
                             name='time' 
-                            onChange={this.handleChangeTime}
+                            onChange={handleTime}
                         />
                         <label className={warningLabels}>{messageTime}</label>
                     </div>
@@ -321,7 +321,6 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             name={'sample1'} 
                             placeholder={format}
-                            onBlur={validateSamples}
 							onChange={handleSample}
 							ref='firstSample'
                         />
@@ -335,7 +334,7 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             name={'sample2'}
                             placeholder={format}
-                            onBlur={validateSamples}
+                            disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[1]}</label> 
@@ -348,7 +347,7 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             name={'sample3'} 
                             placeholder={format}
-                            onBlur={validateSamples}
+                            disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[2]}</label> 
@@ -361,7 +360,7 @@ export default class HeatTest extends React.Component{
                         className={inputs}
                         name={'sample4'} 
                         placeholder={format}
-                        onBlur={validateSamples}
+                        disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
                         onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[3]}</label> 
@@ -374,7 +373,7 @@ export default class HeatTest extends React.Component{
                         className={inputs}
                         name={'sample5'} 
                         placeholder={format}
-                        onBlur={validateSamples}
+                        disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
                         onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[4]}</label> 

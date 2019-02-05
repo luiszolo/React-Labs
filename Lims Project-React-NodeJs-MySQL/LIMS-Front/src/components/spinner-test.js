@@ -99,7 +99,7 @@ export default class SpinnerTest extends React.Component{
         }
     }
 
-    validateOperator=(e)=>{
+    handleOperator=(e)=>{
         const operator = e.target.value
 
         if(/[1-99999]/.test(operator) && operator.length<=5){
@@ -131,40 +131,37 @@ export default class SpinnerTest extends React.Component{
         }
     }
 
-    validateVelocity=()=>{
-        const velocity=this.state.velocity
-
-        if(velocity.length>0){
-            this.setState({
-                validVel: true,
-                messageVel: '',
-            })
-        }else if(this.state.velocity===''){
-            this.setState({
-                messageVel: 'Cant be Blank',
-                validVel: false,
-            })
-        }else{
-            this.setState({
-                messageVel: 'Must be no more than 5 digits',
-                validVel: false,
-            })
-        }
-    }
-
-    handleChangeVelocity = event => {
-        if(event.target.value.length <= 5){
+    handleVelocity = (event) => {
+        const velocity = this.state.velocity
+        if(velocity.length <= 5){
             this.setState({ 
                 velocity: event.target.value,
             });
+            if(velocity.length>0){
+                this.setState({
+                    validVel: true,
+                    messageVel: '',
+                })
+            }else if(this.state.velocity===''){
+                this.setState({
+                    messageVel: 'Cant be Blank',
+                    validVel: false,
+                })
+            }else{
+                this.setState({
+                    messageVel: 'Must be no more than 5 digits',
+                    validVel: false,
+                })
+            }
         }
 
     }
 
     handleSubmit = event => {
         event.preventDefault();
+
         this.setState({
-            loading:true
+            loading: true
         })
 
         const operator= this.state.operator
@@ -214,10 +211,9 @@ export default class SpinnerTest extends React.Component{
     render(){
         const {
             handleSample,
-            handleChangeVelocity,
-            validateOperator,
+            handleVelocity,
+            handleOperator,
             validateVelocity,
-            validateSamples,
             state: {
                 name,
                 messageOp,
@@ -264,7 +260,7 @@ export default class SpinnerTest extends React.Component{
                             className={operatorInput}
                             name='operator' 
                             placeholder='#####'
-                            onBlur={validateOperator}
+                            onChange={handleOperator}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
@@ -276,8 +272,7 @@ export default class SpinnerTest extends React.Component{
                             value={velocity}
                             placeholder='#####'
                             name='velocity' 
-                            onChange={handleChangeVelocity}
-                            onBlur={validateVelocity}
+                            onChange={handleVelocity}
                         />
                         <label className={warningLabels}>{messageVel}</label>
                     </div>
@@ -292,128 +287,127 @@ export default class SpinnerTest extends React.Component{
                             className={inputs}
                             name={'sample1'} 
                             placeholder={format}
-                            onBlur={validateSamples}
 							onChange={handleSample}
 							ref='firstSample'
                         />
                         <label className={warningLabels}>{messageSamples[0]}</label> 
                     </div>
                     <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 2:</label>
-                        <input 
-                            value={this.state.samples[1]}
-                            type='text'
-                            className={inputs}
-                            name={'sample2'}
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[1]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 3:</label>
-                        <input 
-                        value={this.state.samples[2]}
-                            type='text'
-                            className={inputs}
-                            name={'sample3'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[2]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 4:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[3]}
-                            className={inputs}
-                            name={'sample4'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[3]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 5:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[4]}
-                            className={inputs}
-                            name={'sample5'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[4]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 6:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[5]}
-                            className={inputs}
-                            name={'sample6'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[5]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 7:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[6]}
-                            className={inputs}
-                            name={'sample7'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[6]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 8:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[7]}
-                            className={inputs}
-                            name={'sample8'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[7]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 9:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[8]}
-                            className={inputs}
-                            name={'sample9'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[8]}</label> 
-                    </div>
-                    <div className='row justify-content-center form-inline mb-2'>
-                        <label className={regularLabels}>Sample 10:</label>
-                        <input 
-                            type='text'
-                            value={this.state.samples[9]}
-                            className={inputs}
-                            name={'sample10'} 
-                            placeholder={format}
-                            onBlur={validateSamples}
-                            onChange={handleSample}
-                        />
-                        <label className={warningLabels}>{messageSamples[9]}</label> 
+                            <label className={regularLabels}>Sample 2:</label>
+                            <input
+                                value={samples[1]}
+                                type='text'
+                                className={inputs}
+                                name={'sample2'}
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[1]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 3:</label>
+                            <input 
+                                type='text'
+                                value={samples[2]}
+                                className={inputs}
+                                name={'sample3'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[2]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 4:</label>
+                            <input 
+                                type='text'
+                                value={samples[3]}
+                                className={inputs}
+                                name={'sample4'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[3]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 5:</label>
+                            <input 
+                                type='text'
+                                value={samples[4]}
+                                className={inputs}
+                                name={'sample5'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[4]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 6:</label>
+                            <input 
+                                type='text'
+                                value={samples[5]}
+                                className={inputs}
+                                name={'sample6'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[4]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[5]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 7:</label>
+                            <input 
+                                type='text'
+                                value={samples[6]}
+                                className={inputs}
+                                name={'sample7'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[5]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[6]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 8:</label>
+                            <input 
+                                type='text'
+                                value={samples[7]}
+                                className={inputs}
+                                name={'sample8'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[6]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[7]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 9:</label>
+                            <input 
+                                type='text'
+                                value={samples[8]}
+                                className={inputs}
+                                name={'sample9'} 
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[7]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[8]}</label> 
+                        </div>
+                        <div className='row justify-content-center form-inline mb-2'>
+                            <label className={regularLabels}>Sample 10:</label>
+                            <input 
+                                type='text'
+                                value={samples[9]}
+                                className={inputs}
+                                name={'sample10'}
+                                placeholder={format}
+                                disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[8]))? false : true}
+                                onChange={handleSample}
+                            />
+                            <label className={warningLabels}>{messageSamples[9]}</label>
                         </div>
                     </div>
 					<div className='row justify-content-center'>

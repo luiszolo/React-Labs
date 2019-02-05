@@ -97,7 +97,7 @@ export default class ElectricityTest extends React.Component{
         }
     }
 
-    validateOperator=(e)=>{
+    handleOperator=(e)=>{
         const operator = e.target.value
 
         if(/[1-99999]/.test(operator) && operator.length<=5){
@@ -173,8 +173,7 @@ export default class ElectricityTest extends React.Component{
     render(){
         const {
             handleSample,
-            validateOperator,
-            validateSamples,
+            handleOperator,
             state: {
                 name,
                 messageOp,
@@ -192,6 +191,7 @@ export default class ElectricityTest extends React.Component{
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
         let operatorInput= inputs
+        let data
 
         if(validOp===false){
             operatorInput= operatorInput += ' border-danger'
@@ -201,10 +201,10 @@ export default class ElectricityTest extends React.Component{
             operatorInput = inputs
         }
 
-        let data;
         if (this.state.loading) {
           data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
+
         return(<div className='content row justify-content-center'>
             <div className='col-lg-4 col-sm-12 m-4'>
                 <h1 className='text-center'>{name}</h1>
@@ -218,7 +218,7 @@ export default class ElectricityTest extends React.Component{
                             className={operatorInput}
                             name='operator' 
                             placeholder='#####'
-                            onBlur={validateOperator}
+                            onChange={handleOperator}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
@@ -232,7 +232,6 @@ export default class ElectricityTest extends React.Component{
                                 className={inputs}
                                 name={'sample1'} 
                                 placeholder={format}
-                                onBlur={validateSamples}
 								onChange={handleSample}
 								ref='firstSample'
                             />
@@ -247,7 +246,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample2'}
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[1]}</label> 
@@ -261,7 +259,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample3'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[2]}</label> 
@@ -275,7 +272,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample4'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[3]}</label> 
@@ -289,7 +285,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample5'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[4]}</label> 
@@ -303,7 +298,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample6'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[4]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[5]}</label> 
@@ -317,7 +311,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample7'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[5]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[6]}</label> 
@@ -331,7 +324,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample8'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[6]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[7]}</label> 
@@ -345,7 +337,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample9'} 
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[7]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[8]}</label> 
@@ -359,7 +350,6 @@ export default class ElectricityTest extends React.Component{
                                 name={'sample10'}
                                 placeholder={format}
                                 disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[8]))? false : true}
-                                onBlur={validateSamples}
                                 onChange={handleSample}
                             />
                             <label className={warningLabels}>{messageSamples[9]}</label>
