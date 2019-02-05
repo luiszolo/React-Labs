@@ -86,7 +86,7 @@ export default class SampleSearch extends React.Component{
 
         
         return(<div className='content'>
-                    <div className='row justify-content-center form-inline mb-2'>
+                    <div className='row justify-content-center form-inline m-4'>
                        <div className='col-12 row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample Search: </label>
                         <input

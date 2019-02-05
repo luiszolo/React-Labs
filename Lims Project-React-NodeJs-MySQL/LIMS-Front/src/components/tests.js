@@ -73,7 +73,7 @@ export default class Tests extends React.Component {
                 </div>
             </div>
         </nav>
-        <div className='col-lg-10 col-xl-10 col-md-12 col-sm-12 offset-md-2'>
+        <div className='col-lg-10 col-xl-10 col-md-12 col-sm-12 offset-lg-2'>
             {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;

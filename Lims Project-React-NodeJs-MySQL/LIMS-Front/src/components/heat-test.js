@@ -194,43 +194,33 @@ export default class HeatTest extends React.Component{
 
         const samples = this.state.samples.filter((sample)=>{return ((/SA-\d\d-\d\d\d\d\d/.test(sample) && sample.length===11))})
    
-        samples.forEach((sample)=>{
-            axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
-                operator,
-                test:this.state.name,
-                samples:[sample],
-                attributes:[{
-                    name: 'Temperature',
-                    value: temperature
-                },
-                {
-                    name: 'Time Elapse',
-                    value: time
-                }]
-            })
-
-            .then( res=> {
-                if (res.data.message==='Insertion completed') {
-                    this.setState({
-						operator: 0, 
-						samples: Array(10).fill(''),
-						messageAPI: res.data.message,
-                        validSample: false,
-                        loading:false,
-					})
-					ReactDOM.findDOMNode(this.refs.firstSample).focus();
-                } else {
-                    this.setState({
-						messageAPI: 'Sample is not ready for this test'
-                    });
-                }
-              }).catch( () => {
-                alert('Conection Timed Out');
-                this.setState({
-                    loading: false
-                });
-            });
-        })
+        axios.post(`http://10.2.1.94:4000/api/test-forms/add`,{
+			operator,
+			test: this.state.name,
+			samples: samples,
+		})
+		.then( res=> {
+			if (res.data.message==='Insertion completed') {
+				this.setState({
+					operator: 0, 
+					samples: Array(10).fill(''),
+					messageAPI: res.data.message,
+					validSample: false,
+					loading:false
+				})
+				ReactDOM.findDOMNode(this.refs.firstSample).focus();
+			} else {
+				this.setState({
+					loading:false,
+				})
+			}
+			})
+		.catch( () => {
+			alert('Conection Timed Out');
+			this.setState({
+				loading: false
+			});
+		});
 
     }
 
