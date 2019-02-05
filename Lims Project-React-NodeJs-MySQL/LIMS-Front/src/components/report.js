@@ -1,12 +1,16 @@
 import React from 'react';
 import axios from 'axios';
 
+
+import ResponsiveTable from './ResponsiveTable';
+
+
 export default class SampleSearch extends React.Component{
     state = {
-        sample:"",
+        sample:'',
         validSample: false,
-        messageAPI: "",
-        sampleSearched: "",
+        messageAPI: '',
+        sampleSearched: '',
         tests: [],
         attributes: [],
       }
@@ -17,19 +21,19 @@ export default class SampleSearch extends React.Component{
         this.setState({
             sample: sample,
         })
-        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==""){
+        if(!(/SA-\d\d-\d\d\d\d\d/.test(sample)) && sample!==''){
             this.setState({
-                messageAPI: "Incorrect syntax",
+                messageAPI: 'Incorrect syntax',
                 validSample: false,
             })
-        }else if(sample===""){
+        }else if(sample===''){
             this.setState({
-                messageAPI: "",
+                messageAPI: '',
                 validSample: false,
             })
         }else{
             this.setState({
-                messageAPI: "",
+                messageAPI: '',
                 validSample: true,
             })
         }
@@ -38,14 +42,14 @@ export default class SampleSearch extends React.Component{
 
     handleSearch = () => {
         const sample =  this.state.sample
-   
-        axios.get(`http://10.2.1.94:4000/api/logs/${sample}`)
+        
+        axios.get(`http:///10.2.1.94:4000/api/logs/${sample}`)
             .then(res => {
                 if(res.data.message){
                     this.setState({
                         tests: [],
                         attributes: [],
-                        sampleSearched: "",
+                        sampleSearched: '',
                     });
                     this.setState({
                         messageAPI: res.data.message
@@ -55,54 +59,16 @@ export default class SampleSearch extends React.Component{
                     const attributes = res.data.Attributes;
                     this.setState({
                         sampleSearched: this.state.sample,
-                        sample: "",
+                        sample: '',
                         tests,
                         attributes,
-                        messageAPI: "",
+                        messageAPI: '',
+                        validSample: false
                     })
                 }
-            }).catch( () => alert("Conection Timed Out"));
-    }
-
-    renderLogs(){
-        const logs = this.state.tests
-
-        return(<div>
-            <table className="table">
-                <thead class="thead-gray">
-                    <tr>
-                        <th scope="col">Operator</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Test</th>
-                        <th scope="col">Created On</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {logs.map(log =><tr><td>{log["UserID"]}</td><td>{log["State"]}</td><td>{log["Test"]}</td><td>{log["On Created"]}</td></tr>)}
-                </tbody>
-            </table>
-        </div>)
-    }
-
-    renderAtributes(){
-        const attributes = this.state.attributes
-
-        return(
-            <table class="table">
-                <thead className="thead-gray">
-                    <tr>
-                        <th scope="col">Test</th>
-                        <th scope="col">Attribute</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {attributes.map(atrb =><tr><td>{atrb["Test"]}</td><td>{atrb["Attribute"]}</td><td>{atrb["Value"]}</td></tr>)}
-                </tbody>
-            </table>
-        )
-    }
-    
+            }).catch( () => alert('Conection Timed Out'));
+	}
+	
     render() {
         const {
             addSample,
@@ -113,42 +79,63 @@ export default class SampleSearch extends React.Component{
                 validSample,
                 messageAPI,
                 sampleSearched,
-                tests,
-                attributes,
             }
         } = this;
 
-        const regularLabels = "col-md-3 col-sm-12 col-lg-4 col-xl-3 d-block text-right"
+        const regularLabels = 'col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center'
 
         
-        return(<div className="container">
-                    <div className="row justify-content-center form-inline mb-2">
+        return(<div className='content'>
+                    <div className='row justify-content-center form-inline m-4'>
+                       <div className='col-12 row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample Search: </label>
-                <input
-                    id="sample"
-                    type="text"
-                    name="sample"
-                    className={"col-md-4 col-sm-12 col-lg-4 col-xl-3 form-control"}
-                    placeholder="SA-##-#####"
-                    value={sample}
-                    onChange={addSample}
-                    onBlur={validateSample}
-                />
-                <button
-                    className="btn btn-primary col-md-6 col-sm-10 col-lg-3"
-                    onClick={handleSearch}
-                    disabled={!validSample}
-                >
-                Search
-                </button>
+                        <input
+                            id='sample'
+                            type='text'
+                            name='sample'
+                            className={'col-md-6 col-sm-12 col-lg-4 col-xl-3 form-control'}
+                            placeholder='SA-##-#####'
+                            value={sample}
+                            onChange={addSample}
+                            onBlur={validateSample}
+                            />
+                       </div>
+                
+                <div className='row col-12 justify-content-center form-inline mb-2'>
+                    <button
+                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
+                        onClick={handleSearch}
+                        disabled={!validSample}
+                    >
+                    Search
+                    </button>
+                </div>
                 <div className='row justify-content-center'>
-                    <label className={"col-lg-3 col-sm-10 text-center col-md-6 text-danger mt-3"}><p class="Danger">{messageAPI}</p></label>
+                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p class='Danger'>{messageAPI}</p></label>
 					</div>
             </div>
-            <h3 className="col-12 text-center pb-2">{sampleSearched}</h3>
+            <h3 className='col-12 text-center pb-2'>{sampleSearched}</h3>
             <div>
-                {(tests.length===0) ? "" : this.renderLogs()}
-                {(attributes.length===0) ? "" : this.renderAtributes()}
+				{
+					this.state.tests && this.state.tests.length === 0 ? ('') : (
+						<ResponsiveTable title='Sample logs' cols={{
+							userID: 'User ID',
+							sample: 'Sample',
+							state: 'State',
+							test: 'Test',
+							onCreated: 'On Created'
+						}} rows={this.state.tests}/>
+					)
+				}
+				{
+					this.state.attributes && this.state.attributes.length === 0 ? ('') : (
+						<ResponsiveTable title='Sample attributes' cols={{
+							test: 'Test',
+							attribute: 'Attribute',
+							value: 'Value'
+						}} rows={this.state.attributes}/>
+					)
+				}		
             </div>
         </div>)
         }

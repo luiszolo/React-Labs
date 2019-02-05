@@ -23,9 +23,9 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        fetch("http://10.2.1.94:4000/api/tests/?actived=true")
+        fetch('http://10.2.1.94:4000/api/tests/?actived=true')
             .then(res => res.json()) 
-            .then(data=> this.setState({ //Saving the tests in "tests" state
+            .then(data=> this.setState({ //Saving the tests in 'tests' state
                 tests: data.Tests
             })
             );
@@ -33,7 +33,6 @@ class App extends React.Component {
 
     //Render function for the app
     render() {
-        const title = (<div className='container-fluid text-center bg-info text-white '><h1>LIMS</h1></div>) //LIMS header
         const app =['Home']
         
         //Moving state to a constant
@@ -41,23 +40,23 @@ class App extends React.Component {
             return e['name']
         })
         
-        const menu =app.concat(tests) //Adding "Home" to the menu ['Home','<ElectricityTest/>','<HeatTest/>','<ChemistryTest/>','<SpinnerTest/>','<GenerateReport/>']
+        const menu = app.concat(tests) //Adding 'Home' to the menu ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
         const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
 
-        return(<div className="component">
-                {title}
-                <Tests>
-                    {menu.map((t, keyT)=>{
-                        return(<div label={t}>
-                            {comp.map((c,keyC)=>{
-                                if(keyT===keyC){
-                                    return(c)
-                                }
-                            })}
-                        </div>)}
-                    )}
-                </Tests>
-            </div>)
+        return(<div>
+            <header className='container-fluid bg-info'></header>
+            <Tests>
+                {menu.map((t, keyT)=>{
+                    return(<div label={t}>
+                        {comp.map((c,keyC)=>{
+                            if(keyT===keyC){
+                                return(c)
+                            }
+                        })}
+                    </div>)}
+                )}
+            </Tests>
+        </div>)
     }
 }
 

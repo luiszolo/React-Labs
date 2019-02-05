@@ -10,7 +10,7 @@ async function addLog (req, res) {
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id='${body.operator}'`);
 	if(operator == false) {
 		res.send({
-			message: 'The operator doesn\'t exists'
+			message: 'The operator doesn\'t exist'
 		});
 		return;
 	}
@@ -18,7 +18,7 @@ async function addLog (req, res) {
 	const sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${body.sample.toUpperCase()}'`);
 	if (sample == false) {
 		res.send({
-			message: 'The sample doesn\'t exists'
+			message: 'The sample doesn\'t exist'
 		});
 		return;
 	}

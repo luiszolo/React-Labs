@@ -17,17 +17,20 @@ export default class NavItem extends React.Component {
       },
     } = this;
 
-    let className = 'btn btn-light w-100 text-left rounded-0 shadow-none';
+    let className = 'btn btn-light w-100 rounded-0 shadow-none';
 
     if (activeTest === label) {
-      className = 'btn btn-secondary w-100 text-left rounded-0 shadow-none';
+      className = 'btn btn-secondary w-100 rounded-0 shadow-none';
     }
 
     return (
         <button
-            className={className}  // nos da los botones cliekables
+            className={className}
             onClick={onClick}
             title={label}
+            data-toggle='collapse'
+            data-target='#bs-example-navbar-collapse-1'
+            aria-expanded='false'
         >
         {label}
         </button>
