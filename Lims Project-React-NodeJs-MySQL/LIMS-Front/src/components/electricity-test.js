@@ -6,43 +6,45 @@ export default class ElectricityTest extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            name: 'Electricity Test',
-            operator: 0,
-            messageOp: '',
-            validOp: undefined,
-            messageSamples: Array(10).fill(''),
-            validSample: false,
-            samples: Array(10).fill(''),
-            messageAPI: '',
-            loading: false,
+            name: 'Electricity Test',           //Name of the test
+            operator: 0,                        //State of the operator
+            messageOp: '',                      //Message for the operator field
+            validOp: undefined,                 //Validation state of the operator
+            samples: Array(10).fill(''),        //Array of samples
+            messageSamples: Array(10).fill(''), //Array of messages for the samples
+            validSample: false,                 //Validation state of the samples
+            messageAPI: '',                     //Message of the API
+            loading: false,                     //Loading state
         }
     }
     
-    updateSamples=(value,position)=>{
-        this.setState(state=>{
-            let samples = state.samples.map((sample,i)=>{
-                if(position===i){
-                    return sample=value
-                } else {
-                    return sample;
+    /*Funtion for update the samples in their position in the array */
+    updateSamples=(value,position)=>{                       //Take the parameters value an position. Value is the sample and position is the position in the array
+        this.setState((state)=>{                            //Setting the state with an arrow funtion with the parameter state
+            let samples = state.samples.map((sample,i)=>{   //Declaring a variable "samples" and assigning the value of the map of the state of samples with a function with the parameters sample as the current value and i as the index in the array
+                if(position===i){                           //Condition that say if the position of the parameter given is equal to the index then then change the value for the parameter
+                    return sample=value                     //Changing the last value for the new one
+                } else {                                    //If the position don't match, return the current value
+                    return sample;                          //Return the current value
                 }
             })
-            return {
+            return {                                        //Return the array as the new state
                 samples,
             };
         })
     }
 
-    updateSamplesMessage=(value,position)=>{
-        this.setState(state=>{
-            const messageSamples = state.messageSamples.map((message,i)=>{
-                if(i===position){
-                    return message=value
-                } else {
-                    return message;
+    /*Funtion for update the samples in their position in the array */
+    updateSamplesMessage=(value,position)=>{                                //Take the parameters value an position. Value is the sample and position is the position in the array
+        this.setState((state)=>{                                            //Setting the state with an arrow funtion with the parameter state
+            const messageSamples = state.messageSamples.map((message,i)=>{  //Declaring a variable "samples" and assigning the value of the map of the state of samples with a function with the parameters sample as the current value and i as the index in the array
+                if(i===position){                                           //Condition that say if the position of the parameter given is equal to the index then then change the value for the parameter
+                    return message=value                                    //Changing the last value for the new one
+                } else {                                                    //If the position don't match, return the current value
+                    return message;                                         //Return the current value
                 }
             })
-            return {
+            return {                                                        //Return the array as the new state
                 messageSamples,
             };
         })

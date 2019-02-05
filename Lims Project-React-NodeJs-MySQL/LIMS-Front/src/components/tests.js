@@ -26,7 +26,7 @@ export default class Tests extends React.Component {
     } = this;
 
     return (<div className='row m-0' >
-        <nav className = 'col-lg-2 col-xl-2 col-md-2 col-sm-12 fixed-top bg-info' id='menuMobilDiv'>
+        <nav className = 'col-lg-2 col-xl-2 col-md-12 col-sm-12 fixed-top bg-info' id='menuMobilDiv'>
             <div className='breadcrumb'>
                 <h1 className='text-center bg-info text-white w-100'>LIMS</h1>
                 <ul className='m-0'>
@@ -43,7 +43,7 @@ export default class Tests extends React.Component {
                 </ul>
             </div>
             <div className='navbar navbar-default navbar-inverse navbar-fixed-top' id='navMobil'>
-                <div className='container-fluid navbar-header col-sm-1 m-0'>
+                <div className='container-fluid navbar-header m-0'>
                     <button 
                         type='button' 
                         className='navbar-toggle collapsed w-100' 
@@ -73,7 +73,7 @@ export default class Tests extends React.Component {
                 </div>
             </div>
         </nav>
-        <div className='col-lg-10 col-xl-10 col-md-10 col-sm-12 offset-md-2'>
+        <div className='col-lg-10 col-xl-10 col-md-12 col-sm-12 offset-md-2'>
             {children.map((child) => {
             if (child.props.label !== activeTest) return undefined;
             return child.props.children;

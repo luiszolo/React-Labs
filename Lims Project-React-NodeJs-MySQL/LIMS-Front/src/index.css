@@ -83,7 +83,7 @@ nav ul{
 	border: none;
 }
 
-@media(max-width: 767px){
+@media(max-width: 991px){
 	nav{
 		height: auto;
 	}
@@ -95,7 +95,7 @@ nav ul{
 	}
 }
 
-@media(min-width: 768px){
+@media(min-width: 992px){
 	.breadcrumb {
 		display: block;
 		margin: 0 !important;
@@ -107,6 +107,6 @@ nav ul{
 	}
 }
 
-	#spinner{
-		width: 10%;
-	}
+#spinner{
+	width: 10%;
+}
