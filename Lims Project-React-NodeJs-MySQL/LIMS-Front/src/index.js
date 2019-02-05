@@ -8,7 +8,9 @@ import ChemistryTest from './components/chemistry-test.js';
 import SpinnerTest from './components/spinner-test.js';
 import GenerateReport from './components/report.js';
 import Home from './components/home.js';
-import Tests from './components/tests.js';
+
+import Navbar from './containers/Navbar';
+import Test from './containers/Test';
 
 //Importing CSS file
 import './index.css';
@@ -28,24 +30,25 @@ class App extends React.Component {
             .then(data=> this.setState({ //Saving the tests in 'tests' state
                 tests: data.Tests
             })
-            );
+        );
     }
 
     //Render function for the app
     render() {
-        const app =['Home']
-        
-        //Moving state to a constant
-        const tests = this.state.tests.map((e)=>{
+        let app = ['Home'].concat(this.state.tests.map(e =>{
             return e['name']
-        })
-        
-        const menu = app.concat(tests) //Adding 'Home' to the menu ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
-        const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
+		})).concat('Generate Report1');
+
+		let components = [(<Home/>)].concat(this.state.tests.map(e => {
+			console.log(e)
+			return (
+				<Test name={e.name} sampleLength={10} attributes={[]}/>
+			)
+		}));
 
         return(<div>
             <header className='container-fluid bg-info'></header>
-            <Tests>
+            {/* <Tests>
                 {menu.map((t, keyT)=>{
                     return(<div label={t}>
                         {comp.map((c,keyC)=>{
@@ -55,7 +58,22 @@ class App extends React.Component {
                         })}
                     </div>)}
                 )}
-            </Tests>
+			</Tests> */}
+			<Navbar>
+			{
+				app.map((test, i) => {
+					return (
+						<div label={test}>
+							{
+								components.map((comp, j) => {
+									if (i === j) return comp;
+								})
+							}
+						</div>
+					);
+				})
+			}
+			</Navbar>
         </div>)
     }
 }

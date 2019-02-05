@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NavItem from './nav-item';
+import NavItem from './NavItem';
 
 export default class Tests extends React.Component {
   constructor(props) {
@@ -52,9 +52,8 @@ export default class Tests extends React.Component {
                         aria-expanded='false' 
                         id='menuButton'
                     >
-                        <h3 className='mx-auto text-white pt-1'>LIMS</h3>
-                        <img src='images/menu.png' className='buttonImage' alt='button menu'/>
-                    </button>
+						<img src='images/menu.png' className='buttonImage' alt='button menu'/>
+                        <h3 className='mx-auto text-white pt-1'>LIMS</h3></button>
                 </div>
                 <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
                     <ul className='navbar navbar-nav'>
