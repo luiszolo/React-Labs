@@ -42,7 +42,7 @@ class App extends React.Component {
 		let components = [(<Home/>)].concat(this.state.tests.map(e => {
 			console.log(e)
 			return (
-				<Test name={e.name} sampleLength={10} attributes={[]}/>
+				<Test name={e.name} sampleLength={e.sampleLength} attributes={e.attributes}/>
 			)
 		}));
 
