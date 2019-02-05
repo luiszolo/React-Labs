@@ -3,6 +3,9 @@ body{
 }
 
 @media only screen and (max-width: 768px) {
+	h1 {
+		font-size: 1.8em;
+	}
 	.nav {
 		height: auto !important;
 	}
@@ -13,6 +16,23 @@ body{
 	label {
 		padding-left: 0 !important;
 	}
+}
+
+button[disabled]:hover {
+    border-color: #dc3545;
+    background: #dc3545;
+}
+
+.buttonImage{
+	height: 3rem
+}
+
+.content{
+	padding: 0 3rem !important;
+}
+
+.container-fluid {
+	padding: 0 !important;
 }
 
 h1,h2,h3 {
@@ -27,11 +47,11 @@ html, body{
     height: 100%;
 }
 
-img{
+.logo{
+	padding-top: 10rem;
 	width: 100%;
 }
 
-<<<<<<< HEAD
 nav{
 	/* border-right: 1px solid white; */
 	height: 100%;
@@ -44,26 +64,9 @@ nav ul{
 
 .navbar-header{
 	height: 3rem;
-=======
-.component{
-    height: 100%;
->>>>>>> 4ff3c4e12e87874866dcc3079ea0f33397277b46
-}
-
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
 }
 
 .navbar {
-	padding: 0 !important;
-}
-
-.content{
-	padding: 0 3rem !important;
-}
-
-.container-fluid {
 	padding: 0 !important;
 }
 
@@ -76,12 +79,14 @@ button[disabled]:hover {
 }
 
 #menuButton{
+	display: flex;
+	flex-wrap: wrap;
 	padding: 0;
 	background-color: transparent;
 	border: none;
 }
 
-@media(max-width: 767px){
+@media(max-width: 991px){
 	nav{
 		height: auto;
 	}
@@ -93,41 +98,11 @@ button[disabled]:hover {
 	}
 }
 
-<<<<<<< HEAD
-@media(min-width: 768px){
+@media(min-width: 992px){
 	.breadcrumb {
 		display: block;
 		margin: 0 !important;
 		padding: 0 !important;
-=======
-
-  }
-  @media(min-width:769px){
-		.component{
-			min-height: 95vh;
-	}
-	header .navbar {
-	  display: none;   
-	}
-  }
-  /* DEMO ONLY */
-  .breadcrumb {
-	margin-bottom: 0;
-	border-radius: 0;
-  }
-  body {
-	background: white;
-  }
-   header:after {
-	 text-align: center;
-	 margin: 0px auto 0;
-	 display: table;
-	 color: #FFF;
-	 
-	}
-	.breadcrumb{
-		padding: 0%;
->>>>>>> 4ff3c4e12e87874866dcc3079ea0f33397277b46
 	}
 
 	.navbar {
@@ -135,6 +110,6 @@ button[disabled]:hover {
 	}
 }
 
-	#spinner{
-		width: 10%;
-	}
+#spinner{
+	width: 10%;
+}
