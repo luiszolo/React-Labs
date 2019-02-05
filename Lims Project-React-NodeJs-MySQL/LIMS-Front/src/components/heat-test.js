@@ -70,7 +70,7 @@ export default class HeatTest extends React.Component{
                 })
             } else {
                 this.updateSamplesMessage('', sampleNumber - 1)
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Electricity Test`)
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Heat Test`)
                 .then(res => {
                     if (res.data.message) {
                         this.updateSamplesMessage(res.data.message, sampleNumber - 1)
