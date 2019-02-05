@@ -62,7 +62,6 @@ export default class HeatTest extends React.Component{
             this.updateSamples(sample,sampleNumber - 1)
             if(sample===''){
                 this.updateSamplesMessage('', sampleNumber - 1)
-                this.clearSamples(sampleNumber)
             }else if (!(/SA-\d\d-\d\d\d\d\d/.test(sample))){
                 this.updateSamplesMessage('Incorrect syntax', sampleNumber - 1)
                 this.setState({
@@ -100,6 +99,14 @@ export default class HeatTest extends React.Component{
             this.updateSamples('', sampleNumber)
             this.updateSamplesMessage('', sampleNumber)
             this.clearSamples(sampleNumber + 1)
+        }
+    }
+
+    handleBlanks=(e)=>{
+        const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
+        const sample = e.target.value
+        if(sample===''){
+            this.clearSamples(sampleNumber)
         }
     }
 
@@ -234,6 +241,7 @@ export default class HeatTest extends React.Component{
             handleTemperature,
             handleTime,
             handleSample,
+            handleBlanks,
             settingTitle,
             state: {
                 name,
@@ -320,6 +328,7 @@ export default class HeatTest extends React.Component{
                             className={inputs}
                             name={'sample1'} 
                             placeholder={format}
+                            onBlur={handleBlanks}
 							onChange={handleSample}
 							ref='firstSample'
                         />
@@ -334,6 +343,7 @@ export default class HeatTest extends React.Component{
                             name={'sample2'}
                             placeholder={format}
                             disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[0]))? false : true}
+                            onBlur={handleBlanks}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[1]}</label> 
@@ -347,6 +357,7 @@ export default class HeatTest extends React.Component{
                             name={'sample3'} 
                             placeholder={format}
                             disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[1]))? false : true}
+                            onBlur={handleBlanks}
                             onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[2]}</label> 
@@ -360,6 +371,7 @@ export default class HeatTest extends React.Component{
                         name={'sample4'} 
                         placeholder={format}
                         disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[2]))? false : true}
+                        onBlur={handleBlanks}
                         onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[3]}</label> 
@@ -373,6 +385,7 @@ export default class HeatTest extends React.Component{
                         name={'sample5'} 
                         placeholder={format}
                         disabled={(/SA-\d\d-\d\d\d\d\d/.test(samples[3]))? false : true}
+                        onBlur={handleBlanks}
                         onChange={handleSample}
                         />
                         <label className={warningLabels}>{messageSamples[4]}</label> 
