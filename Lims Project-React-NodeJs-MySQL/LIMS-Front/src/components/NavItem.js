@@ -29,7 +29,7 @@ export default class NavItem extends React.Component {
             onClick={onClick}
             title={label}
             data-toggle='collapse'
-            data-target='#bs-example-navbar-collapse-1'
+            data-target='#navCollapse'
             aria-expanded='false'
         >
         {label}

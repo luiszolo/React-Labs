@@ -12,33 +12,52 @@ export default class Test extends React.Component {
 			passedOperator: undefined,
 			passedAttributes: undefined,
 			passedSamples: undefined,
-			attributes: [],
-			samples: [],
+			attributes: Array(this.props.attributes.length).fill(''),
+			samples: Array(this.props.samplesLength).fill(''),
 		}
-
+		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
+		this.handleValidateSample = this.handleValidateSample.bind(this);
 	}
 
 	handleValidateOperator(){
-		if (this.operatorInput === undefined) return;
-		if(this.operatorInput.state.passRegex) {
-			Axios.get(`https://10.2.1.94:4000/api/operators/${this.operatorInput.state.input}`)
+		if (this.refs.operator.state.input === '') return;
+		if(this.refs.operator.state.passRegex) {
+			Axios.get(`http://localhost:4000/api/operators/${this.refs.operator.state.input}`)
 			.then( res => {
 				if (res.data.message) {
-					return {
-						message: res.data.message
-					}
+					this.refs.operator.setState({
+						warningText: res.data.message
+					});
+				} else {
+					this.refs.operator.setState({
+						warningText: ''
+					});
 				}
-				return true;
+				
 			}).catch( _ => {
-				return {
-					message: 'Server connection error'
-				}
+				this.refs.operator.setState({
+					warningText: 'Server connection time out'
+				});
+			});
+		}
+
+		if (this.refs.operator.state.warningText === '') {
+			this.setState({
+				passedOperator: true
+			});
+		} else {
+			this.setState({
+				passedOperator: false
 			});
 		}
 	}
 
-	handleValidateSample(){
+	handleValidateSample(e){
+		const sample = e.target.name
+	}
+
+	handleSubmit(e) {
 
 	}
 
@@ -46,28 +65,29 @@ export default class Test extends React.Component {
 		const { 
 			attributes,
 			name,
-			sampleLength
+			samplesLength
 		} = this.props;
 
 		let stateAttributes = Array(attributes.length).fill('');
-		let stateSamples = 	Array(sampleLength).fill('');
+		let stateSamples = 	Array(samplesLength).fill('');
 		let attributeDisplay = undefined
-		if (attributes > 0 ){
+		if (attributes.length > 0 ){
 			attributeDisplay = attributes.map((attr, idx )=> {
+				
 				return(
 					<InputField 
+						label={ attr.name }
 						displayCssClassName='justify-content-center form-inline mb-3'
 						type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ attr.name } placeholder={ attr.placeholder } required={true}
 						regex={'[0-' + attr.length + ']'}
-						ref = { el => stateAttributes.push(el)}
+						ref = { attr.name }
 					/>
 				);
 			});
 	
 		}
-
 		return(
 			<div className='content row justify-content-center'>
 				<div className='col-lg-4 col-sm-12 m-4'>
@@ -77,12 +97,14 @@ export default class Test extends React.Component {
 					<form>
 						{/* Operator field */}
 						<InputField
+							label='Operator'
 							displayCssClassName='justify-content-center form-inline mb-3'
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' required={true}
 							regex={/[0-99999]/}
-							validation={this.handleValidateOperator}
+							validator={this.handleValidateOperator}
+							ref='operator'
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -96,16 +118,23 @@ export default class Test extends React.Component {
 							{
 								stateSamples.map((sample, idx) => (
 									<InputField
+										label={`Sample ${idx+1}:`}
 										displayCssClassName='justify-content-center form-inline mb-3'
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-										name={'sample'+idx} placeholder='#####' required={true}
+										name={`sample${idx}`} placeholder='#####' required={true}
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
 										// validation={this.handleValidateOperator()} 
 										validation={this.handleValidateSample}
 									/>
 								))
 							}
+						</div>
+						<div className='row justify-content-center'>
+							<button type='submit'
+								className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
+								// disabled={(this.validSamples() && this.validOp() && this.validAttr()) ? false: true}
+							/>
 						</div>
 					</form>
 				</div>

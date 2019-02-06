@@ -6,7 +6,6 @@ export default class InputField extends React.Component {
 		this.state = {
 			input: '',
 			passRegex: undefined,
-			passValidation: undefined,
 			warningText: null
 		};
 
@@ -23,9 +22,17 @@ export default class InputField extends React.Component {
 			this.setState({
 				passRegex: false
 			});
+			if (this.state.input === '') {
+				this.setState({
+					passRegex: undefined
+				});
+				return {
+					message: 'Field can\'t be blank'
+				};
+			}
 			return {
 				message: 'Incorrect syntax'
-			}
+			};
 		} else {
 			this.setState({
 				passRegex: true
@@ -42,13 +49,10 @@ export default class InputField extends React.Component {
 	}
 
 	handleMessage(){
+		this.props.validator();
 		if (this.handleRegex().message){
 			this.setState({
 				warningText: this.handleRegex().message
-			})
-		} else if (this.props.validation().message) {
-			this.setState({
-				warningText: this.handleValidation().message
 			})
 		} else {
 			this.setState({
@@ -61,6 +65,7 @@ export default class InputField extends React.Component {
 		const {
 			displayCssClassName,
 			inputCssClassName,
+			label,
 			labelCssClassName,
 			name,
 			placeholder,
@@ -74,15 +79,17 @@ export default class InputField extends React.Component {
 					displayCssClassName ? 'row '.concat(displayCssClassName) : 'row'
 				}
 			>
-				<label className={ labelCssClassName }> { name } </label>
+				<label className={ labelCssClassName }> { label } </label>
 				<input type={ type } className={ 
 					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
 				} name={ name } placeholder={ placeholder } required={ required } onChange={
 					event => this.handleUserInput(event)
-				} onBlur={ this.handleMessage } ref = { this.props.ref }
+				} 
+				onBlur={ this.handleMessage } 
+				ref = { name }
 				/>
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
-				{ this.state.warningText || this.props.warningText }
+				{ this.state.warningText  }
 				</label>
 			</div>
 		);

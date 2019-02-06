@@ -27,7 +27,7 @@ export default class ElectricityTest extends React.Component{
                 } else {                                    //If the position don't match, return the current value
                     return sample;                          //Return the current value
                 }
-            })
+            });
             return {                                        //Return the array as the new state
                 samples,
             };
