@@ -30,29 +30,15 @@ class App extends React.Component {
 
     //Render function for the app
     render() {
-        let app = ['Home'].concat(this.state.tests.map(e =>{
-            return e['name']
-		})).concat('Generate Report');
+		let app = ['Home'].concat(this.state.tests.map(e => e['name']))
+		.concat('Generate Report');
 
-		let components = [(<Home/>)].concat(this.state.tests.map(e => {
-			return (
-				<Test name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
-			)
-		})).concat(<Report/>);
+		let components = [(<Home/>)].concat(this.state.tests.map(e => (
+			<Test name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
+		))).concat(<Report/>);
 
         return(<div>
             <header className='container-fluid bg-info'></header>
-            {/* <Tests>
-                {menu.map((t, keyT)=>{
-                    return(<div label={t}>
-                        {comp.map((c,keyC)=>{
-                            if(keyT===keyC){
-                                return(c)
-                            }
-                        })}
-                    </div>)}
-                )}
-			</Tests> */}
 			<Navbar>
 			{
 				app.map((test, i) => {

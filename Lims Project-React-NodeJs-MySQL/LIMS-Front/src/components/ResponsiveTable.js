@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './../responsive-table.css';
-
 export default class extends React.Component {
 	constructor(props){
 		super(props);

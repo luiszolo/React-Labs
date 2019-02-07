@@ -199,7 +199,7 @@ export default class ElectricityTest extends React.Component{
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
         let operatorInput= inputs
-        let data
+        let data;
 
         if(validOp===false){
             operatorInput= operatorInput += ' border-danger'

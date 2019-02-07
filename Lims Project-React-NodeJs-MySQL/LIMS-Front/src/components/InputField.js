@@ -15,24 +15,28 @@ export default class InputField extends React.Component {
 	}
 
 	handleRegex() {
+		let regex = this.props.regex;
 		if (typeof(this.props.regex) == 'string') {
-			this.props.regex = new RegExp(this.props.regex, 'i');
+			regex = new RegExp(this.props.regex, 'i');
 		}
-		if (!this.props.regex.test(this.state.input)) {
+		if (!regex.test(this.state.input)) {
 			this.setState({
 				passRegex: false
 			});
-			if (this.state.input === '') {
+			if (!this.props.canBlank && this.state.input === '') {
 				this.setState({
 					passRegex: undefined
 				});
 				return {
 					message: 'Field can\'t be blank'
 				};
+			} else if (this.props.canBlank) {
+				return true;
+			} else {
+				return {
+					message: 'Incorrect syntax'
+				};
 			}
-			return {
-				message: 'Incorrect syntax'
-			};
 		} else {
 			this.setState({
 				passRegex: true
@@ -49,7 +53,7 @@ export default class InputField extends React.Component {
 	}
 
 	handleMessage(){
-		this.props.validator();
+		if (this.props.validator) this.props.validator();
 		if (this.handleRegex().message){
 			this.setState({
 				warningText: this.handleRegex().message
@@ -70,7 +74,6 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
-			type,
 			warningCssClassName
 		} = this.props;
 
@@ -80,7 +83,7 @@ export default class InputField extends React.Component {
 				}
 			>
 				<label className={ labelCssClassName }> { label } </label>
-				<input type={ type } className={ 
+				<input type='text' className={ 
 					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
 				} name={ name } placeholder={ placeholder } required={ required } onChange={
 					event => this.handleUserInput(event)

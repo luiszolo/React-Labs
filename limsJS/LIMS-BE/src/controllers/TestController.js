@@ -45,19 +45,6 @@ async function addTest (req, res) {
 		}
 	}
 
-	// if (newTest.prevStatus != null) {
-	// 	for await (const i of newTest.prevStatus) {
-	// 		const auxPre = await pool.query(`SELECT * FROM Status WHERE name='${i.toUpperCase()}'`);
-	// 		if (auxPre != null || auxPre != [{ }]) {
-	// 			const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
-	// 			for await (const j of newTest.postStatus) {
-	// 				const auxPost = await pool.query(`SELECT * FROM Status WHERE name='${j.toUpperCase()}'`);
-	// 				if( auxPost ) { }
- 	// 			}
-	// 		}
-	// 	}
-	// }
-
 	if (newTest.attributes == null) {
 		res.send({
 			message: 'The Test can\'t be saved!'
@@ -81,12 +68,12 @@ async function getTests (req, res) {
 	// if (req.params == null)
 	let Tests = [];
 	let value;
-	if (req.query.actived == 'true') value = await pool.query('SELECT * FROM Test WHERE status=true ORDER BY id ASC');
+	if (req.query.actived == 'true' || req.query.actived == undefined) value = await pool.query('SELECT * FROM Test WHERE status=true ORDER BY id ASC');
 	else if (req.query.actived == 'false') value = await pool.query('SELECT * FROM Test WHERE status=false ORDER BY id ASC');
 	else value = await pool.query('SELECT * FROM Test ORDER BY id ASC');
 	for await ( const element of value ) {
 		element.name = miscs.capitalizeWord(element.name);
-		let attributes = await pool.query(`SELECT Attribute.name FROM Attribute, 
+		let attributes = await pool.query(`SELECT Attribute.name, Attribute.type, Attribute.unit, Attribute.structure FROM Attribute, 
 			TestAttributes WHERE TestAttributes.test_Id=${element.id} AND 
 			TestAttributes.attribute_Id=Attribute.id`);
 		element['attributes'] = attributes;
