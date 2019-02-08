@@ -22,45 +22,50 @@ export default class Test extends React.Component {
 	}
 
 	componentWillMount(){
-		console.log(this.props.attributes.length)
 		if (this.props.attributes.length > 0) {
 			this.setState({
 				attributes: this.props.attributes,
-				samples: Array(10).fill('')
+				samples: Array(this.props.samplesLength).fill(undefined)
 			});
 		} else {
 			this.setState({
 				attributes: [],
-				samples: Array(10).fill(''),
+				samples: Array(this.props.samplesLength).fill(undefined),
 				passedAttributes: true
 			});
 		}
 	}
 
 	handleValidateOperator(){
-		console.log(this.refs['operator'])
-		if (this.refs.operator.state.input === '') return;
-		if (this.refs.operator.state.passRegex) {
+		if (this.refs['operator'].state.passRegex) {
 			Axios.get(`http://localhost:4000/api/operators/${this.refs.operator.state.input}`)
 			.then( res => {
 				if (res.data.message) {
-					this.refs.operator.setState({
+					this.setState({
+						passedOperator: false
+					});
+					this.refs['operator'].setState({
 						warningText: res.data.message
 					});
 				} else {
-					this.refs.operator.setState({
+					this.setState({
+						passedOperator: true
+					});
+					this.refs['operator'].setState({
 						warningText: ''
 					});
 				}
 				
 			}).catch( _ => {
-				this.refs.operator.setState({
+				this.setState({
+					passedOperator: false
+				});
+				this.refs['operator'].setState({
 					warningText: 'Server connection time out'
 				});
 			});
 		}
-
-		if (this.refs.operator.state.warningText === '') {
+		if (this.refs['operator'].state.warningText === '') {
 			this.setState({
 				passedOperator: true
 			});
@@ -69,6 +74,8 @@ export default class Test extends React.Component {
 				passedOperator: false
 			});
 		}
+
+		console.log(this.state.passedOperator);
 	}
 
 	handleValidateSample(ref){
@@ -108,7 +115,19 @@ export default class Test extends React.Component {
 	}
 
 	handleSubmit(e) {
-		
+		e.preventDefault();
+
+		this.refs['submitButton'].setState({
+			loading: true
+		});
+
+		const operator = this.refs['operator'].state.input;
+		this.setState({
+			// eslint-disable-next-line no-loop-func
+			samples: this.state.samples.map((s, i) => this.refs[`sample${i + 1}`].state.input)
+		});
+
+		console.log(this.state.samples);
 	}
 
 	render(){
@@ -147,7 +166,7 @@ export default class Test extends React.Component {
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' canBlank={false}
-							regex={/[0-99999]/}
+							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							validator={this.handleValidateOperator}
 							ref='operator'
 						/>
@@ -162,19 +181,19 @@ export default class Test extends React.Component {
 							{
 								this.state.samples.map((sample, idx) => (
 									<InputField
-										label={`Sample ${idx+1}:`} canBlank={true}
+										label={`Sample ${ idx + 1 }:` } canBlank={true}
 										displayCssClassName='justify-content-center form-inline mb-3'
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-										name={`sample${idx}`} placeholder='SA-##-#####' required={true}
+										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-										validator={_ => this.handleValidateSample(`sample${idx}`)}
-										ref= {`sample${idx}`}
+										validator={_ => this.handleValidateSample(`sample${ idx + 1}`)}
+										ref= {`sample${ idx + 1 }`}
 									/>
 								))
 							}
 						</div>
-						<SpinnerButton
+						<SpinnerButton name='submitButton'
 							text='Save data'
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
@@ -182,7 +201,7 @@ export default class Test extends React.Component {
 								this.state.passedAttributes && 
 								this.state.passedOperator && 
 								this.state.passedSamples
-							} onClick={''}
+							} onClick={this.handleSubmit}
 						/>
 					</form>
 				</div>
