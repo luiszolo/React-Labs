@@ -79,7 +79,7 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(ref){
-		console.log(this.refs[ref].state.input)
+		// let idx = ref.replace('sample', '') - 1;
 		if (this.refs[ref].state.input === '') return;
 		if (this.refs[ref].state.passRegex) {
 			Axios.get(`http://localhost:4000/api/samples/${this.props.name}/${this.refs[ref].state.input}`)
@@ -99,15 +99,26 @@ export default class Test extends React.Component {
 				});
 			});
 		}
+		// if(this.refs[ref] !== this.refs['sample1']) {
+		// 	console.log('pass here')
+		// 	if (this.refs[`sample${idx}`].state.input === this.refs[ref].state.input) {
+		// 		console.log('please')
+		// 		this.refs[ref].setState({
+		// 			warningText: 'Something here'
+		// 		});
+		// 		console.log(this.refs[ref])
+		// 		this.setState({
+		// 			passedSamples: false
+		// 		});
+		// 	}
+		// }
+		// else
 
 		if (this.refs[ref].state.warningText === '') {
 			this.setState({
 				passedSamples: true
 			});
 		} else {
-			this.refs[ref].setState({
-				warningText: ''
-			});
 			this.setState({
 				passedSamples: false
 			});
@@ -117,17 +128,18 @@ export default class Test extends React.Component {
 	handleSubmit(e) {
 		e.preventDefault();
 
-		this.refs['submitButton'].setState({
+		this.handleBuildSampleArray();
+		console.log(this.state.samples)
+
+		this.refs.submitButton.setState({
 			loading: true
 		});
 
-		const operator = this.refs['operator'].state.input;
-		this.setState({
-			// eslint-disable-next-line no-loop-func
-			samples: this.state.samples.map((s, i) => this.refs[`sample${i + 1}`].state.input)
-		});
-
-		console.log(this.state.samples);
+		if(this.state.passedAttributes 
+			&& this.state.passedOperator 
+			&& this.state.passedSamples) {
+				console.log('Pass!')
+		}
 	}
 
 	render(){
@@ -186,7 +198,7 @@ export default class Test extends React.Component {
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
-										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
+										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/} value = { sample }
 										validator={_ => this.handleValidateSample(`sample${ idx + 1}`)}
 										ref= {`sample${ idx + 1 }`}
 									/>
@@ -194,6 +206,7 @@ export default class Test extends React.Component {
 							}
 						</div>
 						<SpinnerButton name='submitButton'
+							ref='submitButton'
 							text='Save data'
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
@@ -201,7 +214,7 @@ export default class Test extends React.Component {
 								this.state.passedAttributes && 
 								this.state.passedOperator && 
 								this.state.passedSamples
-							} onClick={this.handleSubmit}
+							} onClick={ this.handleSubmit }
 						/>
 					</form>
 				</div>

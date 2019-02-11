@@ -82,6 +82,7 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
+			value,
 			warningCssClassName
 		} = this.props;
 
@@ -93,7 +94,8 @@ export default class InputField extends React.Component {
 				<label className={ labelCssClassName }> { label } </label>
 				<input type='text' className={ 
 					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
-				} name={ name } placeholder={ placeholder } required={ required } onChange={
+				} name={ name } placeholder={ placeholder } required={ required } 
+				value = { value } onChange={
 					event => this.handleUserInput(event)
 				} 
 				onBlur={ this.handleMessage }

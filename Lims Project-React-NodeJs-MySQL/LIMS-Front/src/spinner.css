@@ -1,22 +1,21 @@
 .lds-spinner {
-	color: official;
-	display: inline-block;
 	position: relative;
-	width: 64px;
-	height: 64px;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
   }
   .lds-spinner div {
-	transform-origin: 32px 32px;
+	transform-origin: 16px 16px;
 	animation: lds-spinner 1.2s linear infinite;
   }
   .lds-spinner div:after {
 	content: " ";
 	display: block;
 	position: absolute;
-	top: 3px;
-	left: 29px;
-	width: 5px;
-	height: 14px;
+	top: 2px;
+	left: 14px;
+	width: 3px;
+	height: 8px;
 	border-radius: 20%;
 	background: #cef;
   }
