@@ -38,7 +38,7 @@ class App extends React.Component {
         //Moving state to a constant
         const tests = this.state.tests.map((e)=>{
             return e['name']
-        })
+        }).concat('Generate Report')
         
         const menu = app.concat(tests) //Adding 'Home' to the menu ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
         const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
