@@ -48,7 +48,26 @@ export default class Test extends React.Component {
 	}
 
 	handleAppendAttributeArray(attr, pos) {
-		
+		let attrs = this.state.attributes.map((s, i) => {
+			if(pos === i) return s = attr;
+			else return s;
+		});
+		this.setState({ attributes: attrs});
+	}
+
+	handleValidateAttribute(ref) {
+		let idx = ref.replace('attribute','') - 1;
+		if(this.refs[ref].state.input === '') this.handleAppendAttributeArray('', idx);
+		else this.handleAppendAttributeArray(this.refs[ref].state.input, idx);
+		if (this.refs[ref].state.warningText === '') {
+			this.setState({
+				passedAttributes: true
+			});
+		} else {
+			this.setState({
+				passedAttributes: false
+			});
+		}
 	}
 
 	handleValidateOperator(){
@@ -95,8 +114,8 @@ export default class Test extends React.Component {
 
 	handleValidateSample(ref){
 		let idx = ref.replace('sample', '') - 1;
-		if (this.refs[ref].state.input === '') this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
-		this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
+		if (this.refs[ref].state.input === '') this.handleAppendSamplesArray('', idx);
+		else this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
 		if (this.refs[ref].state.passRegex) {
 			Axios.get(`http://localhost:4000/api/samples/${this.props.name}/${this.refs[ref].state.input}`)
 			.then(res => {
