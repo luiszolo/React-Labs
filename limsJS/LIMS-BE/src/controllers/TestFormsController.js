@@ -51,6 +51,7 @@ async function insertData(req, res) {
 			reqCopy.body = {
 				name: sample
 			};
+			if (sample === '') continue;
 			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == true){
 				sampleErrorList.Exists.push(sample.toUpperCase());
 				continue;
@@ -59,6 +60,7 @@ async function insertData(req, res) {
 	}
 
 	for await (const element of body.samples) {
+		if (element === '') continue;
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
 			sampleError = true;
@@ -178,8 +180,9 @@ async function insertData(req, res) {
 		}
 	}
 	res.send({
-		message: 'Insertion completed'
-	})
+		message: 'Insertion completed',
+		pass: true
+	});
 }
 
 module.exports = {

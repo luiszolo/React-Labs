@@ -6,10 +6,10 @@ export default class InputField extends React.Component {
 		this.state = {
 			blank: undefined,
 			input: '',
+			focused: undefined,
 			passRegex: undefined,
 			warningText: null
 		};
-
 		this.handleMessage = this.handleMessage.bind(this);
 		this.handleRegex = this.handleRegex.bind(this);
 		this.handleUserInput = this.handleUserInput.bind(this);
@@ -60,7 +60,17 @@ export default class InputField extends React.Component {
 	}
 
 	handleMessage(){
-		if (this.handleRegex().message){
+		if(this.state.focused === undefined) {
+			this.setState({
+				focused: true
+			})
+		}
+		else {
+			this.setState({
+				focused: !this.state.focused
+			})
+		}
+		if (this.handleRegex().message && this.state.focused === true){
 			this.setState({
 				warningText: this.handleRegex().message
 			});
@@ -82,7 +92,6 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
-			value,
 			warningCssClassName
 		} = this.props;
 
@@ -95,10 +104,8 @@ export default class InputField extends React.Component {
 				<input type='text' className={ 
 					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
 				} name={ name } placeholder={ placeholder } required={ required } 
-				value = { value } onChange={
-					event => this.handleUserInput(event)
-				} 
-				onBlur={ this.handleMessage }
+				onChange={ event => this.handleUserInput(event) } 
+				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
 				ref = { name }
 				/>
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>

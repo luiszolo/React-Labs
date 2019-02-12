@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import InputField from './../components/InputField';
 import SpinnerButton from './../components/SpinnerButton';
@@ -16,6 +17,8 @@ export default class Test extends React.Component {
 			attributes: undefined,
 			samples: undefined,
 		}
+
+		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
@@ -25,15 +28,27 @@ export default class Test extends React.Component {
 		if (this.props.attributes.length > 0) {
 			this.setState({
 				attributes: this.props.attributes,
-				samples: Array(this.props.samplesLength).fill(undefined)
+				samples: Array(this.props.samplesLength).fill('')
 			});
 		} else {
 			this.setState({
 				attributes: [],
-				samples: Array(this.props.samplesLength).fill(undefined),
+				samples: Array(this.props.samplesLength).fill(''),
 				passedAttributes: true
 			});
 		}
+	}
+
+	handleAppendSamplesArray(sample, pos){
+		let samples = this.state.samples.map((s, i) => {
+			if(pos === i) return s = sample;
+			else return s;
+		});
+		this.setState({ samples: samples});
+	}
+
+	handleAppendAttributeArray(attr, pos) {
+		
 	}
 
 	handleValidateOperator(){
@@ -79,8 +94,9 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(ref){
-		// let idx = ref.replace('sample', '') - 1;
-		if (this.refs[ref].state.input === '') return;
+		let idx = ref.replace('sample', '') - 1;
+		if (this.refs[ref].state.input === '') this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
+		this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
 		if (this.refs[ref].state.passRegex) {
 			Axios.get(`http://localhost:4000/api/samples/${this.props.name}/${this.refs[ref].state.input}`)
 			.then(res => {
@@ -89,8 +105,19 @@ export default class Test extends React.Component {
 						warningText: res.data.message
 					});
 				} else {
-					this.refs.operator.setState({
+					console.log(this.refs[`sample${idx+1}`])
+					this.refs[`sample${idx+2}`].setState({
 						warningText: ''
+					});
+					this.state.samples.forEach((v, i) => {
+						if (this.refs[ref].state.input === v && i !== idx) {
+							this.refs[`sample${idx+1}`].setState({
+								warningText: 'This sample is repeated'
+							});
+							this.setState({
+								passedSamples: false
+							});
+						}
 					});
 				}
 			}).catch( _ => {
@@ -127,19 +154,41 @@ export default class Test extends React.Component {
 
 	handleSubmit(e) {
 		e.preventDefault();
-
-		this.handleBuildSampleArray();
-		console.log(this.state.samples)
+		const operator = this.refs['operator'].state.input;
 
 		this.refs.submitButton.setState({
 			loading: true
 		});
-
-		if(this.state.passedAttributes 
-			&& this.state.passedOperator 
+		if( this.state.passedAttributes && this.state.passedOperator 
 			&& this.state.passedSamples) {
-				console.log('Pass!')
+			
+			console.log('Pass!');
+			Axios.post(`http://localhost:4000/api/test-forms/add`, {
+				operator: operator,
+				samples: this.state.samples,
+				test: this.props.name,
+				attributes: this.state.attributes
+			}).then(res => {
+				this.refs.submitButton.setState({
+					resultMessage: res.data.message
+				});
+				if(res.data.pass) { 
+					this.setState({
+						passedSamples: false,
+						passedAttributes: false,
+						attributes: Array(this.props.attributes.length).fill(''),
+						samples: Array(this.props.samplesLength).fill('')
+					});
+					ReactDOM.findDOMNode(this.refs['sample1']).focus();
+				}
+			}).catch( _ => {
+				alert('Connection Timed Out');
+			})
 		}
+
+		this.refs.submitButton.setState({
+			loading: false
+		});
 	}
 
 	render(){
@@ -169,7 +218,7 @@ export default class Test extends React.Component {
 				<div className='col-lg-4 col-sm-12 m-4'>
 					<h2 className='text-center'>{ name }</h2>
 				</div>
-				<div className='col-sm-12 col-xl-10'>
+				<div className='col-sm-12 col-xl-10 mb-4'>
 					<form>
 						{/* Operator field */}
 						<InputField
@@ -198,7 +247,7 @@ export default class Test extends React.Component {
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
-										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/} value = { sample }
+										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
 										validator={_ => this.handleValidateSample(`sample${ idx + 1}`)}
 										ref= {`sample${ idx + 1 }`}
 									/>
@@ -211,9 +260,9 @@ export default class Test extends React.Component {
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
 							type='submit'disabled={
-								this.state.passedAttributes && 
+								!(this.state.passedAttributes && 
 								this.state.passedOperator && 
-								this.state.passedSamples
+								this.state.passedSamples)
 							} onClick={ this.handleSubmit }
 						/>
 					</form>
