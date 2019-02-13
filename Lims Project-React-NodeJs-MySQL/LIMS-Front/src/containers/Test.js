@@ -20,16 +20,18 @@ export default class Test extends React.Component {
 
 		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleValidateAttribute = this.handleAppendAttributeArray.bind(this);
+		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 	}
 
 	componentWillMount(){
+		console.log(this.props.attributes)
 		if (this.props.attributes.length > 0) {
 			this.setState({
-				attributes: this.props.attributes,
-				samples: Array(this.props.samplesLength).fill('')
+				attributes: Array(this.props.attributes.length).fill({}),
+				samples: Array(this.props.samplesLength).fill(''),
+				passedAttributes: false
 			});
 		} else {
 			this.setState({
@@ -48,9 +50,12 @@ export default class Test extends React.Component {
 		this.setState({ samples: samples});
 	}
 
-	handleAppendAttributeArray(attr, pos) {
+	handleAppendAttributeArray(attr, value,  pos) {
 		let attrs = this.state.attributes.map((s, i) => {
-			if(pos === i) return s = attr;
+			if(pos === i) return s = {
+				name: attr.name,
+				value: value
+			}
 			else return s;
 		});
 		this.setState({ attributes: attrs});
@@ -59,7 +64,7 @@ export default class Test extends React.Component {
 	handleValidateAttribute(ref) {
 		let idx = ref.replace('attribute','') - 1;
 		if(this.refs[ref].state.input === '') this.handleAppendAttributeArray('', idx);
-		else this.handleAppendAttributeArray(this.refs[ref].state.input, idx);
+		else this.handleAppendAttributeArray(this.refs[ref].props, this.refs[ref].state.input, idx);
 		if (this.refs[ref].state.warningText === '') {
 			this.setState({
 				passedAttributes: true
@@ -125,7 +130,6 @@ export default class Test extends React.Component {
 						warningText: res.data.message
 					});
 				} else {
-					console.log(this.refs[`sample${idx+1}`])
 					this.refs[`sample${idx+2}`].setState({
 						warningText: ''
 					});
@@ -175,6 +179,7 @@ export default class Test extends React.Component {
 				test: this.props.name,
 				attributes: this.state.attributes
 			}).then(res => {
+				console.log(res.data)
 				this.refs.submitButton.setState({
 					resultMessage: res.data.message
 				});
@@ -182,7 +187,7 @@ export default class Test extends React.Component {
 					this.setState({
 						passedSamples: false,
 						passedAttributes: false,
-						attributes: Array(this.props.attributes.length).fill(''),
+						attributes: this.props.attributes,
 						samples: Array(this.props.samplesLength).fill('')
 					});
 					ReactDOM.findDOMNode(this.refs['sample1']).focus();
@@ -202,17 +207,17 @@ export default class Test extends React.Component {
 			name
 		} = this.props;
 		let attributeDisplay = undefined;
-		if (this.state.attributes.length > 0 ){
-			attributeDisplay = this.state.attributes.map((attr, idx )=> {
-				
+		if (this.props.attributes.length > 0 ){
+			console.log(this.props.attributes)
+			attributeDisplay = this.props.attributes.map((attr, idx )=> {
 				return(
 					<InputField 
-						label={ attr.name.concat(` (${attr.unit})`) }
+						label={ attr.name + ` (${attr.unit})` }
 						displayCssClassName='justify-content-center form-inline mb-3'
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ attr.name } placeholder={ attr.type } required={true}
-						regex={ attr.structure } validator={ _ => this.handleAppendAttributeArray(`attribute${ idx + 1}`) }
+						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`); } }
 						ref = { `attribute${idx + 1}` }
 					/>
 				);

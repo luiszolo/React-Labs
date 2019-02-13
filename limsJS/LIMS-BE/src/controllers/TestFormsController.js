@@ -5,6 +5,7 @@ const pool = require('./../config/database');
 // Testing
 async function insertData(req, res) {
 	let body = req.body;
+	console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
@@ -81,12 +82,10 @@ async function insertData(req, res) {
 				JOIN StatusSequence ON Status.id = StatusSequence.status_Id WHERE Status.id=${statusElement.prev_State}
 			`);
 			if (logValidation2.pass == true) {
-				console.log('Passed');
 				let logValidation3 = await dbInteract.isExists(`
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required} AND sample_Id=${sample.result.id}
 				`);
 				if (logValidation3 == false && test.result.id != 1) {
-					console.log('Not passed!');
 					sampleError = true;
 					sampleErrorList.NotPrev.push(element.toUpperCase());
 					break;
@@ -141,6 +140,7 @@ async function insertData(req, res) {
 
 
 	for await (const reqSample of body.samples) {
+		if (reqSample === '') continue;
 		let sample = await pool.query(`SELECT * FROM Sample WHERE name='${reqSample.toUpperCase()}'`);
 		if (body.attributes) {
 			for await (const reqAttribute of body.attributes) {
@@ -159,6 +159,7 @@ async function insertData(req, res) {
 
 	let logInserted;
 	for await (const reqSample of body.samples) {
+		if (reqSample === '') continue;
 		for await (const reqPost of postStatus) {
 			for await  (const reqPrev of prevStatus) {
 				let status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPrev.prev_State}`);
