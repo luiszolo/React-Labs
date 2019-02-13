@@ -20,6 +20,7 @@ export default class Test extends React.Component {
 
 		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleValidateAttribute = this.handleAppendAttributeArray.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 	}
@@ -145,20 +146,6 @@ export default class Test extends React.Component {
 				});
 			});
 		}
-		// if(this.refs[ref] !== this.refs['sample1']) {
-		// 	console.log('pass here')
-		// 	if (this.refs[`sample${idx}`].state.input === this.refs[ref].state.input) {
-		// 		console.log('please')
-		// 		this.refs[ref].setState({
-		// 			warningText: 'Something here'
-		// 		});
-		// 		console.log(this.refs[ref])
-		// 		this.setState({
-		// 			passedSamples: false
-		// 		});
-		// 	}
-		// }
-		// else
 
 		if (this.refs[ref].state.warningText === '') {
 			this.setState({
@@ -225,8 +212,8 @@ export default class Test extends React.Component {
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ attr.name } placeholder={ attr.type } required={true}
-						regex={ attr.structure }
-						ref = { attr.name }
+						regex={ attr.structure } validator={ _ => this.handleAppendAttributeArray(`attribute${ idx + 1}`) }
+						ref = { `attribute${idx + 1}` }
 					/>
 				);
 			});

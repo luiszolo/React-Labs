@@ -157,6 +157,7 @@ async function insertData(req, res) {
 		else break;
 	}
 
+	let logInserted;
 	for await (const reqSample of body.samples) {
 		for await (const reqPost of postStatus) {
 			for await  (const reqPrev of prevStatus) {
@@ -175,14 +176,21 @@ async function insertData(req, res) {
 					test: body.test,
 					status: status.result.name
 				}
-				await require('./LogController').addLog(req, res);
+				logInserted = await require('./LogController').addLog(req, res);
 			}
 		}
 	}
-	res.send({
-		message: 'Insertion completed',
-		pass: true
-	});
+	if (logInserted.message) {
+		res.send({
+			message: logInserted.message,
+			pass: false
+		});
+	} else {
+		res.send({
+			message: 'Insertion completed',
+			pass: true
+		});
+	}
 }
 
 module.exports = {
