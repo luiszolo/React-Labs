@@ -53,7 +53,7 @@ export default class ElectricityTest extends React.Component{
     handleSample=(e)=>{
         const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
         const sample = e.target.value
-
+        let counter=0, counter2=0
         if(sample.length<=11){
             this.updateSamples(sample,sampleNumber - 1)
             if(sample===''){
@@ -86,6 +86,26 @@ export default class ElectricityTest extends React.Component{
                 this.setState({
                     validSample: true,
                 })
+                    for (let i=0; i<9; i++){
+                    if (this.state.messageSamples[i]==="Incorrect syntax"  || this.state.messageSamples[i]==="This sample is repeated"){
+                        console.log("hay una mala en:"+" "+i)
+                        counter++
+                    }
+                    else{
+                        counter2++
+                    }
+                }
+                if (counter2==8){
+                    this.setState({
+                        validSample: true,
+                    })
+                }
+                else{
+                    this.setState({
+                        validSample: false,
+                    })
+                }
+                console.log(counter2)
             }
         }
     }
