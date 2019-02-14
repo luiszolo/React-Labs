@@ -16,8 +16,10 @@ export default class Test extends React.Component {
 			passedSamples: undefined,
 			attributes: undefined,
 			samples: undefined,
+			operator:  undefined,
 		}
 
+		this.handleAppendAttributeArray = this.handleAppendAttributeArray.bind(this);
 		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
@@ -51,155 +53,102 @@ export default class Test extends React.Component {
 	}
 
 	handleAppendAttributeArray(attr, value,  pos) {
+		if (attr === '') return;
 		let attrs = this.state.attributes.map((s, i) => {
-			if(pos === i) return s = {
-				name: attr.name,
-				value: value
+			if(pos === i) {
+				if (attr === '') return {};
+				else {
+					return s = {
+						name: attr.name,
+						value: value
+					};
+				}
 			}
 			else return s;
 		});
 		this.setState({ attributes: attrs});
 	}
 
-	handleValidateAttribute(ref) {
-		let idx = ref.replace('attribute','') - 1;
-		if(this.refs[ref].state.input === '') this.handleAppendAttributeArray('', idx);
-		else this.handleAppendAttributeArray(this.refs[ref].props, this.refs[ref].state.input, idx);
-		if (this.refs[ref].state.warningText === '') {
-			this.setState({
-				passedAttributes: true
-			});
-		} else {
-			this.setState({
-				passedAttributes: false
-			});
-		}
+	handleValidateAttribute(attribute, idx) {
+		if(attribute.state.input === '') this.handleAppendAttributeArray('', idx);
+		else this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
+		this.setState({
+			passedAttributes: (attribute.state.passRegex && attribute.state.passValidation)
+		});
 	}
 
 	handleValidateOperator(){
-		if (this.refs['operator'].state.passRegex) {
-			Axios.get(`http://localhost:4000/api/operators/${this.refs.operator.state.input}`)
-			.then( res => {
-				if (res.data.message) {
-					this.setState({
-						passedOperator: false
-					});
-					this.refs['operator'].setState({
-						warningText: res.data.message
-					});
-				} else {
-					this.setState({
-						passedOperator: true
-					});
-					this.refs['operator'].setState({
-						warningText: ''
-					});
-				}
-				
-			}).catch( _ => {
-				this.setState({
-					passedOperator: false
-				});
-				this.refs['operator'].setState({
-					warningText: 'Server connection time out'
-				});
-			});
-		}
-		if (this.refs['operator'].state.warningText === '') {
-			this.setState({
-				passedOperator: true
-			});
-		} else {
-			this.setState({
-				passedOperator: false
-			});
-		}
-
-		console.log(this.state.passedOperator);
+		const operator = this.refs['operator'].state;
+		this.setState({
+			passedOperator: (operator.passRegex && operator.passValidation),
+			operator: operator
+		});
 	}
 
-	handleValidateSample(ref){
-		let idx = ref.replace('sample', '') - 1;
-		if (this.refs[ref].state.input === '') this.handleAppendSamplesArray('', idx);
-		else this.handleAppendSamplesArray(this.refs[ref].state.input, idx);
-		if (this.refs[ref].state.passRegex) {
-			Axios.get(`http://localhost:4000/api/samples/${this.props.name}/${this.refs[ref].state.input}`)
-			.then(res => {
-				if (res.data.message) {
-					this.refs[ref].setState({
-						warningText: res.data.message
-					});
-				} else {
-					this.refs[`sample${idx+2}`].setState({
-						warningText: ''
-					});
-					this.state.samples.forEach((v, i) => {
-						if (this.refs[ref].state.input === v && i !== idx) {
-							this.refs[`sample${idx+1}`].setState({
-								warningText: 'This sample is repeated'
-							});
-							this.setState({
-								passedSamples: false
-							});
-						}
-					});
-				}
-			}).catch( _ => {
-				this.refs[ref].setState({
-					warningText: 'Server connection time out'
-				});
-			});
-		}
-
-		if (this.refs[ref].state.warningText === '') {
-			this.setState({
-				passedSamples: true
-			});
-		} else {
-			this.setState({
-				passedSamples: false
-			});
-		}
+	handleValidateSample(sample, idx){
+		if (sample.state.input === '') this.handleAppendSamplesArray('', idx);
+		else this.handleAppendSamplesArray(sample.state.input, idx);
+		this.setState({
+			passedSamples: (sample.state.passRegex && sample.state.passValidation)
+		});
 	}
 
 	handleSubmit(e) {
 		e.preventDefault();
-		const operator = this.refs['operator'].state.input;
+		this.handleValidateOperator();
+		let counter = 0;
+		for (counter; counter < this.props.attributes.length; counter += 1) {
+			const attr = this.refs[`attribute${counter + 1}`];
+			if (attr) {
+				this.handleValidateAttribute(attr, counter);
+			} else continue;
+		}
+
+		counter = 0;
+		for (counter; counter < this.props.samplesLength; counter += 1) {
+			const sample = this.refs[`sample${counter + 1}`];
+			if (sample) { 
+				this.handleValidateSample(sample, counter);
+			} else continue;
+		}
 
 		this.refs.submitButton.setState({
 			loading: true
 		});
-		if( this.state.passedAttributes && this.state.passedOperator 
-			&& this.state.passedSamples) {
-			
-			console.log('Pass!');
-			Axios.post(`http://localhost:4000/api/test-forms/add`, {
-				operator: operator,
-				samples: this.state.samples,
-				test: this.props.name,
-				attributes: this.state.attributes
-			}).then(res => {
-				console.log(res.data)
-				this.refs.submitButton.setState({
-					resultMessage: res.data.message
-				});
-				if(res.data.pass) { 
-					this.setState({
-						passedSamples: false,
-						passedAttributes: false,
-						attributes: this.props.attributes,
-						samples: Array(this.props.samplesLength).fill('')
-					});
-					ReactDOM.findDOMNode(this.refs['sample1']).focus();
-				}
-			}).catch( _ => {
-				alert('Connection Timed Out');
+		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
+			Axios.post(`http://localhost:4000/api/test-forms-add`, {
+				operator: this.state.operator
 			})
 		}
+			
+		// 	console.log('Pass!');
+		// 	Axios.post(`http://localhost:4000/api/test-forms/add`, {
+		// 		operator: operator,
+		// 		samples: this.state.samples,
+		// 		test: this.props.name,
+		// 		attributes: this.state.attributes
+		// 	}).then(res => {
+		// 		console.log(res.data)
+		// 		this.refs.submitButton.setState({
+		// 			resultMessage: res.data.message
+		// 		});
+		// 		if(res.data.pass) { 
+		// 			this.setState({
+		// 				passedSamples: false,
+		// 				passedAttributes: false,
+		// 				attributes: this.props.attributes,
+		// 				samples: Array(this.props.samplesLength).fill('')
+		// 			});
+		// 			ReactDOM.findDOMNode(this.refs['sample1']).focus();
+		// 		}
+		// 	}).catch( _ => {
+		// 		alert('Connection Timed Out');
+		// 	})
+		// }
 
-		this.refs.submitButton.setState({
-			loading: false
-		});
+		// this.refs.submitButton.setState({
+		// 	loading: false
+		// });
 	}
 
 	render(){
@@ -216,7 +165,7 @@ export default class Test extends React.Component {
 						displayCssClassName='justify-content-center form-inline mb-3'
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-						name={ attr.name } placeholder={ attr.type } required={true}
+						name={ `attribute${idx + 1}` } placeholder={ attr.type } canBlank={false}
 						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`); } }
 						ref = { `attribute${idx + 1}` }
 					/>
@@ -238,8 +187,8 @@ export default class Test extends React.Component {
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' canBlank={false}
+							validationURL={`http://localhost:4000/api/operators/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
-							validator={this.handleValidateOperator}
 							ref='operator'
 						/>
 						<div>
@@ -259,7 +208,7 @@ export default class Test extends React.Component {
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-										validator={_ => this.handleValidateSample(`sample${ idx + 1}`)}
+										validationURL={`http://localhost:4000/api/samples/`}
 										ref= {`sample${ idx + 1 }`}
 									/>
 								))
@@ -270,11 +219,13 @@ export default class Test extends React.Component {
 							text='Save data'
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
-							type='submit'disabled={
-								!(this.state.passedAttributes && 
-								this.state.passedOperator && 
-								this.state.passedSamples)
-							} onClick={ this.handleSubmit }
+							type='submit'
+							// disabled={
+							// 	!(this.state.passedAttributes && 
+							// 	this.state.passedOperator && 
+							// 	this.state.passedSamples)
+							// } 
+							onClick={ this.handleSubmit }
 						/>
 					</form>
 				</div>

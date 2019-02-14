@@ -1,4 +1,5 @@
 import React from 'react';
+import Axios from 'axios';
 
 export default class InputField extends React.Component {
 	constructor(props) {
@@ -8,10 +9,12 @@ export default class InputField extends React.Component {
 			input: '',
 			focused: undefined,
 			passRegex: undefined,
+			passValidation: undefined,
 			warningText: null
 		};
 		this.handleMessage = this.handleMessage.bind(this);
 		this.handleRegex = this.handleRegex.bind(this);
+		this.handleValidation = this.handleValidation.bind(this);
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 
@@ -22,6 +25,7 @@ export default class InputField extends React.Component {
 	}
 
 	handleRegex() {
+		console.log(this.state.input)
 		let regex = this.props.regex;
 		if (typeof(this.props.regex) == 'string') {
 			regex = new RegExp(this.props.regex, 'i');
@@ -30,14 +34,14 @@ export default class InputField extends React.Component {
 			this.setState({
 				passRegex: false
 			});
-			if (!this.props.canBlank && this.state.input === '') {
+			if (!this.props.canBlank && (this.state.input === '' || this.state.input === ' ')) {
 				this.setState({
 					passRegex: false
 				});
 				return {
 					message: 'Field can\'t be blank'
 				};
-			} else if (this.props.canBlank && this.state.input === '') {
+			} else if (this.props.canBlank && (this.state.input === '' || this.state.input === ' ')) {
 				return true;
 			} else {
 				return {
@@ -52,6 +56,30 @@ export default class InputField extends React.Component {
 		}
 	}
 
+	handleValidation(){
+		if(this.state.passRegex) {
+			Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
+				if (res.data.message) {
+					this.setState({
+						passValidation: false,
+						warningText: res.data.message
+					});
+				} else {
+					this.setState({
+						passValidation: true,
+						warningText: ''
+					});
+				}
+			}).catch( err => {
+				this.setState({
+					passValidation: false,
+					warningText: 'Server connection timed out'
+				});
+			});
+			return true;
+		} else return false;
+	}
+
 	handleUserInput(e) {
 		const value = e.target.value;
 		this.setState({
@@ -59,7 +87,8 @@ export default class InputField extends React.Component {
 		});
 	}
 
-	handleMessage(){
+	handleMessage(e){
+		this.handleUserInput(e);
 		if(this.state.focused === undefined) {
 			this.setState({
 				focused: true
@@ -74,13 +103,8 @@ export default class InputField extends React.Component {
 			this.setState({
 				warningText: this.handleRegex().message
 			});
-			if (this.props.validator ) this.props.validator();
-		} else {
-			if (this.props.validator ) this.props.validator();
-			this.setState({
-				warningText: ''
-			});
 		}
+		if (this.props.validationURL) this.handleValidation();
 	}
 
 	render() {

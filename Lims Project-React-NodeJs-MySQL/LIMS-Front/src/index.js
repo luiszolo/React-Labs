@@ -45,9 +45,7 @@ class App extends React.Component {
 					return (
 						<div label={test}>
 							{
-								components.map((comp, j) => {
-									if (i === j) return comp;
-								})
+								components.map((comp, j) => i === j ? comp : null)
 							}
 						</div>
 					);
