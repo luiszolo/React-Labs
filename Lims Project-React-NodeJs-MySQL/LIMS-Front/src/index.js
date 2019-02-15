@@ -38,7 +38,7 @@ class App extends React.Component {
 		))).concat(<Report/>);
 
         return(<div>
-            <header className='container-fluid bg-info'></header>
+            <header className='container-fluid bg-info fixed-top'></header>
 			<Navbar>
 			{
 				app.map((test, i) => {

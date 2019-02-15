@@ -23,6 +23,7 @@ export default class Test extends React.Component {
 		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
+		this.handleValidateForm = this.handleValidateForm.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 	}
@@ -93,8 +94,7 @@ export default class Test extends React.Component {
 		});
 	}
 
-	handleSubmit(e) {
-		e.preventDefault();
+	handleValidateForm(){
 		this.handleValidateOperator();
 		let counter = 0;
 		for (counter; counter < this.props.attributes.length; counter += 1) {
@@ -111,44 +111,44 @@ export default class Test extends React.Component {
 				this.handleValidateSample(sample, counter);
 			} else continue;
 		}
+	}
+
+	handleSubmit(e) {
+		e.preventDefault();
+		
+		this.handleValidateForm();
 
 		this.refs.submitButton.setState({
 			loading: true
 		});
 		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
 			Axios.post(`http://localhost:4000/api/test-forms-add`, {
-				operator: this.state.operator
-			})
-		}
-			
-		// 	console.log('Pass!');
-		// 	Axios.post(`http://localhost:4000/api/test-forms/add`, {
-		// 		operator: operator,
-		// 		samples: this.state.samples,
-		// 		test: this.props.name,
-		// 		attributes: this.state.attributes
-		// 	}).then(res => {
-		// 		console.log(res.data)
-		// 		this.refs.submitButton.setState({
-		// 			resultMessage: res.data.message
-		// 		});
-		// 		if(res.data.pass) { 
-		// 			this.setState({
-		// 				passedSamples: false,
-		// 				passedAttributes: false,
-		// 				attributes: this.props.attributes,
-		// 				samples: Array(this.props.samplesLength).fill('')
-		// 			});
-		// 			ReactDOM.findDOMNode(this.refs['sample1']).focus();
-		// 		}
-		// 	}).catch( _ => {
-		// 		alert('Connection Timed Out');
-		// 	})
-		// }
+				operator: this.state.operator,
+				samples: this.state.samples,
+				test: this.props.test,
+				attributes: this.state.attributes
+			}).then(res => {
+				this.refs.submitButton.setState({
+					resultMessage: res.data.message
+				});
+				if (res.data.pass) {
+					this.setState({
+						passedSamples: false,
+						passedAttributes: false,
+						attributes: this.props.attributes,
+						samples: Array(this.props.samplesLength).fill('')
+					});
 
-		// this.refs.submitButton.setState({
-		// 	loading: false
-		// });
+					ReactDOM.findDOMNode(this.refs['sample1']).focus();
+				}
+			}).catch( _ => {
+				alert('Connection Timed Out');
+			});
+		}
+
+		this.refs.submitButton.setState({
+			loading: false
+		});
 	}
 
 	render(){
@@ -189,7 +189,7 @@ export default class Test extends React.Component {
 							name='operator' placeholder='#####' canBlank={false}
 							validationURL={`http://localhost:4000/api/operators/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
-							ref='operator'
+							ref='operator' addToForm={ this.handleValidateOperator }
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -208,8 +208,10 @@ export default class Test extends React.Component {
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-										validationURL={`http://localhost:4000/api/samples/`}
-										ref= {`sample${ idx + 1 }`}
+										validationURL={`http://localhost:4000/api/samples/${this.props.name}/`}
+										ref= {`sample${ idx + 1 }`} validator={
+											event => this.handleValidateSample(this.refs[`sample${ idx + 1}`].state.input, idx)
+										}
 									/>
 								))
 							}
@@ -220,11 +222,11 @@ export default class Test extends React.Component {
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
 							type='submit'
-							// disabled={
-							// 	!(this.state.passedAttributes && 
-							// 	this.state.passedOperator && 
-							// 	this.state.passedSamples)
-							// } 
+							disabled={
+								!(this.state.passedAttributes && 
+								this.state.passedOperator && 
+								this.state.passedSamples)
+							} 
 							onClick={ this.handleSubmit }
 						/>
 					</form>
