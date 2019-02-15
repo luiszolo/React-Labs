@@ -39,7 +39,8 @@ export default class ChemistryTest extends React.Component{
                     validSample: false,
                 })
             }else{
-                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Chemistry Test`).then(res => {
+                axios.get(`http://10.2.1.94:4000/api/samples/${sample}/Chemistry Test`)
+                .then(res => {
                     if (res.data.message) {
                         this.setState({
                             messageSample:res.data.message,
@@ -51,7 +52,12 @@ export default class ChemistryTest extends React.Component{
                             validSample: true,
                         })
                     }
-                })
+                })		.catch( () => {
+                    alert('Conection Timed Out');
+                    this.setState({
+                        loading: false,
+                        validSample: false,
+                    });})
             }
         }   
     }
@@ -74,7 +80,12 @@ export default class ChemistryTest extends React.Component{
                         validOp: true,
                     })
                 }
-            })
+            })		.catch( () => {
+                alert('Conection Timed Out');
+                this.setState({
+                    loading: false,
+                    validSample: false,
+                });})
         }else if(operator===''){
             this.setState({
                 messageOp: 'Field can\'t be blank', //that's racist

@@ -82,7 +82,13 @@ export default class ElectricityTest extends React.Component{
                             }
                         })
                     }
-                })
+                })		.catch( () => {
+                    alert('Conection Timed Out');
+                    this.setState({
+                        loading: false,
+                        validSample: false,
+                    });
+                });
                 this.setState({
                     validSample: true,
                 })
@@ -144,7 +150,12 @@ export default class ElectricityTest extends React.Component{
                         validOp: true,
                     })
                 }
-            })
+            })		.catch( () => {
+                alert('Conection Timed Out');
+                this.setState({
+                    loading: false,
+                    validSample: false,
+                });})
         }else if(operator===''){
             this.setState({
                 messageOp: 'Field can\'t be blank', //that's racist
