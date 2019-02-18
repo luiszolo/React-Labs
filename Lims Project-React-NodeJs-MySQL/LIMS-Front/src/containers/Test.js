@@ -82,16 +82,18 @@ export default class Test extends React.Component {
 		const operator = this.refs['operator'].state;
 		this.setState({
 			passedOperator: (operator.passRegex && operator.passValidation),
-			operator: operator
+			operator: operator.input
 		});
+		console.log(this.state.passedAttributes, this.state.passedOperator, this.state.passedSamples);
 	}
 
 	handleValidateSample(sample, idx){
-		if (sample.state.input === '') this.handleAppendSamplesArray('', idx);
-		else this.handleAppendSamplesArray(sample.state.input, idx);
+		console.log(sample)
 		this.setState({
-			passedSamples: (sample.state.passRegex && sample.state.passValidation)
+			passedSamples: (sample.passRegex && sample.passValidation)
 		});
+		if (sample.input === '') this.handleAppendSamplesArray('', idx);
+		else this.handleAppendSamplesArray(sample.input, idx);
 	}
 
 	handleValidateForm(){
@@ -107,8 +109,9 @@ export default class Test extends React.Component {
 		counter = 0;
 		for (counter; counter < this.props.samplesLength; counter += 1) {
 			const sample = this.refs[`sample${counter + 1}`];
-			if (sample) { 
-				this.handleValidateSample(sample, counter);
+			if (sample.state.input !== '') { 
+				this.handleValidateSample(sample.state, counter);
+				console.log(this.state.passedSamples)
 			} else continue;
 		}
 	}
@@ -122,7 +125,7 @@ export default class Test extends React.Component {
 			loading: true
 		});
 		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
-			Axios.post(`http://localhost:4000/api/test-forms-add`, {
+			Axios.post(`http://localhost:4000/api/test-forms/add`, {
 				operator: this.state.operator,
 				samples: this.state.samples,
 				test: this.props.test,
@@ -174,7 +177,7 @@ export default class Test extends React.Component {
 		}
 		
 		return(
-			<div className='content row justify-content-center'>
+			<div className='content row justify-content-center test-component'>
 				<div className='col-lg-4 col-sm-12 m-4'>
 					<h2 className='text-center'>{ name }</h2>
 				</div>
@@ -211,7 +214,8 @@ export default class Test extends React.Component {
 										validationURL={`http://localhost:4000/api/samples/${this.props.name}/`}
 										ref= {`sample${ idx + 1 }`} validator={
 											event => this.handleValidateSample(this.refs[`sample${ idx + 1}`].state.input, idx)
-										}
+										} warningLabels='col-md-12 col-sm-12 col-lg-10 col-xl-10'
+										addToForm={ this.handleValidateForm }
 									/>
 								))
 							}

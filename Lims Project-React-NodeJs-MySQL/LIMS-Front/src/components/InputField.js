@@ -25,12 +25,10 @@ export default class InputField extends React.Component {
 	}
 
 	handleRegex() {
-		console.log(this.state.input)
 		let regex = this.props.regex;
 		if (typeof(this.props.regex) == 'string') {
 			regex = new RegExp(this.props.regex, 'i');
 		}
-		console.log('Regex test', regex.test(this.state.input))
 		if (!regex.test(this.state.input)) {
 			this.setState({
 				passRegex: false
@@ -53,17 +51,14 @@ export default class InputField extends React.Component {
 			this.setState({
 				passRegex: true
 			});
-			console.log('Regex state', this.state.passRegex)
 			return true;
 		}
 	}
 
 	handleValidation(regex){
-		console.log('try to execute adding to form!')
 		if(this.props.addToForm) this.props.addToForm();
 		console.log(regex)
 		if(regex) {
-			console.log('Validate existing Operator or not')
 			Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
 				if (res.data.message) {
 					this.setState({
@@ -83,7 +78,6 @@ export default class InputField extends React.Component {
 					warningText: 'Server connection timed out'
 				});
 			});
-			console.log('pass validation or not!', this.state.passValidation)
 		} else return false;
 	}
 
@@ -97,13 +91,11 @@ export default class InputField extends React.Component {
 	handleMessage(e){
 		console.log(this.state.input)
 		if(this.state.focused === undefined) {
-			console.log('Convert undefined to True')
 			this.setState({
 				focused: true
 			});
 		}
 		else {
-			console.log('Convert negative Focused')
 			this.setState({
 				focused: !this.state.focused
 			});
@@ -114,14 +106,12 @@ export default class InputField extends React.Component {
 				warningText: regex.message
 			});
 		} else if(regex) {
-			console.log('Empty Text')
 			this.setState({
 				passRegex: regex,
 				warningText: ''
 			});
 			if (this.props.validationURL) this.handleValidation(regex);
 		}
-		console.log('Go to validation handler')
 	}
 
 	render() {
@@ -133,6 +123,7 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
+			value,
 			warningCssClassName
 		} = this.props;
 
@@ -147,7 +138,7 @@ export default class InputField extends React.Component {
 				} name={ name } placeholder={ placeholder } required={ required } 
 				onChange={ this.handleUserInput } 
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
-				ref = { name }
+				ref = { name } value={ value }
 				/>
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
 				{ this.state.warningText  }

@@ -43,7 +43,7 @@ export default class SpinnerButton extends React.Component {
 						disabled={ this.state.disabled ? true : false }
 						title={ this.state.disabled ? this.props.titleNoPass : this.props.titlePass }
 						className='btn btn-primary col-md-12 col-sm-6 col-lg-3' onClick={ this.props.onClick }
-						onMouseEnter = { this.handleHover } onMouseLeave = { this.handleHover }>
+						onMouseEnter = { this.handleHover } onMouseLeave = { this.handleHover } onMouseOver = { this.handleHover }>
 						{ 
 							this.state.loading ? (<div className="lds-spinner">
 										<div></div><div></div>
