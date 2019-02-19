@@ -170,7 +170,7 @@ export default class Test extends React.Component {
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ `attribute${idx + 1}` } placeholder={ attr.type } canBlank={false}
 						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`); } }
-						ref = { `attribute${idx + 1}` }
+						ref = { `attribute${idx + 1}` } warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 					/>
 				);
 			});
@@ -193,6 +193,7 @@ export default class Test extends React.Component {
 							validationURL={`http://localhost:4000/api/operators/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ this.handleValidateOperator }
+							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -214,7 +215,7 @@ export default class Test extends React.Component {
 										validationURL={`http://localhost:4000/api/samples/${this.props.name}/`}
 										ref= {`sample${ idx + 1 }`} validator={
 											event => this.handleValidateSample(this.refs[`sample${ idx + 1}`].state.input, idx)
-										} warningLabels='col-md-12 col-sm-12 col-lg-10 col-xl-10'
+										} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ this.handleValidateForm }
 									/>
 								))
