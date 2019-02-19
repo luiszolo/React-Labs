@@ -29,7 +29,6 @@ export default class Test extends React.Component {
 	}
 
 	componentWillMount(){
-		console.log(this.props.attributes)
 		if (this.props.attributes.length > 0) {
 			this.setState({
 				attributes: Array(this.props.attributes.length).fill({}),
@@ -84,16 +83,20 @@ export default class Test extends React.Component {
 			passedOperator: (operator.passRegex && operator.passValidation),
 			operator: operator.input
 		});
-		console.log(this.state.passedAttributes, this.state.passedOperator, this.state.passedSamples);
 	}
 
 	handleValidateSample(sample, idx){
-		console.log(sample)
 		this.setState({
 			passedSamples: (sample.passRegex && sample.passValidation)
 		});
 		if (sample.input === '') this.handleAppendSamplesArray('', idx);
 		else this.handleAppendSamplesArray(sample.input, idx);
+
+		if(this.state.passedSamples) {
+			this.refs[`sample${idx + 2}`].setState({
+				prevPassed: true
+			});
+		}
 	}
 
 	handleValidateForm(){
@@ -128,7 +131,7 @@ export default class Test extends React.Component {
 			Axios.post(`http://localhost:4000/api/test-forms/add`, {
 				operator: this.state.operator,
 				samples: this.state.samples,
-				test: this.props.test,
+				test: this.props.name,
 				attributes: this.state.attributes
 			}).then(res => {
 				this.refs.submitButton.setState({
@@ -160,7 +163,6 @@ export default class Test extends React.Component {
 		} = this.props;
 		let attributeDisplay = undefined;
 		if (this.props.attributes.length > 0 ){
-			console.log(this.props.attributes)
 			attributeDisplay = this.props.attributes.map((attr, idx )=> {
 				return(
 					<InputField 
@@ -170,7 +172,8 @@ export default class Test extends React.Component {
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ `attribute${idx + 1}` } placeholder={ attr.type } canBlank={false}
 						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`); } }
-						ref = { `attribute${idx + 1}` } warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
+						ref = { `attribute${idx + 1}` }  prevPassed={ true }
+						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 					/>
 				);
 			});
@@ -194,6 +197,7 @@ export default class Test extends React.Component {
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ this.handleValidateOperator }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
+							prevPassed={ true }
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -216,7 +220,13 @@ export default class Test extends React.Component {
 										ref= {`sample${ idx + 1 }`} validator={
 											event => this.handleValidateSample(this.refs[`sample${ idx + 1}`].state.input, idx)
 										} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
-										addToForm={ this.handleValidateForm }
+										addToForm={ this.handleValidateForm } 
+										prevPassed={ (idx === 0 ? (_) => {
+											this.refs[`sample${ idx + 1}`].setState({
+												prevPassed: !this.refs[`sample${ idx + 1}`].state.prevPassed
+											});
+											return this.refs[`sample${ idx + 1}`].state.prevPassed;
+										} : false) }
 									/>
 								))
 							}

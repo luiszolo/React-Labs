@@ -10,6 +10,7 @@ export default class InputField extends React.Component {
 			focused: undefined,
 			passRegex: undefined,
 			passValidation: undefined,
+			prevPassed: undefined,
 			warningText: null
 		};
 		this.handleMessage = this.handleMessage.bind(this);
@@ -19,8 +20,10 @@ export default class InputField extends React.Component {
 	}
 
 	componentWillMount() {
+		let aux = (this.props.prevPassed)
 		this.setState({
-			blank: this.props.canBlank
+			blank: this.props.canBlank,
+			prevPassed: aux
 		});
 	}
 
@@ -57,7 +60,6 @@ export default class InputField extends React.Component {
 
 	handleValidation(regex){
 		if(this.props.addToForm) this.props.addToForm();
-		console.log(regex)
 		if(regex) {
 			Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
 				if (res.data.message) {
@@ -89,7 +91,6 @@ export default class InputField extends React.Component {
 	}
 
 	handleMessage(e){
-		console.log(this.state.input)
 		if(this.state.focused === undefined) {
 			this.setState({
 				focused: true
@@ -110,7 +111,11 @@ export default class InputField extends React.Component {
 				passRegex: regex,
 				warningText: ''
 			});
-			if (this.props.validationURL) this.handleValidation(regex);
+			if (this.props.validationURL && this.state.input !== '') this.handleValidation(regex);
+		}
+
+		if(this.state.warningText === '') {
+			
 		}
 	}
 
@@ -138,7 +143,7 @@ export default class InputField extends React.Component {
 				} name={ name } placeholder={ placeholder } required={ required } 
 				onChange={ this.handleUserInput } 
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
-				ref = { name } value={ value }
+				ref = { name } value={ value } disabled={ !this.state.prevPassed }
 				/>
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
 				{ this.state.warningText  }
