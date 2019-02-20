@@ -20,7 +20,7 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        fetch('http://localhost:4000/api/tests/?actived=true')
+        fetch('http://10.2.1.94:4000/api/tests/?actived=true')
             .then(res => res.json()) 
             .then(data=> this.setState({ //Saving the tests in 'tests' state
                 tests: data.Tests
