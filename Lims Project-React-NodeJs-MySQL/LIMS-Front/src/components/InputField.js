@@ -59,7 +59,6 @@ export default class InputField extends React.Component {
 	}
 
 	handleValidation(regex){
-		if(this.props.addToForm) this.props.addToForm();
 		if(regex) {
 			Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
 				if (res.data.message) {
@@ -72,6 +71,7 @@ export default class InputField extends React.Component {
 						passValidation: true,
 						warningText: ''
 					});
+					if(this.props.addToForm) this.props.addToForm();
 				}
 			}).catch( _ => {
 				console.log(_);
@@ -109,13 +109,8 @@ export default class InputField extends React.Component {
 		} else if(regex) {
 			this.setState({
 				passRegex: regex,
-				warningText: ''
 			});
 			if (this.props.validationURL && this.state.input !== '') this.handleValidation(regex);
-		}
-
-		if(this.state.warningText === '') {
-			
 		}
 	}
 

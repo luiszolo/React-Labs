@@ -17,6 +17,7 @@ export default class Test extends React.Component {
 			attributes: undefined,
 			samples: undefined,
 			operator:  undefined,
+			ErrorM:"sup",
 		}
 
 		this.handleAppendAttributeArray = this.handleAppendAttributeArray.bind(this);
@@ -53,7 +54,7 @@ export default class Test extends React.Component {
 	}
 
 	handleAppendAttributeArray(attr, value,  pos) {
-		console.log(attr)
+		//console.log(attr)
 		if (attr === '') return;
 		let attrs = this.state.attributes.map((s, i) => {
 			if(pos === i) {
@@ -87,13 +88,23 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(sample, idx){
+		this.state.samples.forEach((value, i)=>{
+			if(sample.input === value  && idx >= i && idx !== i){
+				this.refs[`sample${idx + 1}`].setState({
+					warningText: 'This sample is repeat'
+				})
+			}
+		})
+
+
+
 		this.setState({
 			passedSamples: (sample.passRegex && sample.passValidation)
 		});
-		if (sample.input === '') this.handleAppendSamplesArray('', idx);
+		if(sample.input === '') this.handleAppendSamplesArray('', idx);
 		else this.handleAppendSamplesArray(sample.input, idx);
 
-		if(this.state.passedSamples) {
+		if(this.state.passedSamples && this.refs[`sample${idx + 1}`].state.warningText === '') {
 			this.refs[`sample${idx + 2}`].setState({
 				prevPassed: true
 			});
@@ -115,7 +126,7 @@ export default class Test extends React.Component {
 			const sample = this.refs[`sample${counter + 1}`];
 			if (sample.state.input !== '') { 
 				this.handleValidateSample(sample.state, counter);
-				console.log(this.state.passedSamples)
+				//console.log(this.state.passedSamples)
 			} else continue;
 		}
 	}
@@ -160,7 +171,8 @@ export default class Test extends React.Component {
 
 	render(){
 		const {
-			name
+			name,
+			ErrorM,
 		} = this.props;
 		let attributeDisplay = undefined;
 		if (this.props.attributes.length > 0 ){
@@ -228,7 +240,9 @@ export default class Test extends React.Component {
 											});
 											return this.refs[`sample${ idx + 1}`].state.prevPassed;
 										} : false) }
+										
 									/>
+									
 								))
 							}
 						</div>
