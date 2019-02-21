@@ -53,6 +53,7 @@ export default class Test extends React.Component {
 	}
 
 	handleAppendAttributeArray(attr, value,  pos) {
+		console.log(attr)
 		if (attr === '') return;
 		let attrs = this.state.attributes.map((s, i) => {
 			if(pos === i) {
@@ -170,8 +171,8 @@ export default class Test extends React.Component {
 						displayCssClassName='justify-content-center form-inline mb-3'
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-						name={ `attribute${idx + 1}` } placeholder={ attr.type } canBlank={false}
-						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`); } }
+						name={ attr.name } placeholder={ attr.type } canBlank={false}
+						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`, idx); } }
 						ref = { `attribute${idx + 1}` }  prevPassed={ true }
 						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 					/>
