@@ -72,7 +72,7 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateAttribute(attribute, idx) {
-		if(attribute.state.input === '') this.handleAppendAttributeArray('', idx);
+		if(attribute.state.input === '') this.handleAppendAttributeArray('',undefined, idx);
 		else this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
 		this.setState({
 			passedAttributes: (attribute.state.passRegex && attribute.state.passValidation)
@@ -184,7 +184,7 @@ export default class Test extends React.Component {
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ attr.name } placeholder={ attr.type } canBlank={false}
-						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(`attribute${ idx + 1}`, idx); } }
+						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(this.refs[`attribute${idx + 1}`], idx); } }
 						ref = { `attribute${idx + 1}` }  prevPassed={ true }
 						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 					/>
