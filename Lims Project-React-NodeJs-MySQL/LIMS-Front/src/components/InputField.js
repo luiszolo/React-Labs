@@ -101,7 +101,9 @@ export default class InputField extends React.Component {
 				focused: !this.state.focused
 			});
 		}
-		let regex = this.handleRegex()
+		
+		let regex = this.handleRegex();
+
 		if (regex.message && this.state.focused === true){
 			this.setState({
 				warningText: regex.message
@@ -111,6 +113,15 @@ export default class InputField extends React.Component {
 				passRegex: regex,
 			});
 			if (this.props.validationURL && this.state.input !== '') this.handleValidation(regex);
+		} 
+
+		if(this.state.input === '' && this.props.canBlank === true) {
+			this.setState({
+				passRegex: undefined,
+				passValidation:undefined,
+				warningText: ''
+			});
+			if(this.props.addToForm) this.props.addToForm();
 		}
 	}
 

@@ -14,10 +14,10 @@ export default class Test extends React.Component {
 			passedOperator: undefined,
 			passedAttributes: undefined,
 			passedSamples: undefined,
+			passedRepeatedSample: undefined,
 			attributes: undefined,
 			samples: undefined,
-			operator:  undefined,
-			ErrorM:"sup",
+			operator:  undefined
 		}
 
 		this.handleAppendAttributeArray = this.handleAppendAttributeArray.bind(this);
@@ -88,31 +88,47 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(sample, idx){
+		if(sample.input === '') {
+			this.handleAppendSamplesArray('', idx);
+			return;
+		}
+		this.setState({
+			passedRepeatedSample: true
+		});
+		// Repeated samples!
 		this.state.samples.forEach((value, i)=>{
-			if(sample.input === value  && idx >= i && idx !== i){
+			if(sample.input === value && sample.input !== ''  && idx >= i && idx !== i){
 				this.refs[`sample${idx + 1}`].setState({
 					warningText: 'This sample is repeat'
-				})
+				});
+				this.setState({
+					passedRepeatedSample: false
+				});
 			}
-		})
-
-
-
-		this.setState({
-			passedSamples: (sample.passRegex && sample.passValidation)
 		});
+		if(this.state.passedRepeatedSample === false) return;
+		// Validate Regex samples
+		this.setState({
+			passedSamples: (sample.passRegex),
+			passedRepeatedSample: true
+		});
+
+		// Set samples in json body
 		if(sample.input === '') this.handleAppendSamplesArray('', idx);
 		else this.handleAppendSamplesArray(sample.input, idx);
 
+		// Activate next sample
 		if(this.state.passedSamples && this.refs[`sample${idx + 1}`].state.warningText === '') {
 			this.refs[`sample${idx + 2}`].setState({
 				prevPassed: true
+			});
+			this.setState({
+				passedSamples: (this.state.passedSamples && sample.passValidation)
 			});
 		}
 	}
 
 	handleValidateForm(){
-		this.handleValidateOperator();
 		let counter = 0;
 		for (counter; counter < this.props.attributes.length; counter += 1) {
 			const attr = this.refs[`attribute${counter + 1}`];
@@ -124,18 +140,15 @@ export default class Test extends React.Component {
 		counter = 0;
 		for (counter; counter < this.props.samplesLength; counter += 1) {
 			const sample = this.refs[`sample${counter + 1}`];
-			if (sample.state.input !== '') { 
-				this.handleValidateSample(sample.state, counter);
-				//console.log(this.state.passedSamples)
-			} else continue;
+			this.handleValidateSample(sample.state, counter);
 		}
+
+		console.log(this.state.samples)
 	}
 
 	handleSubmit(e) {
 		e.preventDefault();
 		
-		this.handleValidateForm();
-
 		this.refs.submitButton.setState({
 			loading: true
 		});
@@ -184,8 +197,7 @@ export default class Test extends React.Component {
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 						name={ attr.name } placeholder={ attr.type } canBlank={false}
-						regex={ attr.structure } validator={ _ => { this.handleValidateAttribute(this.refs[`attribute${idx + 1}`], idx); } }
-						ref = { `attribute${idx + 1}` }  prevPassed={ true }
+						regex={ attr.structure } ref = { `attribute${idx + 1}` }  prevPassed={ true }
 						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 					/>
 				);
@@ -210,7 +222,7 @@ export default class Test extends React.Component {
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ this.handleValidateOperator }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
-							prevPassed={ true }
+							prevPassed={ true } addToForm={ event => this.handleValidateOperator()}
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -230,9 +242,7 @@ export default class Test extends React.Component {
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
 										validationURL={`http://10.2.1.94:4000/api/samples/${this.props.name}/`}
-										ref= {`sample${ idx + 1 }`} validator={
-											event => this.handleValidateSample(this.refs[`sample${ idx + 1}`].state.input, idx)
-										} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
+										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ this.handleValidateForm } 
 										prevPassed={ (idx === 0 ? (_) => {
 											this.refs[`sample${ idx + 1}`].setState({
@@ -255,7 +265,8 @@ export default class Test extends React.Component {
 							disabled={
 								!(this.state.passedAttributes && 
 								this.state.passedOperator && 
-								this.state.passedSamples)
+								this.state.passedSamples &&
+								this.state.passedRepeatedSample)
 							} 
 							onClick={ this.handleSubmit }
 						/>
