@@ -60,26 +60,34 @@ export default class InputField extends React.Component {
 
 	handleValidation(regex){
 		if(regex) {
-			Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
-				if (res.data.message) {
+			if(this.props.addToForm && !this.props.validationURL) {
+				this.setState({
+					passValidation: true
+				});
+				this.props.addToForm();
+			}
+			else {
+				Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
+					if (res.data.message) {
+						this.setState({
+							passValidation: false,
+							warningText: res.data.message
+						});
+					} else {
+						this.setState({
+							passValidation: true,
+							warningText: ''
+						});
+						if(this.props.addToForm) this.props.addToForm();
+					}
+				}).catch( _ => {
+					console.log(_);
 					this.setState({
 						passValidation: false,
-						warningText: res.data.message
+						warningText: 'Server connection timed out'
 					});
-				} else {
-					this.setState({
-						passValidation: true,
-						warningText: ''
-					});
-					if(this.props.addToForm) this.props.addToForm();
-				}
-			}).catch( _ => {
-				console.log(_);
-				this.setState({
-					passValidation: false,
-					warningText: 'Server connection timed out'
 				});
-			});
+			}
 		} else return false;
 	}
 
@@ -112,7 +120,7 @@ export default class InputField extends React.Component {
 			this.setState({
 				passRegex: regex,
 			});
-			if (this.props.validationURL && this.state.input !== '') this.handleValidation(regex);
+			if (this.state.input !== '') this.handleValidation(regex);
 		} 
 
 		if(this.state.input === '' && this.props.canBlank === true) {

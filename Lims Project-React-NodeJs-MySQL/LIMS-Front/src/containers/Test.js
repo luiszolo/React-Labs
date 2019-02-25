@@ -26,6 +26,7 @@ export default class Test extends React.Component {
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
+		this.handleClearFormData = this.handleClearFormData.bind(this);
 	}
 
 	componentWillMount(){
@@ -41,6 +42,24 @@ export default class Test extends React.Component {
 				samples: Array(this.props.samplesLength).fill(''),
 				passedAttributes: true
 			});
+		}
+	}
+
+	handleClearFormData(sample, idx){
+		if( idx < this.props.samplesLength) {
+			sample.setState({
+				input: undefined,
+				warningText: undefined,
+				prevPassed: false,
+				passValidation: undefined,
+				passRegex: undefined,
+			});
+			if( idx === 1) {
+				this.setState({
+					passedSamples: false,
+					passedRepeatedSample: false
+				});
+			}
 		}
 	}
 
@@ -73,8 +92,10 @@ export default class Test extends React.Component {
 	handleValidateAttribute(attribute, idx) {
 		if(attribute.state.input === '') this.handleAppendAttributeArray('',undefined, idx);
 		else this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
+
+		console.log(attribute.state, idx)
 		this.setState({
-			passedAttributes: (attribute.state.passRegex && attribute.state.passValidation)
+			passedAttributes: (attribute.state.passRegex && (attribute.state.passValidation || attribute.state.passValidation === undefined))
 		});
 	}
 
@@ -88,7 +109,7 @@ export default class Test extends React.Component {
 
 	handleValidateSample(sample, idx){
 		if(sample.input === '') {
-			this.handleAppendSamplesArray('', idx);
+			// this.handleAppendSamplesArray('', idx);
 			return;
 		}
 		this.setState({
@@ -98,11 +119,12 @@ export default class Test extends React.Component {
 		this.state.samples.forEach((value, i)=>{
 			if(sample.input === value && sample.input !== ''  && idx >= i && idx !== i){
 				this.refs[`sample${idx + 1}`].setState({
-					warningText: 'This sample is repeat'
+					warningText: 'This sample is repeat',
+					passValidation: false,
 				});
-				this.setState({
-					passedRepeatedSample: false
-				});
+				this.refs[`sample${idx + 2}`].setState({
+					prevPassed: false
+				})
 			}
 		});
 		if(this.state.passedRepeatedSample === false) return;
@@ -121,10 +143,15 @@ export default class Test extends React.Component {
 			this.refs[`sample${idx + 2}`].setState({
 				prevPassed: true
 			});
-			this.setState({
-				passedSamples: (this.state.passedSamples && sample.passValidation)
+		} else {
+			this.refs[`sample${idx + 2}`].setState({
+				prevPassed: false
 			});
 		}
+
+		this.setState({
+			passedSamples: (this.state.passedSamples && sample.passValidation)
+		});
 	}
 
 	handleSubmit(e) {
