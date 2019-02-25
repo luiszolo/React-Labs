@@ -24,7 +24,6 @@ export default class Test extends React.Component {
 		this.handleAppendSamplesArray = this.handleAppendSamplesArray.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
-		this.handleValidateForm = this.handleValidateForm.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 	}
@@ -128,24 +127,6 @@ export default class Test extends React.Component {
 		}
 	}
 
-	handleValidateForm(){
-		let counter = 0;
-		for (counter; counter < this.props.attributes.length; counter += 1) {
-			const attr = this.refs[`attribute${counter + 1}`];
-			if (attr) {
-				this.handleValidateAttribute(attr, counter);
-			} else continue;
-		}
-
-		counter = 0;
-		for (counter; counter < this.props.samplesLength; counter += 1) {
-			const sample = this.refs[`sample${counter + 1}`];
-			this.handleValidateSample(sample.state, counter);
-		}
-
-		console.log(this.state.samples)
-	}
-
 	handleSubmit(e) {
 		e.preventDefault();
 		
@@ -199,6 +180,7 @@ export default class Test extends React.Component {
 						name={ attr.name } placeholder={ attr.type } canBlank={false}
 						regex={ attr.structure } ref = { `attribute${idx + 1}` }  prevPassed={ true }
 						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
+						addToForm = { event => this.handleValidateAttribute(this.refs[`attribute${idx + 1}`], idx)}
 					/>
 				);
 			});
@@ -222,7 +204,7 @@ export default class Test extends React.Component {
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ this.handleValidateOperator }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
-							prevPassed={ true } addToForm={ event => this.handleValidateOperator()}
+							prevPassed={ true }
 						/>
 						<div>
 							{/* Attributes Fields */}
@@ -239,11 +221,11 @@ export default class Test extends React.Component {
 										displayCssClassName='justify-content-center form-inline mb-3'
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-										name={`sample${ idx + 1}`} placeholder='SA-##-#####' required={true}
+										name={`sample${ idx + 1}`} placeholder='SA-##-#####'
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
 										validationURL={`http://10.2.1.94:4000/api/samples/${this.props.name}/`}
 										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
-										addToForm={ this.handleValidateForm } 
+										addToForm={ event => this.handleValidateSample(this.refs[`sample${idx + 1}`].state, idx) } 
 										prevPassed={ (idx === 0 ? (_) => {
 											this.refs[`sample${ idx + 1}`].setState({
 												prevPassed: !this.refs[`sample${ idx + 1}`].state.prevPassed
