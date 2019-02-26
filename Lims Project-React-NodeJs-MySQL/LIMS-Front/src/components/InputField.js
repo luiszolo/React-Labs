@@ -158,7 +158,7 @@ export default class InputField extends React.Component {
 				} name={ name } placeholder={ placeholder } required={ required } 
 				onChange={ this.handleUserInput } 
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
-				ref = { name } value={ value } disabled={ !this.state.prevPassed }
+				ref = { name } value={ this.state.input } disabled={ !this.state.prevPassed }
 				/>
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
 				{ this.state.warningText  }
