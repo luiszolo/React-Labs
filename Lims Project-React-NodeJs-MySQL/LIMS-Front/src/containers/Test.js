@@ -72,7 +72,6 @@ export default class Test extends React.Component {
 	}
 
 	handleAppendAttributeArray(attr, value,  pos) {
-		//console.log(attr)
 		if (attr === '') return;
 		let attrs = this.state.attributes.map((s, i) => {
 			if(pos === i) {
@@ -109,7 +108,7 @@ export default class Test extends React.Component {
 
 	handleValidateSample(sample, idx){
 		if(sample.input === '') {
-			// this.handleAppendSamplesArray('', idx);
+			this.handleAppendSamplesArray('', idx);
 			return;
 		}
 		this.setState({
