@@ -90,13 +90,18 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateAttribute(attribute, idx) {
-		if(attribute.state.input === '') this.handleAppendAttributeArray('',undefined, idx);
-		else this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
-
-		console.log(attribute.state, idx)
-		this.setState({
-			passedAttributes: (attribute.state.passRegex && (attribute.state.passValidation || attribute.state.passValidation === undefined))
-		});
+		if(attribute.state.input === '') {
+			this.handleAppendAttributeArray('',undefined, idx);
+			this.setState({
+				passedAttributes: false
+			});
+		}
+		else {
+			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
+			this.setState({
+				passedAttributes: true
+			});
+		}
 	}
 
 	handleValidateOperator(){

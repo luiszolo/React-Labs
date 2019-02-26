@@ -116,14 +116,15 @@ export default class InputField extends React.Component {
 			this.setState({
 				warningText: regex.message
 			});
-		} else if(regex) {
+			return;
+		} else if(regex && this.state.focused === true) {
 			this.setState({
 				passRegex: regex,
+				warningText: ''
 			});
 			if (this.state.input !== '') this.handleValidation(regex);
 		} 
-
-		if(this.state.input === '' && this.props.canBlank === true) {
+		if(this.state.input === '' && this.props.canBlank === true && this.state.focused === true) {
 			this.setState({
 				passRegex: undefined,
 				passValidation:undefined,
