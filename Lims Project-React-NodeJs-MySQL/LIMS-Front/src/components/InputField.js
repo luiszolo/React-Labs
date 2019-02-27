@@ -116,6 +116,7 @@ export default class InputField extends React.Component {
 			this.setState({
 				warningText: regex.message
 			});
+			if(this.props.addToForm) this.props.addToForm();
 			return;
 		} else if(regex && this.state.focused === true) {
 			this.setState({

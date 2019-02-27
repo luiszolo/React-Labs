@@ -60,7 +60,7 @@ export default class Test extends React.Component {
 				passedSamples: false,
 				passedRepeatedSample: true
 			});
-			this.refs[`sample${idx + 2}`].setState({
+			this.refs[`sample${idx + 1}`].setState({
 				input: '',
 				warningText: undefined,
 				prevPassed: prevPassed,
@@ -97,16 +97,23 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateAttribute(attribute, idx) {
-		if(attribute.state.input === '') {
-			this.handleAppendAttributeArray('',undefined, idx);
+		console.log(this.refs[`attribute${idx + 2}`])
+		if (this.refs[`attribute${idx + 2}`] === undefined ||  (this.refs[`attribute${idx + 2}`].state.input === '')) {
+			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
 			this.setState({
 				passedAttributes: false
 			});
-		}
-		else {
-			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
+			if (attribute.state.input !== '' && 
+				this.refs[`attribute${idx + 2}`] === undefined && 
+				this.refs[`attribute${idx}`].state.input !== '') {
+				this.setState({
+					passedAttributes: true
+				});
+			}
+		} else {
+			this.handleAppendAttributeArray('', undefined, idx);
 			this.setState({
-				passedAttributes: true
+				passedAttributes: false
 			});
 		}
 	}
@@ -181,7 +188,8 @@ export default class Test extends React.Component {
 				attributes: this.state.attributes
 			}).then(res => {
 				this.refs.submitButton.setState({
-					resultMessage: res.data.message
+					resultMessage: res.data.message,
+					pass: res.data.pass
 				});
 				if (res.data.pass) {
 					this.setState({
@@ -190,6 +198,7 @@ export default class Test extends React.Component {
 						attributes: this.props.attributes,
 						samples: Array(this.props.samplesLength).fill('')
 					});
+					this.handleClearFormData(0, true);
 
 					ReactDOM.findDOMNode(this.refs['sample1']).focus();
 				}

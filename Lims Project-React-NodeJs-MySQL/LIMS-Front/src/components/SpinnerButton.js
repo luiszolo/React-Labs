@@ -7,7 +7,8 @@ export default class SpinnerButton extends React.Component {
 		this.state = {
 			disabled: undefined,
 			loading: undefined,
-			resultMessage: undefined
+			resultMessage: undefined,
+			pass: undefined
 		};
 	}
 
@@ -18,10 +19,19 @@ export default class SpinnerButton extends React.Component {
 	}
 
 	render(){
+		let cssClasses = 'col-lg-3 col-sm-10 text-center col-md-6 mt-3'
+		
+		if (this.state.pass) {
+			cssClasses = cssClasses.concat(cssClasses, ' text-success');
+		} else {
+			cssClasses = cssClasses.replace(' text-success', '');
+		}
+
+
 		return (
 			<div>
 				<div className='row justify-content-center'>
-					<label className='col-lg-3 col-sm-10 text-center col-md-6  mt-3'>
+					<label className={cssClasses}>
 						{ this.state.resultMessage !== undefined ? this.state.resultMessage : ''}
 					</label>
 				</div>
