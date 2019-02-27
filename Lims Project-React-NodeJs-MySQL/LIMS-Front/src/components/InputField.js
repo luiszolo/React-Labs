@@ -111,7 +111,7 @@ export default class InputField extends React.Component {
 		}
 		
 		let regex = this.handleRegex();
-
+		
 		if (regex.message && this.state.focused === true){
 			this.setState({
 				warningText: regex.message
@@ -143,7 +143,6 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
-			value,
 			warningCssClassName
 		} = this.props;
 

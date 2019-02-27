@@ -6,23 +6,14 @@ export default class SpinnerButton extends React.Component {
 
 		this.state = {
 			disabled: undefined,
-			hover: true,
 			loading: undefined,
 			resultMessage: undefined
 		};
-
-		this.handleHover = this.handleHover.bind(this);
 	}
 
 	componentWillMount(){
 		this.setState({
 			loading: false
-		});
-	}
-
-	handleHover() {
-		this.setState({
-			hover: !this.state.hover
 		});
 	}
 
@@ -40,8 +31,7 @@ export default class SpinnerButton extends React.Component {
 						ref={ this.props.ref}
 						disabled={ this.props.disabled ? true : false }
 						title={ this.props.disabled ? this.props.titleNoPass : this.props.titlePass }
-						className='btn btn-primary col-md-12 col-sm-6 col-lg-3' onClick={ this.props.onClick }
-						onMouseEnter = { this.handleHover } onMouseLeave = { this.handleHover } onMouseOver = { this.handleHover }>
+						className='btn btn-primary col-md-12 col-sm-6 col-lg-3' onClick={ this.props.onClick }>
 						{ 
 							this.state.loading ? (<div className="lds-spinner">
 										<div></div><div></div>

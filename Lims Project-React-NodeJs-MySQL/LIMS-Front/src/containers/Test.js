@@ -46,7 +46,7 @@ export default class Test extends React.Component {
 	}
 
 	handleClearFormData(idx, prevPassed=true){
-		if( idx < this.props.samplesLength && idx != 0) {
+		if( idx < this.props.samplesLength && idx !== 0) {
 			this.refs[`sample${idx + 1}`].setState({
 				input: '',
 				warningText: undefined,
@@ -55,12 +55,19 @@ export default class Test extends React.Component {
 				passRegex: undefined,
 			});
 			this.handleClearFormData(idx + 1, false);
-			if( idx === 0) {
-				this.setState({
-					passedSamples: false,
-					passedRepeatedSample: true
-				});
-			}
+		} else if( idx === 0) {
+			this.setState({
+				passedSamples: false,
+				passedRepeatedSample: true
+			});
+			this.refs[`sample${idx + 2}`].setState({
+				input: '',
+				warningText: undefined,
+				prevPassed: prevPassed,
+				passValidation: undefined,
+				passRegex: undefined,
+			});
+			this.handleClearFormData(idx + 1, false);
 		}
 	}
 
@@ -115,7 +122,7 @@ export default class Test extends React.Component {
 	handleValidateSample(sample, idx){
 		if(sample.input === '') {
 			this.handleAppendSamplesArray('', idx);
-			this.handleClearFormData(idx)
+			this.handleClearFormData(idx, true)
 			return;
 		}
 		this.setState({
