@@ -97,15 +97,14 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateAttribute(attribute, idx) {
-		console.log(this.refs[`attribute${idx + 2}`])
+		
 		if (this.refs[`attribute${idx + 2}`] === undefined ||  (this.refs[`attribute${idx + 2}`].state.input === '')) {
 			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
 			this.setState({
 				passedAttributes: false
 			});
-			if (attribute.state.input !== '' && 
-				this.refs[`attribute${idx + 2}`] === undefined && 
-				this.refs[`attribute${idx}`].state.input !== '') {
+			if (this.refs[`attribute${idx + 2}`] === undefined && 
+				attribute.state.input !== '') {
 				this.setState({
 					passedAttributes: true
 				});
