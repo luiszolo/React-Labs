@@ -117,11 +117,17 @@ export default class Test extends React.Component {
 		}
 	}
 
-	handleValidateOperator(){
-		const operator = this.refs['operator'].state;
+	handleValidateOperator(operator){
+		if (operator.state.input === ''){
+			this.setState({
+				passedOperator: false,
+				operator: operator.state.input
+			});
+			return;
+		}
 		this.setState({
-			passedOperator: (operator.passRegex && operator.passValidation),
-			operator: operator.input
+			passedOperator: (operator.state.passRegex && operator.state.passValidation),
+			operator: operator.state.input
 		});
 	}
 
@@ -129,6 +135,12 @@ export default class Test extends React.Component {
 		if(sample.input === '') {
 			this.handleAppendSamplesArray('', idx);
 			this.handleClearFormData(idx, true)
+			if (idx !== 0) {
+				this.setState({
+					passedSamples: true,
+					passedRepeatedSample: true
+				});
+			}
 			return;
 		}
 		this.setState({
@@ -165,9 +177,11 @@ export default class Test extends React.Component {
 				});
 			}
 		} else {
-			this.refs[`sample${idx + 2}`].setState({
-				prevPassed: false
-			});
+			if (this.refs[`sample${idx + 2}`]) {
+				this.refs[`sample${idx + 2}`].setState({
+					prevPassed: false
+				});
+			}
 		}
 
 		this.setState({
@@ -248,7 +262,7 @@ export default class Test extends React.Component {
 							name='operator' placeholder='#####' canBlank={false}
 							validationURL={`http://10.2.1.94:4000/api/operators/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
-							ref='operator' addToForm={ this.handleValidateOperator }
+							ref='operator' addToForm={ event => this.handleValidateOperator(this.refs['operator']) }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 							prevPassed={ true }
 						/>

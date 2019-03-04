@@ -133,6 +133,7 @@ export default class InputField extends React.Component {
 			});
 			if(this.props.addToForm) this.props.addToForm();
 		}
+		if(this.props.addToForm) this.props.addToForm();
 	}
 
 	render() {
