@@ -159,9 +159,11 @@ export default class Test extends React.Component {
 
 		// Activate next sample
 		if(this.state.passedSamples && this.refs[`sample${idx + 1}`].state.warningText === '') {
-			this.refs[`sample${idx + 2}`].setState({
-				prevPassed: true
-			});
+			if (this.refs[`sample${idx + 2}`]) {
+				this.refs[`sample${idx + 2}`].setState({
+					prevPassed: true
+				});
+			}
 		} else {
 			this.refs[`sample${idx + 2}`].setState({
 				prevPassed: false
@@ -193,17 +195,14 @@ export default class Test extends React.Component {
 				if (res.data.pass) {
 					this.setState({
 						passedSamples: false,
-						passedAttributes: false,
-						attributes: this.props.attributes,
 						samples: Array(this.props.samplesLength).fill('')
 					});
 					this.handleClearFormData(0, true);
-
-					ReactDOM.findDOMNode(this.refs['sample1']).focus();
 				}
 			}).catch( _ => {
 				alert('Connection Timed Out');
 			});
+			ReactDOM.findDOMNode(this.refs[`sample${1}`]).focus();
 		}
 
 		this.refs.submitButton.setState({

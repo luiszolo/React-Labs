@@ -80,8 +80,8 @@ export default class InputField extends React.Component {
 						});
 						if(this.props.addToForm) this.props.addToForm();
 					}
-				}).catch( _ => {
-					console.log(_);
+				}).catch( err => {
+					console.log(err);
 					this.setState({
 						passValidation: false,
 						warningText: 'Server connection timed out'
