@@ -136,6 +136,9 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(sample, idx){
+		this.refs.submitButton.setState({
+			resultMessage: ''
+		})
 		if(sample.input === '') {
 			this.handleAppendSamplesArray('', idx);
 			this.handleClearFormData(idx, true)
@@ -226,9 +229,9 @@ export default class Test extends React.Component {
 		this.refs.submitButton.setState({
 			loading: false
 		});
-		setInterval( this.ref.submitButton.setState({
-			resultMessage: ''
-		}), 2000);
+		// setInterval(()=> this.refs.submitButton.setState({
+		// 	resultMessage: ''
+		// }), 2000);
 	}
 
 	render(){
