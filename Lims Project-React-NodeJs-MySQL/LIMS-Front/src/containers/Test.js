@@ -108,6 +108,10 @@ export default class Test extends React.Component {
 				this.setState({
 					passedAttributes: true
 				});
+			} else {
+				this.setState({
+					passedAttributes: false
+				});
 			}
 		} else {
 			this.handleAppendAttributeArray('', undefined, idx);
@@ -222,6 +226,9 @@ export default class Test extends React.Component {
 		this.refs.submitButton.setState({
 			loading: false
 		});
+		setInterval( this.ref.submitButton.setState({
+			resultMessage: ''
+		}), 2000);
 	}
 
 	render(){
