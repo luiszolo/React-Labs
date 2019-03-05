@@ -229,9 +229,9 @@ export default class Test extends React.Component {
 		this.refs.submitButton.setState({
 			loading: false
 		});
-		// setInterval(()=> this.refs.submitButton.setState({
-		// 	resultMessage: ''
-		// }), 2000);
+		setTimeout(()=> this.refs.submitButton.setState({
+			resultMessage: ''
+		}), 2000);
 	}
 
 	render(){
