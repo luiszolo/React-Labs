@@ -1,10 +1,20 @@
 const pool = require('./../config/database')
 
+async function manipulateData(query, params=null) {
+	const result;
+	await pool.query(query, params, (err, rows) => {
+		if (err) result = false;
+		else result = true;
+	});
+
+	return result;
+}
+
 async function isExists(query) {
 	const obj = await pool.query(query);
 	if(obj[0] == undefined) return false;
 	return {
-		result: obj[0],
+		result: obj,
 		pass: true
 	}
 }
@@ -39,5 +49,6 @@ async function findBy(fields, table, conditions=undefined) {
 
 module.exports = {
 	findBy: findBy,
+	manipulateData: manipulateData,
 	isExists: isExists
 };
