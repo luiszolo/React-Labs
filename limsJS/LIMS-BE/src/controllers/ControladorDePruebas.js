@@ -5,53 +5,26 @@ const getDuplication = require('./../middlewares/miscs').getDuplications;
 const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
 
-async function addOperator(req, res) {
-    const newOperator = req.body.operator;
-    if (newOperator.id > 99999) {
+async function addAttribute(req, res) {
+    const newAttribute = req.body.attribute;
+
+    if (await getAttributeByName(req, res) != false) {
         res.status(403).send({
-            message: 'The operator id exceeds the limit'
-        });
-        return;
+            message: 'The attribute is already exists'
+        })
     }
-
-    if (await getOperatorById(req, res) != false) {
-        res.status(403).send({
-            message: 'The operator is already exists'
-        });
-        return;
-    }
-
-    if (!notNumberField(newOperator.name)) {
-        res.status(403).send({
-            message: 'The name can\'t have numbers'
-        });
-        return;
-    }
-
-    const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Operator SET ?`, 
-        [newOperator]
-    );
-    if (insertion == false) {
-        res.status(503).send({
-            message: 'Something is wrong in INSERT method'
-        });
-        return;
-    }
-
-    res.status(200).send({
-        message: 'Insertion completed'
-    });
-    return;
 }
 
-async function getOperatorById(req, res) {
-    const operatorId = req.body.operator.id;
-    const validateExistence = await dbInteract
-        .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
-    if (validateExistence.pass) {
+async function getAttributeByName(req, res) {
+    const options = req.body.options;
+    const attribute = req.body.attribute;
+
+    const validateExistence =  await dbInteract
+        .isExists(`SELECT * FROM Attribute WHERE 
+            name='${attribute.name.toUpperCase()}`);
+    if (validateExistence.pass) { 
         return {
-            operators: validateExistence.result[0]
+            attributes: validateExistence.result[0]
         };
     } else return false;
 }
