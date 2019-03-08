@@ -148,6 +148,15 @@ export default class InputField extends React.Component {
 			warningCssClassName
 		} = this.props;
 
+		let inputClassName = inputCssClassName
+		if(this.state.passRegex || this.state.passValidation) {
+			inputClassName += ' border-success'
+		} else if(this.state.passRegex === undefined && this.state.passValidation === undefined){
+			inputClassName = inputCssClassName
+		} else {
+			inputClassName += ' border-danger'
+		}
+
 		return (
 			<div className={
 					displayCssClassName ? 'row '.concat(displayCssClassName) : 'row'
@@ -155,7 +164,7 @@ export default class InputField extends React.Component {
 			>
 				<label className={ labelCssClassName }> { label } </label>
 				<input type='text' className={ 
-					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
+					inputCssClassName ? 'form-control '.concat(inputClassName) : 'form-control' 
 				} name={ name } placeholder={ placeholder } required={ required } 
 				onChange={ this.handleUserInput } 
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
