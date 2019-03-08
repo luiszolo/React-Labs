@@ -5,7 +5,6 @@ const getDuplication = require('./../middlewares/miscs').getDuplications;
 const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
 
-// Not tested
 async function addOperator(req, res) {
     const newOperator = req.body.operator;
     if (newOperator.id > 99999) {
@@ -14,12 +13,13 @@ async function addOperator(req, res) {
         });
         return;
     }
-    if (getOperatorById(req, res).operators.length === 1) {
+
+    if (await getOperatorById(req, res) != false) {
         res.status(403).send({
             message: 'The operator is already exists'
         });
         return;
-    } else if (getOperatorById(req, res) == false) { }
+    }
 
     if (!notNumberField(newOperator.name)) {
         res.status(403).send({
@@ -42,11 +42,11 @@ async function addOperator(req, res) {
     res.status(200).send({
         message: 'Insertion completed'
     });
+    return;
 }
 
-// Not tested
 async function getOperatorById(req, res) {
-    const operatorId = req.body.operator;
+    const operatorId = req.body.operator.id;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
     if (validateExistence.pass) {
@@ -56,9 +56,20 @@ async function getOperatorById(req, res) {
     } else return false;
 }
 
-// Not tested
 async function getOperatorList(req, res) {
-    const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BT id ASC`);
+    const options = req.body.options;
+    
+    if (options != null) {
+        const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
+        if (operators == false) {
+            res.status(404).send({
+                message: 'Add some operators first!'
+            });
+            return;
+        }
+    }
+
+    const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
     if (operators == false) {
         res.status(404).send({
             message: 'Add some operators first!'
@@ -67,11 +78,10 @@ async function getOperatorList(req, res) {
     }
 
     res.status(200).send({
-        operators = operators.result
+        operators: operators.result
     });
 }
 
-// Not tested
 async function removeOperator(req, res) {
     const operator = req.body.operator
 
@@ -89,7 +99,7 @@ async function removeOperator(req, res) {
         return;
     }
 
-    const deleted = await dbInteract.manipulateData(`UPDATE Operator SET status=${operator.status} WHERE id=${operator.id}`);
+    const deleted = await dbInteract.manipulateData(`UPDATE Operator SET status=0 WHERE id=${operator.id}`);
     if (deleted == false) {
         res.status(503).send({
             message: 'Something is wrong in DELETE method'
@@ -102,7 +112,6 @@ async function removeOperator(req, res) {
     });
 }
 
-// Not tested
 async function updateOperator(req, res) {
     const newOperator = req.body.operator;
     if (newOperator.id > 99999) {
@@ -125,12 +134,12 @@ async function updateOperator(req, res) {
         return;
     }
 
-    const insertion = await dbInteract.manipulateData(`UPDATE Operator SET 
-        name='${newOperator.name.toUpperCase()}', 
+    const update = await dbInteract.manipulateData(`UPDATE Operator SET 
+        name='${newOperator.name}', 
         status=${newOperator.status}, 
         type=${newOperator.type} 
         WHERE id=${newOperator.id}`);
-    if (insertion == false) {
+    if (update == false) {
         res.status(503).send({
             message: 'Something is wrong in UPDATE method'
         });

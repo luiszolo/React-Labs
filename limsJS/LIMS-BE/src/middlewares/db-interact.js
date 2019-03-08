@@ -1,7 +1,7 @@
 const pool = require('./../config/database')
 
 async function manipulateData(query, params=null) {
-	const result;
+	let result;
 	await pool.query(query, params, (err, rows) => {
 		if (err) result = false;
 		else result = true;
