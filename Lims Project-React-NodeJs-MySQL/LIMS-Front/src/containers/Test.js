@@ -26,7 +26,7 @@ export default class Test extends React.Component {
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
-		this.handleClearFormData = this.handleClearFormData.bind(this);
+		this.handleMoveFormData = this.handleMoveFormData.bind(this);
 	}
 
 	componentWillMount(){
@@ -45,10 +45,9 @@ export default class Test extends React.Component {
 		}
 	}
 
-	handleClearFormData(idx){
-		if( idx < this.props.samplesLength && idx !== 0) {
-			if(this.refs[`sample${idx + 2}`] !== undefined) {
-				this.handleAppendSamplesArray(this.refs[`sample${idx + 2}`].state.input, idx);
+	handleMoveFormData(idx){
+		if( idx < this.props.samplesLength) {
+			if(this.refs[`sample${idx + 2}`] !== undefined && idx !== 0) {
 				this.refs[`sample${idx + 1}`].setState({
 					input: this.refs[`sample${idx + 2}`].state.input,
 					warningText: this.refs[`sample${idx + 2}`].state.warningText,
@@ -57,19 +56,28 @@ export default class Test extends React.Component {
 					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
 				});
 
-				
-				this.handleClearFormData(idx + 1);
+				this.handleAppendSamplesArray(this.state.samples[idx + 1], idx)
+				this.handleMoveFormData(idx + 1);
+			} else if( idx === 0) {
+				this.handleAppendSamplesArray(this.refs[`sample${idx + 2}`].state.input, idx);
+				this.refs[`sample${idx + 1}`].setState({
+					input: this.refs[`sample${idx + 2}`].state.input,
+					warningText: this.refs[`sample${idx + 2}`].state.warningText,
+					prevPassed: true,
+					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
+					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
+				});
+				this.handleMoveFormData(idx + 1);
+			} else {
+				this.refs[`sample${idx + 1}`].setState({
+					input: '',
+					warningText: undefined,
+					prevPassed: undefined,
+					passValidation: undefined,
+					passRegex: undefined,
+				});
 			}
-		} else if( idx === 0) {
-			this.refs[`sample${idx + 1}`].setState({
-				input: this.refs[`sample${idx + 2}`].state.input,
-				warningText: this.refs[`sample${idx + 2}`].state.warningText,
-				prevPassed: true,
-				passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
-				passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
-			});
-			this.handleClearFormData(idx + 1);
-		}
+		} 
 	}
 
 	handleAppendSamplesArray(sample, pos){
@@ -99,7 +107,6 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateAttribute(attribute, idx) {
-		
 		if (this.refs[`attribute${idx + 2}`] === undefined ||  (this.refs[`attribute${idx + 2}`].state.input === '')) {
 			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
 			this.setState({
@@ -142,7 +149,7 @@ export default class Test extends React.Component {
 			resultMessage: ''
 		})
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
-			this.handleClearFormData(idx)
+			this.handleMoveFormData(idx)
 			if (idx !== 0) {
 				this.setState({
 					passedSamples: true,
@@ -217,7 +224,7 @@ export default class Test extends React.Component {
 						passedSamples: false,
 						samples: Array(this.props.samplesLength).fill('')
 					});
-					this.handleClearFormData(0);
+					this.handleMoveFormData(0);
 				}
 			}).catch( _ => {
 				alert('Connection Timed Out');
