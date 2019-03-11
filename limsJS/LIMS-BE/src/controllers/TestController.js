@@ -28,6 +28,14 @@ async function addTest (req, res) {
 		});
 		return;
 	}
+
+	if (newTest.samplesLength <= 0) {
+		res.send({
+			message: 'The Test can\'t be saved!'
+		});
+		return;
+	}
+
 	await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state ? true : false}`);
 	if (newTest.attributes != null) {
 		for await (const element of newTest.attributes) {
@@ -45,11 +53,8 @@ async function addTest (req, res) {
 		}
 	}
 
-	if (newTest.attributes == null) {
-		res.send({
-			message: 'The Test can\'t be saved!'
-		});
-		return;
+	if (newTest.prevStatus && newTest.postStatus) {
+		
 	}
 	res.send({
 		message: "Insertion successful"

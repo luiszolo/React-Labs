@@ -14,7 +14,7 @@ async function addOperator(req, res) {
         return;
     }
 
-    if (await getOperatorById(req, res) != false) {
+    if (await getOperatorById(req, res) !== false) {
         res.status(403).send({
             message: 'The operator is already exists'
         });
@@ -32,7 +32,7 @@ async function addOperator(req, res) {
         `INSERT INTO Operator SET ?`, 
         [newOperator]
     );
-    if (insertion == false) {
+    if (insertion === false) {
         res.status(503).send({
             message: 'Something is wrong in INSERT method'
         });
@@ -60,6 +60,29 @@ async function getOperatorList(req, res) {
     const options = req.body.options;
     
     if (options != null) {
+        if (options.byId === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some operators first!'
+                });
+                return;
+            }
+        } else if (options.byName === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some operators first!'
+                });
+                return;
+            }
+        } else {
+            res.status(503).send({
+                message: 'The option selected doesn\'t exists'
+            });
+            return;
+        }
+    } else {
         const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
         if (operators == false) {
             res.status(404).send({
@@ -67,14 +90,6 @@ async function getOperatorList(req, res) {
             });
             return;
         }
-    }
-
-    const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-    if (operators == false) {
-        res.status(404).send({
-            message: 'Add some operators first!'
-        });
-        return;
     }
 
     res.status(200).send({

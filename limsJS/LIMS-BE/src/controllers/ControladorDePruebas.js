@@ -8,20 +8,35 @@ const notNumberField = require('./../middlewares/regex').notNumber;
 async function addAttribute(req, res) {
     const newAttribute = req.body.attribute;
 
-    if (await getAttributeByName(req, res) != false) {
+    if (await getAttributeById(req, res) !== false) {
         res.status(403).send({
             message: 'The attribute is already exists'
-        })
+        });
+        return;
     }
+
+    const insertion = await dbInteract.manipulateData(
+        `INSERT INTO Attribute SET ?`,
+        [newAttribute]
+    );
+    if (insertion === false) {
+        res.status(503).send({
+            message: 'Something is wrong in INSERT method'
+        });
+        return;
+    }
+    res.status(200).send({
+        message: 'Insertion completed'
+    });
+    return;
 }
 
-async function getAttributeByName(req, res) {
-    const options = req.body.options;
+async function getAttributeById(req, res) {
     const attribute = req.body.attribute;
 
     const validateExistence =  await dbInteract
         .isExists(`SELECT * FROM Attribute WHERE 
-            name='${attribute.name.toUpperCase()}`);
+            id=${attribute.id}`);
     if (validateExistence.pass) { 
         return {
             attributes: validateExistence.result[0]
@@ -29,50 +44,61 @@ async function getAttributeByName(req, res) {
     } else return false;
 }
 
-async function getOperatorList(req, res) {
+async function getAttributeList(req, res) {
     const options = req.body.options;
-    
+
     if (options != null) {
+        if (options.byId === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some attributes first!'
+                });
+                return;
+            }
+        } else if (options.byName === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some attributes first!'
+                });
+                return;
+            }
+        } else {
+            res.status(404).send({
+                message: 'The option selected doesn\'t exists'
+            });
+            return;
+        }
+    } else {
         const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
         if (operators == false) {
             res.status(404).send({
-                message: 'Add some operators first!'
+                message: 'Add some attributes first!'
             });
             return;
         }
     }
-
-    const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-    if (operators == false) {
-        res.status(404).send({
-            message: 'Add some operators first!'
-        });
-        return;
-    }
-
-    res.status(200).send({
-        operators: operators.result
-    });
 }
 
-async function removeOperator(req, res) {
-    const operator = req.body.operator
+async function removeAttribute(req, res) {
+    const attribute = req.body.attribute
 
-    if (operator.name === undefined && operator.id === undefined) {
+    if (attribute.name === undefined && attribute.id === undefined) {
         res.status(404).send({
-            message: 'There is no data to search the operator'
+            message: 'There is no data to search the attribute'
         });
         return;
     }
 
-    if (getOperatorById(req, res) == false) {
+    if (getAttributeById(req, res) == false) {
         res.status(404).send({
-            message: 'The operator doesn\'t exists'
+            message: 'The attribute doesn\'t exists'
         });
         return;
     }
 
-    const deleted = await dbInteract.manipulateData(`UPDATE Operator SET status=0 WHERE id=${operator.id}`);
+    const deleted = await dbInteract.manipulateData(`UPDATE Attribute SET status=0 WHERE id=${attribute.id}`);
     if (deleted == false) {
         res.status(503).send({
             message: 'Something is wrong in DELETE method'
@@ -85,49 +111,40 @@ async function removeOperator(req, res) {
     });
 }
 
-async function updateOperator(req, res) {
-    const newOperator = req.body.operator;
-    if (newOperator.id > 99999) {
+async function updateAttribute(req, res) {
+    const newAttribute = req.body.attribute;
+
+    if (await getAttributeById(req, res) !== false) {
         res.status(403).send({
-            message: 'The operator id exceeds the limit'
-        });
-        return;
-    }
-    if (getOperatorById(req, res) === false) {
-        res.status(403).send({
-            message: 'The operator is doesn\'t exists'
+            message: 'The attribute is already exists'
         });
         return;
     }
 
-    if (!notNumberField(newOperator.name)) {
-        res.status(403).send({
-            message: 'The name can\'t have numbers'
-        });
-        return;
-    }
-
-    const update = await dbInteract.manipulateData(`UPDATE Operator SET 
-        name='${newOperator.name}', 
-        status=${newOperator.status}, 
-        type=${newOperator.type} 
-        WHERE id=${newOperator.id}`);
-    if (update == false) {
+    const update = await dbInteract.manipulateData(
+        `UPDATE Attribute SET ?
+        name='${newAttribute.name}',
+        placeholder='${newAttribute.pplaceholder}',
+        unit='${newAttribute.unit}',
+        regex='${newAttribute.regex}'
+        WHERE id=${newAttribute.id}`
+    );
+    if (update === false) {
         res.status(503).send({
-            message: 'Something is wrong in UPDATE method'
+            message: 'Something is wrong in INSERT method'
         });
         return;
     }
-
     res.status(200).send({
-        message: 'Updated completed'
+        message: 'Insertion completed'
     });
+    return;
 }
 
 module.exports = {
-    addOperator: addOperator,
-    getOperatorById: getOperatorById,
-    getOperatorList: getOperatorList,
-    removeOperator: removeOperator,
-    updateOperator: updateOperator
+    addAttribute: addAttribute,
+    getAttributeById: getAttributeById,
+    getAttributeList: getAttributeList,
+    removeAttribute: removeAttribute,
+    updateAttribute: updateAttribute
 };

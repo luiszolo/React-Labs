@@ -1,94 +1,150 @@
-const miscs = require('./../middlewares/miscs');
-const pool = require('./../config/database');
-const regex = require('./../middlewares/regex');
+const dbInteract = require('./../middlewares/db-interact');
+const asyncForEach = require('./../middlewares/miscs').asyncForEach;
+const capitalizeWord = require('./../middlewares/miscs').capitalizeWord;
+const getDuplication = require('./../middlewares/miscs').getDuplications;
+const removeDuplication = require('./../middlewares/miscs').removeDuplications;
+const notNumberField = require('./../middlewares/regex').notNumber;
 
-// Finish
-async function addAttribute (req, res) {
-	let params  = req.body;
-	console.log(params);
-	const newAttribute = {
-		name: params.name.toUpperCase(),
-		unit: params.unit.toUpperCase()
-	};
-	const validateAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${newAttribute.name}' AND unit='${newAttribute.unit}'`);
-	if (validateAttribute.length == 1) {
-		res.send({
-			message: 'This attribute already exists!'
-		});
-		return;
-	}
-	if (!regex.notNumber(newAttribute.name)) {
-		res.send({
-			message: 'Cannot add attribute with numbers'
-		})
-		return;
-	}
-	await pool.query('INSERT INTO Attribute SET ?', [newAttribute]);
-	res.send({
-		message: 'Insertion successful'
-	});
-};
+async function addAttribute(req, res) {
+    const newAttribute = req.body.attribute;
 
-// Finish
-async function deleteAttribute (req, res) {
-	let params = req.params;
-	await pool.query('DELETE FROM Attribute WHERE id= ?', [params.id]);
-	res.send({
-		message: 'Delete successful'
-	});
-};
+    if (await getAttributeById(req, res) !== false) {
+        res.status(403).send({
+            message: 'The attribute is already exists'
+        });
+        return;
+    }
 
-// Finish
-async function getAttributes (req, res) {
-	const value = await pool.query('SELECT * FROM Attribute ORDER BY name ASC');
-	for await (const element of value) { 
-		element.name = miscs.capitalizeWord(element.name);
-		element.unit = element.unit.toLowerCase();
-	}
-	res.send({
-		Attributes : value
-	});
-};
+    const insertion = await dbInteract.manipulateData(
+        `INSERT INTO Attribute SET ?`,
+        [newAttribute]
+    );
+    if (insertion === false) {
+        res.status(503).send({
+            message: 'Something is wrong in INSERT method'
+        });
+        return;
+    }
+    res.status(200).send({
+        message: 'Insertion completed'
+    });
+    return;
+}
 
-// Finish
-async function getAttributeById (req, res) {
-	let params = req.params;
-	const value = await pool.query(`SELECT * FROM Attribute WHERE id=${params.id}`);
-	if (value == undefined) res.send({ message: "Attribute doesn't exists" });
-	value[0].name = miscs.capitalizeWord(value[0].name);
-	res.send({
-		Attribute : value[0]
-	});
-};
+async function getAttributeById(req, res) {
+    const attribute = req.body.attribute;
 
-// Finish
-async function updateAttribute (req, res) {
-	let params = req.params;
-	let body = req.body;
-	const validateAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${body.name.toUpperCase()}' AND unit='${newAttribute.unit.toUpperCase()}'`);
-	if (validateAttribute.length == 1) {
-		res.send({
-			message: 'This attribute already exists!'
-		});
-		return;
-	}
-	if (!regex.notNumber(body.name.toUpperCase())) {
-		res.send({
-			message: 'Cannot add attribute with numbers'
-		})
-		return;
-	}
-	await pool.query(`UPDATE Attribute SET name='${body.name.toUpperCase()}', unit='${body.unit.toUpperCase()}' WHERE id='${params.id}'`);
-	res.send({
-		message: 'Update successful'
-	});
+    const validateExistence =  await dbInteract
+        .isExists(`SELECT * FROM Attribute WHERE 
+            id=${attribute.id}`);
+    if (validateExistence.pass) { 
+        return {
+            attributes: validateExistence.result[0]
+        };
+    } else return false;
+}
+
+async function getAttributeList(req, res) {
+    const options = req.body.options;
+
+    if (options != null) {
+        if (options.byId === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some attributes first!'
+                });
+                return;
+            }
+        } else if (options.byName === true) {
+            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
+            if (operators == false) {
+                res.status(404).send({
+                    message: 'Add some attributes first!'
+                });
+                return;
+            }
+        } else {
+            res.status(404).send({
+                message: 'The option selected doesn\'t exists'
+            });
+            return;
+        }
+    } else {
+        const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
+        if (operators == false) {
+            res.status(404).send({
+                message: 'Add some attributes first!'
+            });
+            return;
+        }
+    }
+}
+
+async function removeAttribute(req, res) {
+    const attribute = req.body.attribute
+
+    if (attribute.name === undefined && attribute.id === undefined) {
+        res.status(404).send({
+            message: 'There is no data to search the attribute'
+        });
+        return;
+    }
+
+    if (getAttributeById(req, res) == false) {
+        res.status(404).send({
+            message: 'The attribute doesn\'t exists'
+        });
+        return;
+    }
+
+    const deleted = await dbInteract.manipulateData(`UPDATE Attribute SET status=0 WHERE id=${attribute.id}`);
+    if (deleted == false) {
+        res.status(503).send({
+            message: 'Something is wrong in DELETE method'
+        });
+        return;
+    }
+
+    res.status(200).send({
+        message: 'Deactivation completed'
+    });
+}
+
+async function updateAttribute(req, res) {
+    const newAttribute = req.body.attribute;
+
+    if (await getAttributeById(req, res) !== false) {
+        res.status(403).send({
+            message: 'The attribute is already exists'
+        });
+        return;
+    }
+
+    const update = await dbInteract.manipulateData(
+        `UPDATE Attribute SET ?
+        name='${newAttribute.name}',
+        placeholder='${newAttribute.pplaceholder}',
+        unit='${newAttribute.unit}',
+        regex='${newAttribute.regex}'
+        WHERE id=${newAttribute.id}`
+    );
+    if (update === false) {
+        res.status(503).send({
+            message: 'Something is wrong in INSERT method'
+        });
+        return;
+    }
+    res.status(200).send({
+        message: 'Insertion completed'
+    });
+    return;
 }
 
 module.exports = {
-	addAttribute: addAttribute,
-	deleteAttribute: deleteAttribute,
-	getAttributeById: getAttributeById,
-	getAttributes: getAttributes,
-	updateAttribute: updateAttribute
+    addAttribute: addAttribute,
+    getAttributeById: getAttributeById,
+    getAttributeList: getAttributeList,
+    removeAttribute: removeAttribute,
+    updateAttribute: updateAttribute
 };
-
