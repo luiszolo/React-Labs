@@ -4,6 +4,7 @@ const capitalizeWord = require('./../middlewares/miscs').capitalizeWord;
 const getDuplication = require('./../middlewares/miscs').getDuplications;
 const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
+const validateSample = require('./../middlewares/regex').validateSampleName;
 
 async function addOperator(req, res) {
     const newOperator = req.body.operator;

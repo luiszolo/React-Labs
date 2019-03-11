@@ -4,13 +4,20 @@ const capitalizeWord = require('./../middlewares/miscs').capitalizeWord;
 const getDuplication = require('./../middlewares/miscs').getDuplications;
 const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
+const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
-async function addAttribute(req, res) {
-    const newAttribute = req.body.attribute;
+async function addSample(req, res) {
+    const newSample = req.body.sample;
 
-    if (await getAttributeById(req, res) !== false) {
+    if (await getSampleById(req, res) !== false) {
         res.status(403).send({
-            message: 'The attribute is already exists'
+            message: 'The sample is already exists'
+        });
+        return;
+    }
+    if (validateSampleName(newSample.barcode) === false) {
+        res.status(403).send({
+            message: 'The sample is already exists'
         });
         return;
     }
@@ -31,12 +38,12 @@ async function addAttribute(req, res) {
     return;
 }
 
-async function getAttributeById(req, res) {
-    const attribute = req.body.attribute;
+async function getSampleById(req, res) {
+    const sample = req.body.sample;
 
     const validateExistence =  await dbInteract
-        .isExists(`SELECT * FROM Attribute WHERE 
-            id=${attribute.id}`);
+        .isExists(`SELECT * FROM Sample WHERE 
+            name=${attribute.name}`);
     if (validateExistence.pass) { 
         return {
             attributes: validateExistence.result[0]
