@@ -28,12 +28,13 @@ async function addTest (req, res) {
 		});
 		return;
 	}
-	await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state ? true : false}`);
 	if (newTest.attributes != null) {
+		await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state === true ? true : false}`);
 		for await (const element of newTest.attributes) {
 			const auxAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${element.toUpperCase()}'`);
 			if(auxAttribute != null || auxAttribute != [{  }]) {
 				const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
+				console.log(id)
 				await pool.query(`INSERT INTO TestAttributes SET test_Id=${id[0].id}, attribute_Id=${auxAttribute[0].id}`);
 			} else {
 				const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
@@ -45,6 +46,18 @@ async function addTest (req, res) {
 		}
 	}
 
+	if (newTest.prevStatus && newTest.postStatus) {
+		const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
+		const prevId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.prevStatus.name.toUpperCase()}'`);
+		const postId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.postStatus.toUpperCase()}'`);
+		console.log(id, prevId, postId)
+
+		await pool.query(`INSERT INTO statussequence SET status_Id=${postId[0].id}, status_Required=${prevId[0].id}`);
+
+		await pool.query(`INSERT INTO teststatus SET test_Id=${id[0].id}, prev_State=${prevId[0].id}, post_State=${postId[0].id}`);
+		console.log("Llego aqui? :v")
+	}
+	
 	if (newTest.attributes == null) {
 		res.send({
 			message: 'The Test can\'t be saved!'
@@ -106,11 +119,6 @@ async function getTestById (req, res) {
 	});
 };
 
-async function getTestBySample (req, res) {
-	let body = req.body;
-
-	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test}'`);
-}
 
 // Finish
 async function updateTest (req, res) {

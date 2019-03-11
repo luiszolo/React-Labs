@@ -22,6 +22,11 @@ async function addStatus (req, res) {
 		})
 		return;
 	}
+	else {
+		res.send({
+			message: 'Insertion completed'
+		})
+	}
 	await pool.query('INSERT INTO Status SET ?', [newStatus]);
 	console.log(`Saved Status: ${newStatus.name}`);
 };
@@ -47,10 +52,12 @@ async function getStatus (req, res) {
 async function getStatusById (req, res) {
 	let params = req.params;
 	const value = await pool.query(`SELECT * FROM Status WHERE id=${params.id}`);
-	if (value == undefined) res.send({ message: "Status doesn't exists" });
+	console.log(value[0]);
+	if (value[0] == null ) {res.send({ message: "Status doesn't exists" }); return;}
 	value[0].name = miscs.capitalizeWord(value[0].name);
+	console.log(value[0]);
 	res.send({
-		Status : value
+		Status : value[0]
 	});
 };
 

@@ -8,7 +8,9 @@ async function addAttribute (req, res) {
 	console.log(params);
 	const newAttribute = {
 		name: params.name.toUpperCase(),
-		unit: params.unit.toUpperCase()
+		unit: params.unit.toUpperCase(),
+		type: params.type,
+		structure: params.regex
 	};
 	const validateAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${newAttribute.name}' AND unit='${newAttribute.unit}'`);
 	if (validateAttribute.length == 1) {
@@ -23,7 +25,7 @@ async function addAttribute (req, res) {
 		})
 		return;
 	}
-	await pool.query('INSERT INTO Attribute SET ?', [newAttribute]);
+	await pool.query(`INSERT INTO Attribute SET name='${newAttribute.name}', unit='${newAttribute.unit}', type='${newAttribute.type}', structure='${newAttribute.structure}'`);
 	res.send({
 		message: 'Insertion successful'
 	});
@@ -54,7 +56,7 @@ async function getAttributes (req, res) {
 async function getAttributeById (req, res) {
 	let params = req.params;
 	const value = await pool.query(`SELECT * FROM Attribute WHERE id=${params.id}`);
-	if (value == undefined) res.send({ message: "Attribute doesn't exists" });
+	if (value[0] == undefined) res.send({ message: "Attribute doesn't exists" });
 	value[0].name = miscs.capitalizeWord(value[0].name);
 	res.send({
 		Attribute : value[0]
