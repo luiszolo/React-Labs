@@ -145,9 +145,6 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(sample, idx){
-		this.refs.submitButton.setState({
-			resultMessage: ''
-		})
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
 			this.handleMoveFormData(idx)
 			if (idx !== 0) {

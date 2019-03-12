@@ -25,9 +25,9 @@ body{
 	margin-top: 50px !important;
 }
 
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
+button[disabled] {
+    border-color: #6c757d !important;
+    background: #6c757d !important;
 }
 
 .buttonImage{

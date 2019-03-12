@@ -47,7 +47,7 @@ export default class InputField extends React.Component {
 				return true;
 			} else {
 				return {
-					message: 'Incorrect syntax'
+					message: 'Incorrect syntax. Must be: ' + this.props.placeholder
 				};
 			}
 		} else {
