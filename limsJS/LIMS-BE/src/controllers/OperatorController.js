@@ -47,75 +47,72 @@ async function addOperator(req, res) {
 }
 
 async function getOperatorById(req, res) {
-    const operatorId = req.body.operator.id;
+    const operatorId = req.params.id;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
     if (validateExistence.pass) {
+        res.status(200).send({
+            operator: validateExistence.result[0]
+        });
         return {
             operators: validateExistence.result[0]
         };
-    } else return false;
+    } else {
+        res.status(404).send({
+            message: 'The operator doesn\'t exists'
+        });
+        return false;
+    }
 }
 
 async function getOperatorList(req, res) {
-    const options = req.body.options;
-    
-    if (options != null) {
-        if (options.byId === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some operators first!'
-                });
-                return;
-            }
-        } else if (options.byName === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some operators first!'
-                });
-                return;
-            }
+    const option = req.params.option;
+    let query = "";
+    if (option != null) {
+        if (option === "id") {
+            query = `SELECT * FROM Operator ORDER BY id ASC`;
+        } else if (option === "name") {
+            query = `SELECT * FROM Operator ORDER BY name ASC`;
         } else {
-            res.status(503).send({
-                message: 'The option selected doesn\'t exists'
+            res.status(404).send({
+                message: 'The option doesn\'t exists'
             });
             return;
         }
     } else {
-        const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-        if (operators == false) {
-            res.status(404).send({
-                message: 'Add some operators first!'
-            });
-            return;
-        }
+        query =  `SELECT * FROM Operator ORDER BY id ASC`;
     }
 
+    const operators = await dbInteract.isExists(query);
+    if (operators === false) {
+        res.status(404).send({
+            message: 'Add some operators first!'
+        });
+        return;
+    }
     res.status(200).send({
         operators: operators.result
     });
 }
 
 async function removeOperator(req, res) {
-    const operator = req.body.operator
+    const operator = req.params;
 
-    if (operator.name === undefined && operator.id === undefined) {
+    if (operator.id === undefined) {
         res.status(404).send({
             message: 'There is no data to search the operator'
         });
         return;
     }
 
-    if (getOperatorById(req, res) == false) {
+    if (await getOperatorById(req, res) === false) {
         res.status(404).send({
             message: 'The operator doesn\'t exists'
         });
         return;
     }
 
-    const deleted = await dbInteract.manipulateData(`UPDATE Operator SET status=0 WHERE id=${operator.id}`);
+    const deleted = await dbInteract.manipulateData(`UPDATE Operator SET actived=0 WHERE id=${operator.id}`);
     if (deleted == false) {
         res.status(503).send({
             message: 'Something is wrong in DELETE method'
@@ -129,14 +126,10 @@ async function removeOperator(req, res) {
 }
 
 async function updateOperator(req, res) {
+    const id = req.params.id;
     const newOperator = req.body.operator;
-    if (newOperator.id > 99999) {
-        res.status(403).send({
-            message: 'The operator id exceeds the limit'
-        });
-        return;
-    }
-    if (getOperatorById(req, res) === false) {
+
+    if (await getOperatorById(req, res) === false) {
         res.status(403).send({
             message: 'The operator is doesn\'t exists'
         });
@@ -152,9 +145,9 @@ async function updateOperator(req, res) {
 
     const update = await dbInteract.manipulateData(`UPDATE Operator SET 
         name='${newOperator.name}', 
-        status=${newOperator.status}, 
+        actived=${newOperator.status}, 
         type=${newOperator.type} 
-        WHERE id=${newOperator.id}`);
+        WHERE id=${id}`);
     if (update == false) {
         res.status(503).send({
             message: 'Something is wrong in UPDATE method'

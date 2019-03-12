@@ -6,25 +6,26 @@ const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
 const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
-async function addSample(req, res) {
-    const newSample = req.body.sample;
+async function addStatus(req, res) {
+    const newStatus = req.body.status;
 
-    if (await getSampleById(req, res) !== false) {
+    if (await getStatusById(req, res) !== false) {
         res.status(403).send({
-            message: 'The sample is already exists'
+            message: 'The status is already exists'
         });
         return;
     }
-    if (validateSampleName(newSample.barcode) === false) {
-        res.status(403).send({
-            message: 'The sample is already exists'
+
+    if (!notNumberField(newStatus.name)) {
+        res.status().send({
+            message: 'The status can\'t have numbers'
         });
         return;
     }
 
     const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Attribute SET ?`,
-        [newAttribute]
+        `INSERT INTO Status SET ?`,
+        [newStatus]
     );
     if (insertion === false) {
         res.status(503).send({
@@ -38,75 +39,74 @@ async function addSample(req, res) {
     return;
 }
 
-async function getSampleById(req, res) {
-    const sample = req.body.sample;
+async function getStatusById(req, res) {
+    const id = req.params.id;
 
-    const validateExistence =  await dbInteract
-        .isExists(`SELECT * FROM Sample WHERE 
-            name=${attribute.name}`);
-    if (validateExistence.pass) { 
+    const validateExistence =  await dbInteract.isExists(`SELECT * FROM Status WHERE id=${id}`);
+    if (validateExistence.pass) {
+        res.status(200).send({
+            status: validateExistence.result[0]
+        });
         return {
-            attributes: validateExistence.result[0]
+            status: validateExistence.result[0]
         };
-    } else return false;
+    } else {
+        res.status(404).send({
+            message: 'The status doesn\'t exists'
+        });
+        return false;
+    }
 }
 
-async function getAttributeList(req, res) {
-    const options = req.body.options;
-
-    if (options != null) {
-        if (options.byId === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some attributes first!'
-                });
-                return;
-            }
-        } else if (options.byName === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some attributes first!'
-                });
-                return;
-            }
+async function getStatusList(req, res) {
+    const option = req.params.option;
+    let query = "";
+    if (option != null) {
+        if (option === "id") {
+            query = `SELECT * FROM Status ORDER BY id ASC`;
+        } else if (option === "name") {
+            query = `SELECT * FROM Status ORDER BY name ASC`;
         } else {
             res.status(404).send({
-                message: 'The option selected doesn\'t exists'
+                message: 'The option doesn\'t exists'
             });
             return;
         }
     } else {
-        const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-        if (operators == false) {
-            res.status(404).send({
-                message: 'Add some attributes first!'
-            });
-            return;
-        }
+        query =  `SELECT * FROM Status ORDER BY id ASC`;
     }
+
+    const status = await dbInteract.isExists(query);
+    if (status == false) {
+        res.status(404).send({
+            message: 'Add some status first!'
+        });
+        return;
+    }
+    res.status(200).send({
+        status: status.result
+    });
 }
 
-async function removeAttribute(req, res) {
-    const attribute = req.body.attribute
+async function removeStatus(req, res) {
+    const status = req.params;
 
-    if (attribute.name === undefined && attribute.id === undefined) {
+    if (status.id === undefined) {
         res.status(404).send({
-            message: 'There is no data to search the attribute'
+            message: 'There is no data to search the status'
         });
         return;
     }
 
-    if (getAttributeById(req, res) == false) {
+    if (await getStatusById(req, res) === false) {
         res.status(404).send({
-            message: 'The attribute doesn\'t exists'
+            message: 'The status doesn\'t exists'
         });
         return;
     }
 
-    const deleted = await dbInteract.manipulateData(`UPDATE Attribute SET status=0 WHERE id=${attribute.id}`);
-    if (deleted == false) {
+    const deleted = await dbInteract.manipulateData(`UPDATE Status SET actived=0 WHERE id=${status.id}`);
+    if (deleted === false) {
         res.status(503).send({
             message: 'Something is wrong in DELETE method'
         });
@@ -118,23 +118,22 @@ async function removeAttribute(req, res) {
     });
 }
 
-async function updateAttribute(req, res) {
-    const newAttribute = req.body.attribute;
+async function updateStatus(req, res) {
+    const id = req.params.id;
+    const newStatus = req.body.status;
 
-    if (await getAttributeById(req, res) !== false) {
+    if (await getStatusById(req, res) !== false) {
         res.status(403).send({
-            message: 'The attribute is already exists'
+            message: 'The status is already exists'
         });
         return;
     }
 
     const update = await dbInteract.manipulateData(
-        `UPDATE Attribute SET ?
-        name='${newAttribute.name}',
-        placeholder='${newAttribute.pplaceholder}',
-        unit='${newAttribute.unit}',
-        regex='${newAttribute.regex}'
-        WHERE id=${newAttribute.id}`
+        `UPDATE Status SET ?
+        name='${newStatus.name}',
+        actived='${newStatus.actived}'
+        WHERE id=${id}`
     );
     if (update === false) {
         res.status(503).send({
@@ -149,9 +148,9 @@ async function updateAttribute(req, res) {
 }
 
 module.exports = {
-    addAttribute: addAttribute,
-    getAttributeById: getAttributeById,
-    getAttributeList: getAttributeList,
-    removeAttribute: removeAttribute,
-    updateAttribute: updateAttribute
+    addStatus: addStatus,
+    getStatusById: getStatusById,
+    getStatusList: getStatusList,
+    removeStatus: removeStatus,
+    updateStatus: updateStatus
 };

@@ -2,11 +2,11 @@ const router = require('express').Router();
 
 const Controller = require('../controllers/AttributeController');
 
-router.delete('/:id',   Controller.removeAttribute);
-router.get('/', Controller.getAttributeList);
-router.get('/:id', Controller.getAttributeById);
+router.delete('/find/:id',   Controller.removeAttribute);
+router.get('/by/:option?', Controller.getAttributeList);
+router.get('/find/:id', Controller.getAttributeById);
 router.post('/add', Controller.addAttribute);
-router.put('/:id', Controller.updateAttribute);
+router.put('/find/:id', Controller.updateAttribute);
 
 
 module.exports = router;

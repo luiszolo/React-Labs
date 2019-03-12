@@ -1,0 +1,12 @@
+status
+- actived field (bool)
+
+sample
+- status field (fk, reference last)
+
+attribute
+- actived field (bool)
+
+operator
+- actived field (bool)
+- type field (bool)

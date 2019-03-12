@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 25, 2019 at 07:01 PM
+-- Generation Time: Mar 12, 2019 at 06:41 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.4.3
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 -- Database: `lims`
 --
 
-CREATE DATABASE IF NOT EXISTS `lims`;
-USE `lims`;
-
 -- --------------------------------------------------------
 
 --
@@ -32,19 +29,11 @@ USE `lims`;
 CREATE TABLE IF NOT EXISTS `attribute` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(99) NOT NULL,
+  `type` varchar(4) NOT NULL,
   `unit` varchar(99) NOT NULL,
+  `structure` varchar(99) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `attribute`
---
-
-INSERT INTO `attribute` (`id`, `name`, `unit`) VALUES
-(1, 'Chemistry', 'Q'),
-(2, 'Temperature', 'C'),
-(3, 'Time Elapse', 'Sec'),
-(4, 'Velocity', 'RPM');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -64,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   KEY `fk_Log_operator_id` (`operator_Id`),
   KEY `fk_Log_sample_id` (`sample_Id`),
   KEY `fk_Log_status_id` (`status_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=123 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -75,6 +64,8 @@ CREATE TABLE IF NOT EXISTS `log` (
 CREATE TABLE IF NOT EXISTS `operator` (
   `id` int(11) NOT NULL,
   `name` varchar(99) NOT NULL,
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -82,11 +73,8 @@ CREATE TABLE IF NOT EXISTS `operator` (
 -- Dumping data for table `operator`
 --
 
-INSERT INTO `operator` (`id`, `name`) VALUES
-(0, '12345'),
-(1, 'Josue '),
-(619, 'Testing'),
-(12345, 'Luis Villalobos');
+INSERT INTO `operator` (`id`, `name`, `type`, `status`) VALUES
+(99999, 'Administrator', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -95,11 +83,14 @@ INSERT INTO `operator` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `sample` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(99) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=82 ;
-
+  `id` int(7) NOT NULL,
+  `barcode` varchar(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_2` (`id`),
+  UNIQUE KEY `barcode` (`barcode`),
+  UNIQUE KEY `id_3` (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -117,9 +108,7 @@ CREATE TABLE IF NOT EXISTS `samplevalue` (
   KEY `fk_SampleValue_sample_id` (`sample_Id`),
   KEY `fk_SampleValue_test_id` (`test_Id`),
   KEY `fk_SampleValue_attribute_id` (`attribute_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=89 ;
-
-
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -131,24 +120,7 @@ CREATE TABLE IF NOT EXISTS `status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(99) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
-
---
--- Dumping data for table `status`
---
-
-INSERT INTO `status` (`id`, `name`) VALUES
-(1, 'Sample Ready for Chemistry'),
-(2, 'Sample Ready for Heat'),
-(3, 'Sample Ready for Sppiner'),
-(4, 'Sample Ready for Electricity'),
-(5, 'Sample Passed Electricty'),
-(6, 'Sample Ready for Electricity'),
-(7, 'Sample Passed Electricty'),
-(8, 'Sample Passed Heat'),
-(9, 'Sample Passed Chemestry'),
-(10, 'Sample Passed Spinner'),
-(11, 'Sample Used');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -163,16 +135,6 @@ CREATE TABLE IF NOT EXISTS `statussequence` (
   KEY `fk_StatusSequence_status_required` (`status_Required`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `statussequence`
---
-
-INSERT INTO `statussequence` (`status_Id`, `status_Required`) VALUES
-(5, NULL),
-(8, 2),
-(9, 1),
-(10, 3);
-
 -- --------------------------------------------------------
 
 --
@@ -185,18 +147,7 @@ CREATE TABLE IF NOT EXISTS `test` (
   `samplesLength` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
-
---
--- Dumping data for table `test`
---
-
-INSERT INTO `test` (`id`, `name`, `samplesLength`, `status`) VALUES
-(1, 'ELECTRICITY TEST', 0, 1),
-(8, 'HEAT TEST', 2, 1),
-(9, 'CHEMISTRY TEST', 1, 1),
-(10, 'SPINNER TEST', 1, 1),
-(11, 'Generate Report', 0, 1);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -210,16 +161,6 @@ CREATE TABLE IF NOT EXISTS `testattributes` (
   KEY `fk_TestAttributes_test_id` (`test_Id`),
   KEY `fk_TestAttributes_attribute_id` (`attribute_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `testattributes`
---
-
-INSERT INTO `testattributes` (`test_Id`, `attribute_Id`) VALUES
-(9, 1),
-(8, 2),
-(8, 3),
-(10, 4);
 
 -- --------------------------------------------------------
 
@@ -235,16 +176,6 @@ CREATE TABLE IF NOT EXISTS `teststatus` (
   KEY `fk_TestStatus_prev_state` (`prev_State`),
   KEY `fk_TestStatus_post_state` (`post_State`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `teststatus`
---
-
-INSERT INTO `teststatus` (`test_Id`, `prev_State`, `post_State`) VALUES
-(1, 5, 2),
-(8, 8, 1),
-(9, 9, 3),
-(10, 10, 11);
 
 --
 -- Constraints for dumped tables

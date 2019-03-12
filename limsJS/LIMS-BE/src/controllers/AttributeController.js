@@ -33,66 +33,67 @@ async function addAttribute(req, res) {
 }
 
 async function getAttributeById(req, res) {
-    const attribute = req.body.attribute;
+    const attribute = req.params;
 
     const validateExistence =  await dbInteract
         .isExists(`SELECT * FROM Attribute WHERE 
             id=${attribute.id}`);
-    if (validateExistence.pass) { 
+    if (validateExistence.pass) {
+        res.status(200).send({
+            attribute: validateExistence.result[0]
+        });
         return {
-            attributes: validateExistence.result[0]
+            attribute: validateExistence.result[0]
         };
-    } else return false;
+    } else {
+        res.status(404).send({
+            message: 'The attribute doesn\'t exists'
+        });
+        return false;
+    }
 }
 
 async function getAttributeList(req, res) {
-    const options = req.body.options;
-
-    if (options != null) {
-        if (options.byId === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some attributes first!'
-                });
-                return;
-            }
-        } else if (options.byName === true) {
-            const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY name ASC`);
-            if (operators == false) {
-                res.status(404).send({
-                    message: 'Add some attributes first!'
-                });
-                return;
-            }
+    const option = req.params.option;
+    let query = "";
+    if (option != null) {
+        if (option === "id") {
+            query = `SELECT * FROM Attribute ORDER BY id ASC`;
+        } else if (option === "name") {
+            query = `SELECT * FROM Attribute ORDER BY name ASC`;
         } else {
             res.status(404).send({
-                message: 'The option selected doesn\'t exists'
+                message: 'The option doesn\'t exists'
             });
             return;
         }
     } else {
-        const operators = await dbInteract.isExists(`SELECT * FROM Operator ORDER BY id ASC`);
-        if (operators == false) {
-            res.status(404).send({
-                message: 'Add some attributes first!'
-            });
-            return;
-        }
+        query =  `SELECT * FROM Attribute ORDER BY id ASC`;
     }
+
+    const attributes = await dbInteract.isExists(query);
+    if (attributes === false) {
+        res.status(404).send({
+            message: 'Add some attributes first!'
+        });
+        return;
+    }
+    res.status(200).send({
+        attributes: attributes.result
+    });
 }
 
 async function removeAttribute(req, res) {
-    const attribute = req.body.attribute
+    const attribute = req.params
 
-    if (attribute.name === undefined && attribute.id === undefined) {
+    if (attribute.id === undefined) {
         res.status(404).send({
             message: 'There is no data to search the attribute'
         });
         return;
     }
 
-    if (getAttributeById(req, res) == false) {
+    if (await getAttributeById(req, res) === false) {
         res.status(404).send({
             message: 'The attribute doesn\'t exists'
         });
@@ -113,11 +114,12 @@ async function removeAttribute(req, res) {
 }
 
 async function updateAttribute(req, res) {
+    const id = req.params.id;
     const newAttribute = req.body.attribute;
 
-    if (await getAttributeById(req, res) !== false) {
+    if (await getAttributeById(req, res) === false) {
         res.status(403).send({
-            message: 'The attribute is already exists'
+            message: 'The attribute doesn\'t exists'
         });
         return;
     }
@@ -125,10 +127,10 @@ async function updateAttribute(req, res) {
     const update = await dbInteract.manipulateData(
         `UPDATE Attribute SET ?
         name='${newAttribute.name}',
-        placeholder='${newAttribute.pplaceholder}',
+        placeholder='${newAttribute.placeholder}',
         unit='${newAttribute.unit}',
         regex='${newAttribute.regex}'
-        WHERE id=${newAttribute.id}`
+        WHERE id=${id}`
     );
     if (update === false) {
         res.status(503).send({
