@@ -9,7 +9,7 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addSample(req, res) {
     const newSample = req.body.sample;
 
-    if (await getSampleById(req, res) !== false) {
+    if (await getSample(req, res) !== false) {
         res.status(403).send({
             message: 'The sample is already exists'
         });
@@ -38,23 +38,29 @@ async function addSample(req, res) {
     return;
 }
 
-async function getSampleById(req, res) {
-    const sample = req.params;
-
-    const validateExistence =  await dbInteract.isExists(`SELECT * FROM Sample WHERE id=${sample.id}`);
+async function getSample(req, res) {
+    const sampleId = req.params.id | req.body.sample.name;
+    const validateExistence = await dbInteract
+        .isExists(`SELECT * FROM Sample WHERE id=${sampleId} OR name='${sampleId}'`);
     if (validateExistence.pass) {
-        res.status(200).send({
-            sample: validateExistence.result[0]
-        });
         return {
             sample: validateExistence.result[0]
         };
-    } else {
+    } else return false;
+}
+
+async function getSampleById(req, res) {
+    const searchMethod = await getSample(req, res);
+    if (searchMethod === false) {
         res.status(404).send({
-            message: 'The sample doesn\'t exists'
+            message: "The sample doesn't exists"
         });
-        return false;
+        return;
     }
+    res.status(200).send({
+        sample: searchMethod.sample
+    });
+    return;
 }
 
 async function getSampleList(req, res) {
@@ -97,7 +103,7 @@ async function removeSample(req, res) {
         return;
     }
 
-    if (await getSampleById(req, res) === false) {
+    if (await getSample(req, res) === false) {
         res.status(404).send({
             message: 'The sample doesn\'t exists'
         });
@@ -121,7 +127,7 @@ async function updateSample(req, res) {
     const id = req.params.id;
     const newSample = req.body.sample;
 
-    if (await getSampleById(req, res) !== false) {
+    if (await getSample(req, res) !== false) {
         res.status(403).send({
             message: 'The sample is already exists'
         });

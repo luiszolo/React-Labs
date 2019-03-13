@@ -9,7 +9,7 @@ const validateSample = require('./../middlewares/regex').validateSampleName;
 async function addAttribute(req, res) {
     const newAttribute = req.body.attribute;
 
-    if (await getAttributeById(req, res) !== false) {
+    if (await getAttribute(req, res) !== false) {
         res.status(403).send({
             message: 'The attribute is already exists'
         });
@@ -32,25 +32,31 @@ async function addAttribute(req, res) {
     return;
 }
 
-async function getAttributeById(req, res) {
-    const attribute = req.params;
+async function getAttribute(req, res) {
+    const attributeId = req.params.id | req.body.attribute.name;
 
     const validateExistence =  await dbInteract
         .isExists(`SELECT * FROM Attribute WHERE 
-            id=${attribute.id}`);
+            id=${attributeId} OR name='${attributeId}'`);
     if (validateExistence.pass) {
-        res.status(200).send({
-            attribute: validateExistence.result[0]
-        });
         return {
             attribute: validateExistence.result[0]
         };
-    } else {
+    } else return false;
+}
+
+async function getAttributeById(req, res) {
+    const searchMethod = await getOperator(req, res);
+    if (searchMethod === false) {
         res.status(404).send({
-            message: 'The attribute doesn\'t exists'
+            message: "The attribute doesn't exists"
         });
-        return false;
+        return;
     }
+    res.status(200).send({
+        attribute: searchMethod.attribute
+    });
+    return;
 }
 
 async function getAttributeList(req, res) {
@@ -93,7 +99,7 @@ async function removeAttribute(req, res) {
         return;
     }
 
-    if (await getAttributeById(req, res) === false) {
+    if (await getAttribute(req, res) === false) {
         res.status(404).send({
             message: 'The attribute doesn\'t exists'
         });
@@ -117,7 +123,7 @@ async function updateAttribute(req, res) {
     const id = req.params.id;
     const newAttribute = req.body.attribute;
 
-    if (await getAttributeById(req, res) === false) {
+    if (await getAttribute(req, res) === false) {
         res.status(403).send({
             message: 'The attribute doesn\'t exists'
         });

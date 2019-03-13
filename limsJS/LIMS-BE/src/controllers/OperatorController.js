@@ -15,7 +15,7 @@ async function addOperator(req, res) {
         return;
     }
 
-    if (await getOperatorById(req, res) !== false) {
+    if (await getOperator(req, res) !== false) {
         res.status(403).send({
             message: 'The operator is already exists'
         });
@@ -47,22 +47,28 @@ async function addOperator(req, res) {
 }
 
 async function getOperatorById(req, res) {
-    const operatorId = req.params.id;
+    const searchMethod = await getOperator(req, res);
+    if (searchMethod === false) {
+        res.status(404).send({
+            message: "The operator doesn't exists"
+        });
+        return;
+    }
+    res.status(200).send({
+        operator: searchMethod.operators
+    });
+    return;
+}
+
+async function getOperator(req, res) {
+    const operatorId = req.params.id | req.body.operator.id;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
     if (validateExistence.pass) {
-        res.status(200).send({
-            operator: validateExistence.result[0]
-        });
         return {
             operators: validateExistence.result[0]
         };
-    } else {
-        res.status(404).send({
-            message: 'The operator doesn\'t exists'
-        });
-        return false;
-    }
+    } else return false;
 }
 
 async function getOperatorList(req, res) {
@@ -105,7 +111,7 @@ async function removeOperator(req, res) {
         return;
     }
 
-    if (await getOperatorById(req, res) === false) {
+    if (await getOperator(req, res) === false) {
         res.status(404).send({
             message: 'The operator doesn\'t exists'
         });
@@ -129,7 +135,7 @@ async function updateOperator(req, res) {
     const id = req.params.id;
     const newOperator = req.body.operator;
 
-    if (await getOperatorById(req, res) === false) {
+    if (await getOperator(req, res) === false) {
         res.status(403).send({
             message: 'The operator is doesn\'t exists'
         });

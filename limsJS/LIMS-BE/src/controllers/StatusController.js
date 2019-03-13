@@ -17,7 +17,7 @@ async function addStatus(req, res) {
     }
 
     if (!notNumberField(newStatus.name)) {
-        res.status().send({
+        res.status(403).send({
             message: 'The status can\'t have numbers'
         });
         return;
@@ -39,23 +39,29 @@ async function addStatus(req, res) {
     return;
 }
 
-async function getStatusById(req, res) {
-    const id = req.params.id;
-
-    const validateExistence =  await dbInteract.isExists(`SELECT * FROM Status WHERE id=${id}`);
+async function getStatus(req, res) {
+    const statusId = req.params.id | req.body.status.name;
+    const validateExistence = await dbInteract
+        .isExists(`SELECT * FROM Sample WHERE id=${statusId} OR name='${statusId}'`);
     if (validateExistence.pass) {
-        res.status(200).send({
-            status: validateExistence.result[0]
-        });
         return {
             status: validateExistence.result[0]
         };
-    } else {
+    } else return false;
+}
+
+async function getStatusById(req, res) {
+    const searchMethod = await getStatusById(req, res);
+    if (searchMethod === false) {
         res.status(404).send({
-            message: 'The status doesn\'t exists'
+            message: "The status doesn't exists"
         });
-        return false;
+        return;
     }
+    res.status(200).send({
+        status: searchMethod.status
+    });
+    return;
 }
 
 async function getStatusList(req, res) {

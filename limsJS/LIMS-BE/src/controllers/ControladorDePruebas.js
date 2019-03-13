@@ -6,66 +6,168 @@ const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
 const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
-async function addStatus(req, res) {
-    const newStatus = req.body.status;
+async function addTest(req, res) {
+    const newTest = req.body.test;
 
-    if (await getStatusById(req, res) !== false) {
+    if (await getTest(req, res) !== false) {
         res.status(403).send({
-            message: 'The status is already exists'
+            message: 'The test is already exists'
         });
         return;
     }
 
-    if (!notNumberField(newStatus.name)) {
-        res.status().send({
-            message: 'The status can\'t have numbers'
+    if (!notNumberField(newTest.name)) {
+        res.status(403).send({
+            message: 'The test can\'t have numbers'
         });
         return;
     }
 
-    const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Status SET ?`,
-        [newStatus]
+    if (newTest.samplesLength <= 0) {
+        res.status(403).send({
+			message: 'The Test can\'t be saved!'
+		});
+		return;
+    }
+
+    if (!newTest.initialState || !newTest.postStatus) {
+        res.status(403).send({
+            message: 'Missing Status!'
+        });
+        return;
+    } 
+
+    const initialStateId = await dbInteract.isExists(
+        `SELECT id FROM Status WHERE name='${newTest.initialState.toUpperCase()}'`
     );
+    if (initialStateId === false) {
+        res.status(403).send({
+            message: `Error saving the new test: 
+            status ${newTest.initialState.toUpperCase()} doesn't exists`
+        });
+        return;
+    }
+
+    let insertion = undefined;
+
+    if (newTest.requiredState === undefined) {
+        insertion = await dbInteract.manipulateData(
+            `INSERT INTO Test SET ?`,
+            [{
+                name: newTest.name.toUpperCase(),
+                require_State: null,
+                initial_State: initialStateId.result[0].id,
+                actived: 1
+            }]
+        );
+    } else {
+        const requiredStateId = await dbInteract.isExists(
+            `SELECT id FROM Status WHERE name='${newTest.requiredState.toUpperCase()}'`
+        );
+        insertion = await dbInteract.manipulateData(
+            `INSERT INTO Test SET ?`,
+            [{
+                name: newTest.name.toUpperCase(),
+                require_State: requiredStateId.result[0].id,
+                initial_State: initialStateId.result[0].id,
+                actived: 1
+            }]
+        );
+    }
+
     if (insertion === false) {
         res.status(503).send({
             message: 'Something is wrong in INSERT method'
         });
         return;
     }
+
+    const testId = await dbInteract.isExists(
+        `SELECT * FROM Test 
+        WHERE name='${newTest.name.toUpperCase()}'`
+    );
+
+    if (newTest.attributes !== undefined) {
+        for await (const attr of newTest.attributes) {
+            const validateExistence =  await dbInteract.isExists(
+                `SELECT * FROM Attribute 
+                WHERE name='${attr.toUpperCase()}' 
+                AND actived=1`
+            );
+            if (validateExistence === false) {
+                await restoreProcess(testId, hasAttr=true)
+                res.status(403).send({
+                    message: `Error saving the new test: ${attr.toUpperCase()} 
+                    doesn't exists`
+                })
+                return;
+            }
+            await dbInteract.manipulateData(`INSERT INTO `,[{
+                test_Id: testId,
+                attribute_Id: validateExistence.result[0].id
+            }]);
+        }
+    }
+
+    for await (const postStatus of newTest.postStatus) {
+        const postStatusId = await dbInteract.isExists(
+            `SELECT id FROM Status WHERE name='${postStatus.toUpperCase()}'`
+        );
+        if (postStatusId === false) {
+            await restoreProcess(testId, hasAttr=(newTest.attributes !== undefined), hasStatus=true)
+            res.status(403).send({
+                message: `Error saving the new test: 
+                status ${postStatus.toUpperCase()} doesn't exists`
+            });
+            return;
+        }
+        await dbInteract.manipulateData(`INSERT INTO TestStatus SET ?`,
+            [{
+                test_Id: testId,
+                result_State: postStatusId.result[0].id
+            }]
+        );
+    }
+
     res.status(200).send({
         message: 'Insertion completed'
     });
     return;
 }
 
-async function getStatusById(req, res) {
-    const id = req.params.id;
-
-    const validateExistence =  await dbInteract.isExists(`SELECT * FROM Status WHERE id=${id}`);
+async function getTest(req, res) {
+    const testId = req.params.id | req.body.test.name;
+    const validateExistence = await dbInteract
+        .isExists(`SELECT * FROM Test WHERE id=${testId} OR name='${testId}'`);
     if (validateExistence.pass) {
-        res.status(200).send({
-            status: validateExistence.result[0]
-        });
         return {
-            status: validateExistence.result[0]
+            test: validateExistence.result[0]
         };
-    } else {
-        res.status(404).send({
-            message: 'The status doesn\'t exists'
-        });
-        return false;
-    }
+    } else return false;
 }
 
-async function getStatusList(req, res) {
+async function getTestById(req, res) {
+    const searchMethod = await getTest(req, res);
+    if (searchMethod === false) {
+        res.status(404).send({
+            message: "The test doesn't exists"
+        });
+        return;
+    }
+    res.status(200).send({
+        test: searchMethod.test
+    });
+    return;
+}
+
+async function getTestList(req, res) {
     const option = req.params.option;
     let query = "";
     if (option != null) {
         if (option === "id") {
-            query = `SELECT * FROM Status ORDER BY id ASC`;
+            query = `SELECT * FROM Test ORDER BY id ASC`;
         } else if (option === "name") {
-            query = `SELECT * FROM Status ORDER BY name ASC`;
+            query = `SELECT * FROM Test ORDER BY name ASC`;
         } else {
             res.status(404).send({
                 message: 'The option doesn\'t exists'
@@ -73,13 +175,13 @@ async function getStatusList(req, res) {
             return;
         }
     } else {
-        query =  `SELECT * FROM Status ORDER BY id ASC`;
+        query =  `SELECT * FROM Test ORDER BY id ASC`;
     }
 
     const status = await dbInteract.isExists(query);
     if (status == false) {
         res.status(404).send({
-            message: 'Add some status first!'
+            message: 'Add some tests first!'
         });
         return;
     }
@@ -118,6 +220,24 @@ async function removeStatus(req, res) {
     });
 }
 
+async function restoreProcess (testId, hasAttr=false, hasStatus=false) {
+
+    if (hasAttr === true) {
+        await dbInteract.manipulateData(
+            `DELETE * FROM TestAttributes WHERE test_Id=${testId}`
+        );
+    }
+    if (hasStatus === true) {
+        await dbInteract.manipulateData(
+            `DELETE * FROM TestStatus WHERE test_Id=${testId}`
+        );
+    }
+
+    await dbInteract.manipulateData(
+        `DELETE * FROM Test WHERE id=${testId}`
+    );
+}
+
 async function updateStatus(req, res) {
     const id = req.params.id;
     const newStatus = req.body.status;
@@ -148,9 +268,9 @@ async function updateStatus(req, res) {
 }
 
 module.exports = {
-    addStatus: addStatus,
-    getStatusById: getStatusById,
-    getStatusList: getStatusList,
+    addTest: addTest,
+    getTestById: getTestById,
+    getTestList: getTestList,
     removeStatus: removeStatus,
     updateStatus: updateStatus
 };
