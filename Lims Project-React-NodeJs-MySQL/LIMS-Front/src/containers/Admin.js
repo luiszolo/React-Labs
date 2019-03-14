@@ -2,6 +2,9 @@ import React from 'react';
 import axios from 'axios';
 
 
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+import ResponsiveTable from '../components/ResponsiveTable';
 
 
 
@@ -9,9 +12,10 @@ export default class Admin extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            nameStatus:'',
+          status:[],
+          status2:[],
             nameAtt:'',
-            name: 'Electricity Test',           //Name of the test
+         
             operator: 0,                        //State of the operator
             messageOp: '',                      //Message for the operator field
             validOp: undefined,                 //Validation state of the operator
@@ -32,6 +36,8 @@ export default class Admin extends React.Component{
             preStatusTest:'',
             requiredTest:'',
             postStatusTest:'',
+            solodepruebadetablas:'',
+            solodepruebadetablasparaindex:'',
 
         }
     }
@@ -145,7 +151,7 @@ export default class Admin extends React.Component{
     }
 
     validateAttHandler=(e)=>{
-        if(this.state.validAttGet==true && this.state.typeAtt!=''){
+        if(this.state.validAttGet===true && this.state.typeAtt!==''){
             this.setState({
                 validAtt: true
             })
@@ -179,8 +185,11 @@ export default class Admin extends React.Component{
     handleStatusTest=(e)=>{
         const statusTest=e.target.value
         if(statusTest.length>=1){
+            console.log("hola")
             this.setState({
-                statusTest:statusTest
+                statusTest:statusTest,
+                messageOp:"hola",
+                
             })
             }
             else if(statusTest===''){
@@ -236,14 +245,14 @@ export default class Admin extends React.Component{
     }
     handleRegexAtt=(e)=>{
         const regexAtt=e.target.value
-        console.log(regexAtt)
+        
         if(regexAtt.length>=1){
             this.setState({
                 // validAtt:true,
                 regexAtt:regexAtt
                 
             })
-            console.log(regexAtt)
+         
             }
             else if(regexAtt===''){
                 this.setState({
@@ -254,36 +263,22 @@ export default class Admin extends React.Component{
 
     handleStatus=(e)=>{
         const nameStatus=e.target.value
+        console.log(this.state.status.map((x, i) => x.name))
         if(nameStatus.length>=1){
-            console.log(nameStatus)
-            axios.get(`http://10.2.1.94:4000/api/status/` + nameStatus) 
-            .then(res => {
-                if (res.data.message) { 
-                    this.setState({
-                        validStatus: true,
-                        messageOp: "",
-                    })
-                } 
-                else {
-                    this.setState({
-                        messageOp: "The status alredy exist",
-                        validStatus: false,
-                    })
-                }
-            })		
-            .catch( () => {
-                alert('Conection Timed Out');
+            this.setState({
+                validOp:true
+            })
+        }
+        this.state.status.forEach((value,index)=>{
+            console.log(value.name)
+            if(value.name===nameStatus){
                 this.setState({
-                    loading: false,
-                    validSample: false,
-                });})
-            }
-            if(nameStatus===''){
-                this.setState({
-                    validStatus: false,
+                    validOp:false
                 })
             }
-    }
+        })
+            }
+        
 
     handleOperator=(e)=>{
         const operator = e.target.value
@@ -327,7 +322,7 @@ export default class Admin extends React.Component{
         this.setState({
             loading:true
         })
-        const nameStatus=this.state.nameStatus
+        
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
 			name:"Status de Prueba para Altas en Admin tres"
 		})
@@ -360,7 +355,7 @@ export default class Admin extends React.Component{
         this.setState({
             loading:true
         })
-        const nameStatus=this.state.nameStatus
+       
         const regex=this.state.regexAtt
 		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
             name:this.state.nameAtt,
@@ -396,7 +391,7 @@ export default class Admin extends React.Component{
         this.setState({
             loading:true
         })
-        const nameStatus=this.state.nameStatus
+     
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLenght:this.state.samplelenghtTest,
@@ -428,32 +423,138 @@ export default class Admin extends React.Component{
 			});
 		});
     }
+
+
+
+componentDidMount(){
+    const url= "http://localhost:4000/api/status";
+    fetch(url,{
+        method : "GET"
+    }).then(Response => Response.json()).then(res =>{
+        this.setState({status:res.Statuss})
+        
+    } 
+        )
+}
+
+deleteRow(name){
+
+    const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
+        return status.name === name
+    })
+
+    let copyStatus = [...this.state.status]
+    copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
+    this.setState({status:copyStatus})
+    
+    const item = {
+        id: index,                              // asignamos al los states los valores seleccionados con el pointer 
+        name: name
+      };
+
+      this.setState({
+        status2: [...this.state.status2, item]       // llenamos la info en el arreglo de alado 
+      });
+
+}
+
+deleteRow2(name){
+
+    const index = this.state.status2.findIndex(status2=>{ // aqui seleccionas el que quieres es como un pointer
+        return status2.name === name
+    })
+
+    let copyStatus2 = [...this.state.status2]
+    copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
+    this.setState({status2:copyStatus2})
+    
+    const item = {
+        id: index,                              // asignamos al los states los valores seleccionados con el pointer 
+        name: name
+      };
+
+      this.setState({
+        status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
+      });
+
+}
+
+
+handleAddRow = () => {
+    const item = {
+      id: this.state.solodepruebadetablasparaindex,
+      name: this.state.solodepruebadetablas
+    };
+    
+    this.setState({
+      status2: [...this.state.status2, item]
+    });
+  };
+
     render(){
         const {
             handleSubmitStatus,
             handleStatus,
-            handleOperator,
-            handleSample,
-            handleBlanks,
-            handleAtt,
-            handleSubmitAtt,
-            handleUnitAtt,
-            handleRegexAtt,
-            handleTypeAtt,
+            columns =[
+            {
+                Header: "Name",
+                accessor: "name"
+                ,filtrable: true
+            },
+            // {
+            //     Header: "Action",
+            //     Cell: props=>{
+            //         return(
+            //             <button className="" 
+            //             onClick={()=>{
+            //                 this.deleteRow(props.original.name)
+                            
+
+            //             }}>Delete</button>
+            //         )
+            //     }
+            // },
+
+        
+        ],            
+        columns2 =[
+ 
+            {
+                Header: "Name",
+                accessor: "name",
+            },
+            {
+                Header: "Action",
+                Cell: props=>{
+                    return(
+                        <button className="" 
+                        onClick={()=>{
+                            this.deleteRow2(props.original.name)
+                            
+
+                        }}>Delete</button>
+                    )
+                }
+            },
+
+        
+        ],
+        
+
             state: {
                 name,
                 messageOp,
                 validOp,
-                messageSamples,
+              solodepruebadetablas,
                 validSample,
                 messageAPI,
-                samples,
+             
                 validStatus,
-                validAtt,
+              
             }
         } = this;
 
-        const format='SA-##-#####'
+        
         const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
@@ -480,6 +581,7 @@ export default class Admin extends React.Component{
             </div>
             <div className='col-sm-12 col-xl-10'>
                 <form onSubmit={handleSubmitStatus}>
+                {solodepruebadetablas}
                     <div className='row justify-content-center form-inline mb-3'>
                     
                         <label className={regularLabels}>Status</label>
@@ -497,8 +599,8 @@ export default class Admin extends React.Component{
 					<button
                         type='submit'
                         className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(validStatus) ? false : true}
-                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
+                        disabled={(validOp) ? false : true}
+                        title={(validOp) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}
@@ -512,189 +614,53 @@ export default class Admin extends React.Component{
                 </form>
             </div>
 
-            <div className='col-lg-4 col-sm-12 m-4'>
-                <h1 className='text-center'>Attributes</h1>
-            </div>
-            <div className='col-sm-12 col-xl-10'>
-                <form onSubmit={handleSubmitAtt}>
-                    <div className='row justify-content-center form-inline mb-3'>
-                    
-                        <label className={regularLabels}>Name:</label>
-                        <input
-                            type='text'
-                            className={operatorInput}
-                            name='Status' 
-                            placeholder='#####'
-                            onBlur={handleAtt}
-                        />
-                        <label className={warningLabels}>{messageOp}</label>
-                    </div>
-                    <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Unit:</label>
-                    <input
-                   
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleUnitAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Type:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleTypeAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Regex:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
 
-                    <div className='row justify-content-center'>
-					<button
-                        type='submit'
-                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        // disabled={(validAtt) ? false : true}
-                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
-                    >
-                    Save Data
-                    {data}
-                    </button>
-					</div>
-					<div className='row justify-content-center'>
-					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                    {messageAPI}
-                    </label>
-					</div>
-                </form>
-            </div>
 
-            <div className='col-lg-4 col-sm-12 m-4'>
-                <h1 className='text-center'>Tests</h1>
-            </div>
-            <div className='col-sm-12 col-xl-10'>
-                <form onSubmit={handleSubmitAtt}>
-                    <div className='row justify-content-center form-inline mb-3'>
-                    
-                        <label className={regularLabels}>Name:</label>
-                        <input
-                            type='text'
-                            className={operatorInput}
-                            name='Status' 
-                            placeholder='#####'
-                            onBlur={handleAtt}
-                        />
-                        <label className={warningLabels}>{messageOp}</label>
-                    </div>
-                    <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Samples Lenght:</label>
-                    <input
-                   
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleUnitAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Attributes:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleTypeAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Status:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Pre Status:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>What Test does it Required:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Post Status:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
 
-                    <div className='row justify-content-center'>
-					<button
-                        type='submit'
-                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        // disabled={(validAtt) ? false : true}
-                        title={(validSample && validOp) ? 'Form is ready' : 'Form not ready'}
-                    >
-                    Save Data
-                    {data}
-                    </button>
-					</div>
-					<div className='row justify-content-center'>
-					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                    {messageAPI}
-                    </label>
-					</div>
-                </form>
-            </div>
+
+
+
+
+
+
+      <div>
+
+
+
+
+          </div>
+       
+
+
+            <ReactTable
+            columns={columns}
+            data={this.state.status}
+            filtrable
+            sortable
+            
+            
+            ></ReactTable>
+
+
+
+
+            {/* <ReactTable
+            columns={columns2}
+            data={this.state.status2}
+            
+            ></ReactTable> */}
+
+            {/* <ResponsiveTable title="Hello my fellas!" cols={{
+                id: 'ID',
+                name: 'Status'
+            }} rows ={this.state.status}></ResponsiveTable> */}
+
+
+
+
+
+
+
 
 
         </div>)

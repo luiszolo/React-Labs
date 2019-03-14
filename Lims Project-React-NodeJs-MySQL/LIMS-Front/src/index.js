@@ -10,6 +10,8 @@ import Test from './containers/Test';
 //Importing CSS file
 import './index.css';
 import Admin from './containers/Admin';
+import AdminTests from './containers/AdminTests';
+import AdminAttributes from './containers/AdminAttributes';
 
 class App extends React.Component {
     constructor(props){
@@ -32,11 +34,11 @@ class App extends React.Component {
     //Render function for the app
     render() {
 		let app = ['Home'].concat(this.state.tests.map(e => e['name']))
-		.concat('Generate Report', 'Admin Site');
+		.concat('Generate Report', 'Admin Site','Admin Attributes','Admin Tests');
 
 		let components = [(<Home/>)].concat(this.state.tests.map(e => (
 			<Test name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
-		))).concat(<Report/>, <Admin/>);
+		))).concat(<Report/>, <Admin/>, <AdminAttributes/>, <AdminTests/>);
 
         return(<div>
             <header className='container-fluid bg-info fixed-top'></header>

@@ -36,6 +36,7 @@ export default class extends React.Component {
 					{
 						Object.values(row).map( function(value, idx){
 							return <td data-label={Object.keys(row)[idx]}>{value}</td>
+						
 						})
 					}
 

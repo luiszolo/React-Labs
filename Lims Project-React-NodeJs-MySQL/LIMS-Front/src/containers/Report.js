@@ -40,6 +40,17 @@ export default class Report extends React.Component{
 
     }
 
+    handletesting = (e) => {
+        const testing = e.target.value
+        alert("dsadasd")
+        console.log("df")
+        this.setState({
+            testing: testing,
+        })
+        console.log(testing)
+
+    }
+
     handleSearch = () => {
         const sample =  this.state.sample
         
@@ -73,6 +84,7 @@ export default class Report extends React.Component{
     render() {
         const {
             addSample,
+          
             validateSample,
             handleSearch,
             state: {
@@ -86,7 +98,8 @@ export default class Report extends React.Component{
         const regularLabels = 'col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center'
 
         
-        return(<div className='test-component p-4'>
+        return(
+        <div className='test-component p-4'>
                     <div className='row justify-content-center form-inline m-4'>
                        <div className='col-12 row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample Search: </label>
@@ -121,11 +134,12 @@ export default class Report extends React.Component{
 					this.state.tests && this.state.tests.length === 0 ? ('') : (
 						<ResponsiveTable title='Sample logs' cols={{
 							userID: 'User ID',
-							sample: 'Sample',
+							sample: 'Sample' ,
 							state: 'State',
 							test: 'Test',
 							onCreated: 'On Created'
-						}} rows={this.state.tests}/>
+						}} rows={this.state.tests}
+                        onClick={this.handletesting}/>
 					)
 				}
 				{
