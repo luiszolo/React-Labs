@@ -4,19 +4,28 @@ const pool = require('./../config/database');
 
 // Testing
 async function insertData(req, res) {
-	let body = req.body;
-	console.log(body)
-	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
-	if(operator == false) {
-		res.send({
+	
+	const operator = await require('./OperatorController')
+        .getOperator(req, res);
+	if (operator.operators === undefined) {
+		res.status(404).send({
 			message: 'The operator doesn\'t exists'
 		});
 		return;
 	}
-	const test = await dbInteract.isExists(`SELECT * FROM Test WHERE name='${body.test.toUpperCase()}'`);
-	if (test == false) {
-		res.send({
-			message: 'The test doesn\'t exists'
+
+	const testResultState = await require('./TestController')
+		.getTest(req, res);
+	
+	const result_State = await require('./StatusController').getStatus({
+		params: {
+			id: testResultState.test.result_State
+		}
+	}, res);
+
+	if (result_State.status === undefined) {
+		res.status(404).send({
+			message: 'The test result state doesn\'t exists'
 		});
 		return;
 	}

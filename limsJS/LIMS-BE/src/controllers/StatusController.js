@@ -9,7 +9,7 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addStatus(req, res) {
     const newStatus = req.body.status;
 
-    if (await getStatusById(req, res) !== false) {
+    if (await getStatus(req, res) !== false) {
         res.status(403).send({
             message: 'The status is already exists'
         });
@@ -51,7 +51,7 @@ async function getStatus(req, res) {
 }
 
 async function getStatusById(req, res) {
-    const searchMethod = await getStatusById(req, res);
+    const searchMethod = await getStatus(req, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The status doesn't exists"
@@ -104,7 +104,7 @@ async function removeStatus(req, res) {
         return;
     }
 
-    if (await getStatusById(req, res) === false) {
+    if (await getStatus(req, res) === false) {
         res.status(404).send({
             message: 'The status doesn\'t exists'
         });
@@ -128,7 +128,7 @@ async function updateStatus(req, res) {
     const id = req.params.id;
     const newStatus = req.body.status;
 
-    if (await getStatusById(req, res) !== false) {
+    if (await getStatus(req, res) !== false) {
         res.status(403).send({
             message: 'The status is already exists'
         });
@@ -155,6 +155,7 @@ async function updateStatus(req, res) {
 
 module.exports = {
     addStatus: addStatus,
+    getStatus: getStatus,
     getStatusById: getStatusById,
     getStatusList: getStatusList,
     removeStatus: removeStatus,

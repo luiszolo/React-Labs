@@ -152,6 +152,7 @@ async function updateAttribute(req, res) {
 
 module.exports = {
     addAttribute: addAttribute,
+    getAttribute: getAttribute,
     getAttributeById: getAttributeById,
     getAttributeList: getAttributeList,
     removeAttribute: removeAttribute,

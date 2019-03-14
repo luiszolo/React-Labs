@@ -168,6 +168,7 @@ async function updateOperator(req, res) {
 
 module.exports = {
     addOperator: addOperator,
+    getOperator: getOperator,
     getOperatorById: getOperatorById,
     getOperatorList: getOperatorList,
     removeOperator: removeOperator,

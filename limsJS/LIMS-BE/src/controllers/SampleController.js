@@ -154,6 +154,7 @@ async function updateSample(req, res) {
 
 module.exports = {
     addSample: addSample,
+    getSample: getSample,
     getSampleById: getSampleById,
     getSampleList: getSampleList,
     removeSample: removeSample,
