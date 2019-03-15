@@ -47,15 +47,21 @@ async function addTest (req, res) {
 	}
 
 	if (newTest.prevStatus && newTest.postStatus) {
-		const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
-		const prevId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.prevStatus.name.toUpperCase()}'`);
-		const postId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.postStatus.toUpperCase()}'`);
-		console.log(id, prevId, postId)
+        const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
+        const prevId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.prevStatus.name.toUpperCase()}'`);
+        for await (const status of newTest.postStatus) {
+            const postId = await pool.query(`SELECT id FROM Status WHERE name='${status.toUpperCase()}'`);
+            if (postId === undefined || prevId === undefined) {
+                res.send({
+                    message: "Status invalid"
+                });
+                return;
+            }
+            await pool.query(`INSERT INTO statussequence SET status_Id=${postId[0].id}, status_Required=${prevId[0].id}`);
 
-		await pool.query(`INSERT INTO statussequence SET status_Id=${postId[0].id}, status_Required=${prevId[0].id}`);
-
-		await pool.query(`INSERT INTO teststatus SET test_Id=${id[0].id}, prev_State=${prevId[0].id}, post_State=${postId[0].id}`);
-		console.log("Llego aqui? :v")
+		    await pool.query(`INSERT INTO teststatus SET test_Id=${id[0].id}, prev_State=${prevId[0].id}, post_State=${postId[0].id}`);
+        
+        }
 	}
 	
 	if (newTest.attributes == null) {
