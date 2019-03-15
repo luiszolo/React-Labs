@@ -1,8 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import InputField from './../components/InputField';
-import SpinnerButton from './../components/SpinnerButton';
+
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -170,7 +169,7 @@ console.log(this.state.status2)
         })
        
         console.log(this.state.status2)
-		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
+		axios.post(`http://localhost:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
             attributes:this.state.attributes2.map((x, i) => x.name),
@@ -182,16 +181,11 @@ console.log(this.state.status2)
             postStatus:this.state.status2.map((x, i) => x.name)
 		})
 		.then( res=> {
-            console.log(res.data.message)
-			if (res.data.message==='Insertion successful') {
-                this.componentDidMount()
+			if (res.data.message==='Insertion completed') {
 				this.setState({
 					messageAPI: res.data.message,
-					validOp: false,
-                    loading:false,
-                    nameTest:' ',
-                    status2:[],
-                    attributes2:[],
+					validStatus: false,
+					loading:false
 				})
 			} else {
 				this.setState({
@@ -211,7 +205,7 @@ console.log(this.state.status2)
         
 
 
-        const url1= "http://10.2.1.94:4000/api/attributes";
+        const url1= "http://localhost:4000/api/attributes";
         fetch(url1,{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
@@ -219,7 +213,7 @@ console.log(this.state.status2)
         } 
             )
 
-            const url2= "http://10.2.1.94:4000/api/status";
+            const url2= "http://localhost:4000/api/status";
             fetch(url2,{
                 method : "GET"
             }).then(Response => Response.json()).then(res =>{
@@ -230,7 +224,7 @@ console.log(this.state.status2)
             
                 )
                 
-                const url4= "http://10.2.1.94:4000/api/status";
+                const url4= "http://localhost:4000/api/status";
                 fetch(url4,{
                     method : "GET"
                 }).then(Response => Response.json()).then(res =>{
@@ -241,7 +235,7 @@ console.log(this.state.status2)
                 
                     )
 
-            const url= "http://10.2.1.94:4000/api/tests";
+            const url= "http://localhost:4000/api/tests";
             fetch(url,{
                 method : "GET"
             }).then(Response => Response.json()).then(res =>{
@@ -269,11 +263,7 @@ console.log(this.state.status2)
           this.setState({
             attributes2: [...this.state.attributes2, item]       // llenamos la info en el arreglo de alado 
           });
-          
-
- 
-
-
+          console.log(item.name)
     
     }
     
@@ -314,13 +304,9 @@ console.log(this.state.status2)
           };
     
           this.setState({
-            status2: [...this.state.status2, item] ,      // llenamos la info en el arreglo de alado 
-            validTest4:true
+            status2: [...this.state.status2, item]       // llenamos la info en el arreglo de alado 
           });
     
-   
-                   
-
     }
     
     deleteRow4(name){
@@ -341,12 +327,6 @@ console.log(this.state.status2)
           this.setState({
             status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
           });
-          if(this.state.status2.length===1){
-              console.log("funciona")
-            this.setState({
-                validTest4:false,
-            })
-            }
     
     }
     renderOption(){
@@ -532,7 +512,6 @@ console.log(this.state.status2)
 
                     </div>
                         <label className={regularLabels}>Name:</label>
-
                         <input
                             type='text'
                             className={operatorInput}
@@ -581,8 +560,8 @@ console.log(this.state.status2)
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
                     
-                    <label className={regularLabels}>Pre Status:</label>
-                        <select id="status" onBlur={this.handlePreStatusTest} defaultValue="Sample Ready For Electricity" placeholder="Status">
+                    <label className={regularLabels}>Pre Status2:</label>
+                        <select id="status" onBlur={this.handlePreStatusTest} defaultValue="Sample Ready For Electricity" placeholder="Status"  >
                             {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
@@ -617,9 +596,7 @@ console.log(this.state.status2)
                     Save Data
                     {data}
                     </button>
-                    
 					</div>
-                    {messageAPI}
 					<div id="tables" className='row justify-content-center'>                
                     <ReactTable
                         columns={columns3}
@@ -633,7 +610,7 @@ console.log(this.state.status2)
                         noDataText={"Select a Status..."}>
                     </ReactTable>
 					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                   
+                    {messageAPI}
                     
                     </label>
                     
