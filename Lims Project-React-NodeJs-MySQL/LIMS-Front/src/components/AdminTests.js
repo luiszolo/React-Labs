@@ -169,7 +169,7 @@ console.log(this.state.status2)
         })
        
         console.log(this.state.status2)
-		axios.post(`http://localhost:4000/api/tests/add`,{
+		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
             attributes:this.state.attributes2.map((x, i) => x.name),
@@ -205,7 +205,7 @@ console.log(this.state.status2)
         
 
 
-        const url1= "http://localhost:4000/api/attributes";
+        const url1= "http://10.2.1.94:4000/api/attributes";
         fetch(url1,{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
@@ -213,7 +213,7 @@ console.log(this.state.status2)
         } 
             )
 
-            const url2= "http://localhost:4000/api/status";
+            const url2= "http://10.2.1.94:4000/api/status";
             fetch(url2,{
                 method : "GET"
             }).then(Response => Response.json()).then(res =>{
@@ -224,7 +224,7 @@ console.log(this.state.status2)
             
                 )
                 
-                const url4= "http://localhost:4000/api/status";
+                const url4= "http://10.2.1.94:4000/api/status";
                 fetch(url4,{
                     method : "GET"
                 }).then(Response => Response.json()).then(res =>{
@@ -235,7 +235,7 @@ console.log(this.state.status2)
                 
                     )
 
-            const url= "http://localhost:4000/api/tests";
+            const url= "http://10.2.1.94:4000/api/tests";
             fetch(url,{
                 method : "GET"
             }).then(Response => Response.json()).then(res =>{

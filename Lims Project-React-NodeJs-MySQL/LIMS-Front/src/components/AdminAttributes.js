@@ -14,17 +14,6 @@ export default class AdminAtrributes extends React.Component{
             status:[],
             status2:[],
             nameAtt:'',
-            name: 'Electricity Test',           //Name of the test
-            operator: 0,                        //State of the operator
-            messageOp: '',                      //Message for the operator field
-            validOp: undefined,                 //Validation state of the operator
-            validStatus: undefined,
-            validAtt: undefined,
-            samples: Array(10).fill(''),        //Array of samples
-            messageSamples: Array(10).fill(''), //Array of messages for the samples
-            validSample: false,                 //Validation state of the samples
-            messageAPI: '',                     //Message of the API
-            loading: false,                     //Loading state
             unitAtt:'',
             typeAtt:'',
             regexAtt:'',
@@ -36,40 +25,6 @@ export default class AdminAtrributes extends React.Component{
             requiredTest:'',
             postStatusTest:'',
 
-        }
-    }
-
-
-    /*Funtion for update the samples in their position in the array */
-    updateSamplesMessage=(value,position)=>{                                //Take the parameters value an position. Value is the sample and position is the position in the array
-        this.setState((state)=>{                                            //Setting the state with an arrow funtion with the parameter state
-            const messageSamples = state.messageSamples.map((message,i)=>{  //Declaring a variable "samples" and assigning the value of the map of the state of samples with a function with the parameters sample as the current value and i as the index in the array
-                if(i===position){                                           //Condition that say if the position of the parameter given is equal to the index then then change the value for the parameter
-                    return message=value                                    //Changing the last value for the new one
-                } else {                                                    //If the position don't match, return the current value
-                    return message;                                         //Return the current value
-                }
-            })
-            return {                                                        //Return the array as the new state
-                messageSamples,
-            };
-        })
-    }
-
-
-    clearSamples=(sampleNumber)=>{
-        if (sampleNumber < this.state.samples.length){
-            this.updateSamples('', sampleNumber)
-            this.updateSamplesMessage('', sampleNumber)
-            this.clearSamples(sampleNumber + 1)
-        }
-    }
-
-    handleBlanks=(e)=>{
-        const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
-        const sample = e.target.value
-        if(sample===''){
-            this.clearSamples(sampleNumber)
         }
     }
 
@@ -112,11 +67,6 @@ export default class AdminAtrributes extends React.Component{
             }
     }
 
-
-
-    
-
-
     handleRegexAtt=(e)=>{
         const regexAtt=e.target.value
         if(regexAtt.length>=1){
@@ -133,8 +83,6 @@ export default class AdminAtrributes extends React.Component{
             }
     }
 
-
-
     handleTypeAtt=(e)=>{
         const typeAtt=e.target.value
         if(typeAtt.length>=1){
@@ -149,13 +97,6 @@ export default class AdminAtrributes extends React.Component{
                 })
             }
     }
-
-
-
-
-
-
-
 
     handleSubmitAtt = event => {
         event.preventDefault();
@@ -192,7 +133,7 @@ export default class AdminAtrributes extends React.Component{
     }
 
     componentDidMount(){
-        const url= "http://localhost:4000/api/attributes";
+        const url= "http://10.2.1.94:4000/api/attributes";
         fetch(url,{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
