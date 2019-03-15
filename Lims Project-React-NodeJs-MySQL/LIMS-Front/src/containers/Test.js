@@ -27,7 +27,6 @@ export default class Test extends React.Component {
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 		this.handleMoveFormData = this.handleMoveFormData.bind(this);
-		this.handleClick = this.handleClick.bind(this);
 		this.handleMoveSamplesData = this.handleMoveSamplesData.bind(this);
 	}
 
