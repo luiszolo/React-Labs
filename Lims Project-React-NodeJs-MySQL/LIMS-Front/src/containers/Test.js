@@ -27,6 +27,8 @@ export default class Test extends React.Component {
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 		this.handleMoveFormData = this.handleMoveFormData.bind(this);
+		this.handleClick = this.handleClick.bind(this);
+		this.handleMoveSamplesData = this.handleMoveSamplesData.bind(this);
 	}
 
 	componentWillMount(){
@@ -45,47 +47,17 @@ export default class Test extends React.Component {
 		}
 	}
 
-	handleMoveFormData(idx){
-		if( idx < this.props.samplesLength) {
-			if(this.refs[`sample${idx + 2}`] !== undefined && idx !== 0) {
-				this.refs[`sample${idx + 1}`].setState({
-					input: this.refs[`sample${idx + 2}`].state.input,
-					warningText: this.refs[`sample${idx + 2}`].state.warningText,
-					prevPassed: this.refs[`sample${idx + 2}`].state.prevPassed,
-					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
-					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
-				});
-
-				this.handleAppendSamplesArray(this.state.samples[idx + 1], idx)
-				this.handleMoveFormData(idx + 1);
-			} else if( idx === 0) {
-				this.handleAppendSamplesArray(this.refs[`sample${idx + 2}`].state.input, idx);
-				this.refs[`sample${idx + 1}`].setState({
-					input: this.refs[`sample${idx + 2}`].state.input,
-					warningText: this.refs[`sample${idx + 2}`].state.warningText,
-					prevPassed: true,
-					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
-					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
-				});
-				this.handleMoveFormData(idx + 1);
-			} else {
-				this.refs[`sample${idx + 1}`].setState({
-					input: '',
-					warningText: undefined,
-					prevPassed: undefined,
-					passValidation: undefined,
-					passRegex: undefined,
-				});
-			}
-		} 
+	handleAppendSamplesArray(sample, pos){
+		let samples = this.state.samples.slice();
+		samples[pos] = sample
+		this.setState({ samples: samples});
 	}
 
-	handleAppendSamplesArray(sample, pos){
-		console.log(pos, sample)
-		let samples = this.state.samples.map((s, i) => {
-			if(pos === i) return s = sample;
-			else return s;
-		});
+	handleMoveSamplesData(idx){
+		let firstSamples = this.state.samples.slice(0, idx);
+		let lastSamples = this.state.samples.slice(idx + 1, this.state.samples.length);
+		let samples = firstSamples.concat(lastSamples)
+		samples.push('')
 		this.setState({ samples: samples});
 	}
 
@@ -104,6 +76,38 @@ export default class Test extends React.Component {
 			else return s;
 		});
 		this.setState({ attributes: attrs});
+	}
+
+	handleMoveFormData(idx){
+		if( idx < this.props.samplesLength) {
+			if(this.refs[`sample${idx + 2}`] !== undefined && idx !== 0) {
+				this.refs[`sample${idx + 1}`].setState({
+					input: this.refs[`sample${idx + 2}`].state.input,
+					warningText: this.refs[`sample${idx + 2}`].state.warningText,
+					prevPassed: this.refs[`sample${idx + 2}`].state.prevPassed,
+					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
+					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
+				});
+				this.handleMoveFormData(idx + 1);
+			} else if( idx === 0) {
+				this.refs[`sample${idx + 1}`].setState({
+					input: this.refs[`sample${idx + 2}`].state.input,
+					warningText: this.refs[`sample${idx + 2}`].state.warningText,
+					prevPassed: true,
+					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
+					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
+				});
+				this.handleMoveFormData(idx + 1);
+			} else {
+				this.refs[`sample${idx + 1}`].setState({
+					input: '',
+					warningText: undefined,
+					prevPassed: undefined,
+					passValidation: undefined,
+					passRegex: undefined,
+				});
+			}
+		}
 	}
 
 	handleValidateAttribute(attribute, idx) {
@@ -147,6 +151,7 @@ export default class Test extends React.Component {
 	handleValidateSample(sample, idx){
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
 			this.handleMoveFormData(idx)
+			this.handleMoveSamplesData(idx)
 			if (idx !== 0) {
 				this.setState({
 					passedSamples: true,
