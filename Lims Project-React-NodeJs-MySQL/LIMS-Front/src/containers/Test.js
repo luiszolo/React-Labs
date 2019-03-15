@@ -26,7 +26,8 @@ export default class Test extends React.Component {
 		this.handleValidateAttribute = this.handleValidateAttribute.bind(this);
 		this.handleValidateOperator = this.handleValidateOperator.bind(this);
 		this.handleValidateSample = this.handleValidateSample.bind(this);
-		this.handleClearFormData = this.handleClearFormData.bind(this);
+		this.handleMoveFormData = this.handleMoveFormData.bind(this);
+		this.handleMoveSamplesData = this.handleMoveSamplesData.bind(this);
 	}
 
 	componentWillMount(){
@@ -45,37 +46,17 @@ export default class Test extends React.Component {
 		}
 	}
 
-	handleClearFormData(idx, prevPassed=true){
-		if( idx < this.props.samplesLength && idx !== 0) {
-			this.refs[`sample${idx + 1}`].setState({
-				input: '',
-				warningText: undefined,
-				prevPassed: prevPassed,
-				passValidation: undefined,
-				passRegex: undefined,
-			});
-			this.handleClearFormData(idx + 1, false);
-		} else if( idx === 0) {
-			this.setState({
-				passedSamples: false,
-				passedRepeatedSample: true
-			});
-			this.refs[`sample${idx + 1}`].setState({
-				input: '',
-				warningText: undefined,
-				prevPassed: prevPassed,
-				passValidation: undefined,
-				passRegex: undefined,
-			});
-			this.handleClearFormData(idx + 1, false);
-		}
+	handleAppendSamplesArray(sample, pos){
+		let samples = this.state.samples.slice();
+		samples[pos] = sample
+		this.setState({ samples: samples});
 	}
 
-	handleAppendSamplesArray(sample, pos){
-		let samples = this.state.samples.map((s, i) => {
-			if(pos === i) return s = sample;
-			else return s;
-		});
+	handleMoveSamplesData(idx){
+		let firstSamples = this.state.samples.slice(0, idx);
+		let lastSamples = this.state.samples.slice(idx + 1, this.state.samples.length);
+		let samples = firstSamples.concat(lastSamples)
+		samples.push('')
 		this.setState({ samples: samples});
 	}
 
@@ -96,8 +77,39 @@ export default class Test extends React.Component {
 		this.setState({ attributes: attrs});
 	}
 
+	handleMoveFormData(idx){
+		if( idx < this.props.samplesLength) {
+			if(this.refs[`sample${idx + 2}`] !== undefined && idx !== 0) {
+				this.refs[`sample${idx + 1}`].setState({
+					input: this.refs[`sample${idx + 2}`].state.input,
+					warningText: this.refs[`sample${idx + 2}`].state.warningText,
+					prevPassed: this.refs[`sample${idx + 2}`].state.prevPassed,
+					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
+					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
+				});
+				this.handleMoveFormData(idx + 1);
+			} else if( idx === 0) {
+				this.refs[`sample${idx + 1}`].setState({
+					input: this.refs[`sample${idx + 2}`].state.input,
+					warningText: this.refs[`sample${idx + 2}`].state.warningText,
+					prevPassed: true,
+					passValidation: this.refs[`sample${idx + 2}`].state.passValidation,
+					passRegex: this.refs[`sample${idx + 2}`].state.passRegex,
+				});
+				this.handleMoveFormData(idx + 1);
+			} else {
+				this.refs[`sample${idx + 1}`].setState({
+					input: '',
+					warningText: undefined,
+					prevPassed: undefined,
+					passValidation: undefined,
+					passRegex: undefined,
+				});
+			}
+		}
+	}
+
 	handleValidateAttribute(attribute, idx) {
-		
 		if (this.refs[`attribute${idx + 2}`] === undefined ||  (this.refs[`attribute${idx + 2}`].state.input === '')) {
 			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
 			this.setState({
@@ -136,12 +148,9 @@ export default class Test extends React.Component {
 	}
 
 	handleValidateSample(sample, idx){
-		this.refs.submitButton.setState({
-			resultMessage: ''
-		})
-		if(sample.input === '') {
-			this.handleAppendSamplesArray('', idx);
-			this.handleClearFormData(idx, true)
+		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
+			this.handleMoveFormData(idx)
+			this.handleMoveSamplesData(idx)
 			if (idx !== 0) {
 				this.setState({
 					passedSamples: true,
@@ -149,33 +158,31 @@ export default class Test extends React.Component {
 				});
 			}
 			return;
+		} else {
+			this.handleAppendSamplesArray(sample.input, idx);
+			this.setState({
+				passedRepeatedSample: true
+			});
+			// Repeated samples!
+			this.state.samples.forEach((value, i)=>{
+				if(sample.input === value && sample.input !== ''  && idx >= i && idx !== i){
+					this.refs[`sample${idx + 1}`].setState({
+						warningText: 'This sample is repeat',
+						passValidation: false,
+					});
+					this.refs[`sample${idx + 2}`].setState({
+						prevPassed: false
+					})
+				}
+			});
+			if(this.state.passedRepeatedSample === false) return;
+			// Validate Regex samples
+			this.setState({
+				passedSamples: (sample.passRegex),
+				passedRepeatedSample: true
+			});
 		}
-		this.setState({
-			passedRepeatedSample: true
-		});
-		// Repeated samples!
-		this.state.samples.forEach((value, i)=>{
-			if(sample.input === value && sample.input !== ''  && idx >= i && idx !== i){
-				this.refs[`sample${idx + 1}`].setState({
-					warningText: 'This sample is repeat',
-					passValidation: false,
-				});
-				this.refs[`sample${idx + 2}`].setState({
-					prevPassed: false
-				})
-			}
-		});
-		if(this.state.passedRepeatedSample === false) return;
-		// Validate Regex samples
-		this.setState({
-			passedSamples: (sample.passRegex),
-			passedRepeatedSample: true
-		});
-
-		// Set samples in json body
-		if(sample.input === '') this.handleAppendSamplesArray('', idx);
-		else this.handleAppendSamplesArray(sample.input, idx);
-
+		
 		// Activate next sample
 		if(this.state.passedSamples && this.refs[`sample${idx + 1}`].state.warningText === '') {
 			if (this.refs[`sample${idx + 2}`]) {
@@ -218,7 +225,7 @@ export default class Test extends React.Component {
 						passedSamples: false,
 						samples: Array(this.props.samplesLength).fill('')
 					});
-					this.handleClearFormData(0, true);
+					this.handleMoveFormData(0);
 				}
 			}).catch( _ => {
 				alert('Connection Timed Out');
