@@ -5,6 +5,11 @@ body{
 	min-height: 100vh;
 }
 
+.correctIcon{
+	height: 2.5rem;
+	padding: .5rem;
+}
+
 @media only screen and (max-width: 768px) {
 	h1 {
 		font-size: 1.8em;

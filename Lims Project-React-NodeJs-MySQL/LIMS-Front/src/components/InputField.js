@@ -150,13 +150,13 @@ export default class InputField extends React.Component {
 			warningCssClassName
 		} = this.props;
 
-		let inputClassName = inputCssClassName
-		if(this.state.passRegex || this.state.passValidation) {
-			inputClassName += ' border-success'
+		let validationIcon = <div></div>
+		if(this.state.passRegex && this.state.passValidation) {
+			validationIcon = <img src='images/correct.jpg' className='correctIcon' alt='correct'/>
 		} else if(this.state.passRegex === undefined && this.state.passValidation === undefined){
-			inputClassName = inputCssClassName
+			validationIcon = <div></div>
 		} else {
-			inputClassName += ' border-danger'
+			validationIcon = <img src='images/wrong.png' className='correctIcon' alt='correct'/>
 		}
 
 		return (
@@ -166,14 +166,15 @@ export default class InputField extends React.Component {
 			>
 				<label className={ labelCssClassName }> { label } </label>
 				<input type='text' className={ 
-					inputCssClassName ? 'form-control '.concat(inputClassName) : 'form-control' 
+					inputCssClassName ? 'form-control '.concat(inputCssClassName) : 'form-control' 
 				} name={ name } placeholder={ placeholder } required={ required } 
 				onChange={ this.handleUserInput } 
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
 				ref = { name } value={ this.state.input } disabled={ !this.state.prevPassed }
 				/>
+				{ validationIcon }
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
-				{ this.state.warningText  }
+				{ this.state.warningText }
 				</label>
 			</div>
 		);
