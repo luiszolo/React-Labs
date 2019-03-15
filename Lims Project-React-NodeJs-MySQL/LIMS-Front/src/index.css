@@ -5,6 +5,11 @@ body{
 	min-height: 100vh;
 }
 
+.correctIcon{
+	height: 2.5rem;
+	padding: .5rem;
+}
+
 @media only screen and (max-width: 768px) {
 	h1 {
 		font-size: 1.8em;
@@ -25,9 +30,9 @@ body{
 	margin-top: 50px !important;
 }
 
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
+button[disabled] {
+    border-color: #6c757d !important;
+    background: #6c757d !important;
 }
 
 .buttonImage{
