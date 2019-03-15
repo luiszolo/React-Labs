@@ -1,21 +1,15 @@
 import React from 'react';
-import axios from 'axios';
 
-
-import ReactTable from "react-table";
 import Status from '../components/AdminStatus';
 import Tests from '../components/AdminTests';
 import Attributes from '../components/AdminAttributes';
-
-import "react-table/react-table.css";
-
-
 
 export default class Admin extends React.Component{
     constructor(props){
         super(props);
         this.state={
             activeWindow: <Status/>,
+            activeTab:0,
         }
 
         this.handleButtonMenu = this.handleButtonMenu.bind(this)
@@ -26,47 +20,54 @@ export default class Admin extends React.Component{
 
         if (name==='tests'){
             this.setState({
-                activeWindow: <Tests/>
+                activeWindow: <Tests/>,
+                activeTab:2,
             })
         } else if(name==='attributes') {
             this.setState({
-                activeWindow: <Attributes/>
+                activeWindow: <Attributes/>,
+                activeTab:1,
             })
         } else {
             this.setState({
-                activeWindow: <Status/>
+                activeWindow: <Status/>,
+                activeTab:0,
             })
         }
     }
 
-
     render(){
-        return(<div className='content row test-component'>
-            <button 
-                type='button' 
-                name='status' 
-                className = 'col btn btn-light w-100 rounded-0 shadow-none'
-                onClick={this.handleButtonMenu}
-            >
-            Add status
-            </button>
-            <button 
-                type='button' 
-                name='attributes' 
-                className = 'col btn btn-light w-100 rounded-0 shadow-none'
-                onClick={this.handleButtonMenu}
-            >
-            Add attributes
-            </button>
-            <button 
-                type='button' 
-                name='tests' 
-                className = 'col btn btn-light w-100 rounded-0 shadow-none'
-                onClick={this.handleButtonMenu}
-            >
-            Add tests
-            </button>
-            <div>
+        const active = 'col-4 col-lg-2 btn activeButton border border-bottom-0 rounded-0 shadow-none'
+        const unactive = 'col-4 col-lg-2 btn btn-light border rounded-0 shadow-none'
+
+        return(<div className='row test-component'>
+            <div className='col-12 p-0 adminBar'>
+                <button 
+                    type='button' 
+                    name='status' 
+                    className = {(this.state.activeTab === 0) ? active : unactive}
+                    onClick={this.handleButtonMenu}
+                >
+                Add status
+                </button>
+                <button 
+                    type='button' 
+                    name='attributes' 
+                    className = {(this.state.activeTab === 1) ? active : unactive}
+                    onClick={this.handleButtonMenu}
+                >
+                Add attributes
+                </button>
+                <button 
+                    type='button'
+                    name='tests'
+                    className = {(this.state.activeTab === 2) ? active : unactive}
+                    onClick={this.handleButtonMenu}
+                >
+                Add tests
+                </button>
+            </div>
+            <div className='container-fluid'>
                 {this.state.activeWindow}
             </div>
         </div>)

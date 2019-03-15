@@ -5,6 +5,14 @@ body{
 	min-height: 100vh;
 }
 
+.activeButton{
+	background-color: white;
+}
+
+.adminBar{
+	background-color: #e3f2fd;
+}
+
 .correctIcon{
 	height: 2.5rem;
 	padding: .5rem;
@@ -27,7 +35,7 @@ body{
 }
 
 .test-component {
-	margin-top: 50px !important;
+	margin-top: 3rem !important;
 }
 
 button[disabled] {
@@ -45,6 +53,10 @@ button[disabled] {
 
 .container-fluid {
 	padding: 0 !important;
+}
+
+.status, .attributes{
+	border: .1px solid #6c757d ;
 }
 
 h1,h2,h3 {

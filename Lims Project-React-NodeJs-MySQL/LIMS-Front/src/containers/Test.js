@@ -264,7 +264,7 @@ export default class Test extends React.Component {
 		}
 		
 		return(
-			<div className='content row justify-content-center test-component'>
+			<div className='row justify-content-center test-component'>
 				<div className='col-lg-4 col-sm-12 m-4'>
 					<h2 className='text-center'>{ name }</h2>
 				</div>
