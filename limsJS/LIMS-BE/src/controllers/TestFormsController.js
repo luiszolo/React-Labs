@@ -160,8 +160,8 @@ async function insertData(req, res) {
 	let logInserted;
 	for await (const reqSample of body.samples) {
 		if (reqSample === '') continue;
-		for await (const reqPost of postStatus) {
-			for await  (const reqPrev of prevStatus) {
+		for await (const reqPrev of prevStatus) {
+			for await  (const reqPost of postStatus) {
 				let status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPrev.prev_State}`);
 				req.body = {
 					operator: body.operator,

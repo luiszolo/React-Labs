@@ -266,7 +266,8 @@ export default class Admin extends React.Component{
         console.log(this.state.status.map((x, i) => x.name))
         if(nameStatus.length>=1){
             this.setState({
-                validOp:true
+                validOp:true,
+                nameStatus:nameStatus
             })
         }
         this.state.status.forEach((value,index)=>{
@@ -324,7 +325,7 @@ export default class Admin extends React.Component{
         })
         
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
-			name:"Status de Prueba para Altas en Admin tres"
+			name: this.state.nameStatus
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
@@ -637,8 +638,6 @@ handleAddRow = () => {
             data={this.state.status}
             filtrable
             sortable
-            
-            
             ></ReactTable>
 
 

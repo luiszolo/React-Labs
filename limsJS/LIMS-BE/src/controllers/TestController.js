@@ -29,7 +29,7 @@ async function addTest (req, res) {
 		return;
 	}
 	if (newTest.attributes != null) {
-		await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state === 1 ? true : false}`);
+		await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state}`);
 		for await (const element of newTest.attributes) {
 			const auxAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${element.toUpperCase()}'`);
 			if(auxAttribute != null || auxAttribute != [{  }]) {
