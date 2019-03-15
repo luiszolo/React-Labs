@@ -18,13 +18,6 @@ export default class AdminAtrributes extends React.Component{
             typeAtt:'',
             regexAtt:'',
             validAttGet: undefined,
-            nameTest:'',
-            samplelenghtTest:'',
-            statusTest:'',
-            preStatusTest:'',
-            requiredTest:'',
-            postStatusTest:'',
-
         }
     }
 
@@ -138,13 +131,11 @@ export default class AdminAtrributes extends React.Component{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
             this.setState({status:res.Attributes})
-            
         } 
             )
     }
     
     deleteRow(name){
-    
         const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
             return status.name === name
         })
@@ -161,30 +152,7 @@ export default class AdminAtrributes extends React.Component{
           this.setState({
             status2: [...this.state.status2, item]       // llenamos la info en el arreglo de alado 
           });
-    
     }
-    
-    deleteRow2(name){
-    
-        const index = this.state.status2.findIndex(status2=>{ // aqui seleccionas el que quieres es como un pointer
-            return status2.name === name
-        })
-    
-        let copyStatus2 = [...this.state.status2]
-        copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
-        this.setState({status2:copyStatus2})
-        
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-          };
-    
-          this.setState({
-            status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
-          });
-    
-    }
-
 
     render(){
         const {
@@ -193,9 +161,6 @@ export default class AdminAtrributes extends React.Component{
                     Header: "Name",
                     accessor: "name"
                 },
-
-    
-            
             ], 
             handleAtt,
             handleSubmitAtt,
@@ -203,18 +168,14 @@ export default class AdminAtrributes extends React.Component{
             handleRegexAtt,
             handleTypeAtt,
             state: {
-              
                 messageOp,
                 validOp,
                 validAtt1,
                 validAtt2,
                 validAtt3,
-                validSample,
                 messageAPI,
-        
             }
         } = this;
-
     
         const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
@@ -223,22 +184,12 @@ export default class AdminAtrributes extends React.Component{
         let operatorInput= inputs
         let data
 
-        // if(validStatus===false){
-        //     operatorInput= operatorInput += ' border-danger'
-        // }else if(validStatus===true){
-        //     operatorInput= operatorInput += ' border-success'
-        // }else{
-        //     operatorInput = inputs
-        // }
-
         if (this.state.loading) {
           data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
 
         return(
         <div className='content row justify-content-center'>
-
-
             <div className='col-lg-4 col-sm-12 m-4'>
                 <h1 className='text-center'>Attributes</h1>
             </div>
@@ -312,19 +263,12 @@ export default class AdminAtrributes extends React.Component{
 					</div>
                 </form>
             </div>
-
-
             <ReactTable
             columns={columns}
             data={this.state.status}
             filtrable
             sortable
-            
-            
             ></ReactTable>
-
-
-
         </div>)
     }
 }
