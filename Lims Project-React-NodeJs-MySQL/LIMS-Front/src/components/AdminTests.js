@@ -1,12 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
-import InputField from './../components/InputField';
-import SpinnerButton from './../components/SpinnerButton';
-
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-
 
 export default class AdminTests extends React.Component{
     constructor(props){
@@ -17,8 +13,6 @@ export default class AdminTests extends React.Component{
             validTest3:undefined,
             validTest4:undefined,
             tests:[],
-            attributes:[],
-            attributes2:[],
             status:[],
             status2:[],
             status3:[],
@@ -26,43 +20,18 @@ export default class AdminTests extends React.Component{
             name: 'Electricity Test',           //Name of the test
             operator: 0,                        //State of the operator
             messageOp: '',                      //Message for the operator field
-            validOp: undefined,                 //Validation state of the operator
-            validStatus: undefined,
+            ValidNameTest: undefined,
             validAtt: undefined,
-            samples: Array(10).fill(''),        //Array of samples
-            messageSamples: Array(10).fill(''), //Array of messages for the samples
-            validSample: false,                 //Validation state of the samples
             messageAPI: '',                     //Message of the API
             loading: false,                     //Loading state
-            unitAtt:'',
-            typeAtt:'',
-            regexAtt:'',
-            validAttGet: undefined,
-            nameTest:'',
             samplelenghtTest:'',
             statusTest:'',
             preStatusTest:'',
             requiredTest:'',
             postStatusTest:'',
             attributeTest:'',
-
         }
     }
-    
-
-
-
-
-
-
-    handleBlanks=(e)=>{
-        const sampleNumber = parseInt(e.target.name.replace('sample',''),10)
-        const sample = e.target.value
-        if(sample===''){
-            this.clearSamples(sampleNumber)
-        }
-    }
-
 
     handleAttributesTest=(e)=>{
         const attributeTest=e.target.value
@@ -74,6 +43,7 @@ export default class AdminTests extends React.Component{
             else if(attributeTest===''){
             }
     }
+
     handleSamplesLTest=(e)=>{
         const samplelenghtTest=e.target.value
         if(samplelenghtTest.length>=1){
@@ -93,25 +63,24 @@ export default class AdminTests extends React.Component{
         const nameTest=e.target.value
         if(nameTest.length>=1){
             this.setState({
-                validOp:true,
+                ValidNameTest:true,
                 nameTest:nameTest
             })
         }
         else{
             this.setState({
-                validOp:false
+                ValidNameTest:false
             })
         }
         this.state.tests.forEach((value,index)=>{
             
             if(value.name===nameTest){
                 this.setState({
-                    validOp:false
+                    ValidNameTest:false
                 })
             }
         })
     }
-
 
     handleStatusTest=(e)=>{
         const statusTest=e.target.value
@@ -145,9 +114,7 @@ export default class AdminTests extends React.Component{
             }
     }
 
-
     handlePostStatusTest=(e)=>{
-console.log(this.state.status2)
         if(this.state.status2.length===0){
             this.setState({
                 validTest4:false,
@@ -160,16 +127,11 @@ console.log(this.state.status2)
             }
     }
 
-
-
-
     handleSubmitTest = event => {
         event.preventDefault();
         this.setState({
             loading:true
         })
-       
-        console.log(this.state.status2)
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
@@ -187,7 +149,7 @@ console.log(this.state.status2)
                 this.componentDidMount()
 				this.setState({
 					messageAPI: res.data.message,
-					validOp: false,
+					ValidNameTest: false,
                     loading:false,
                     nameTest:' ',
                     status2:[],
@@ -208,9 +170,6 @@ console.log(this.state.status2)
     }
 
     componentDidMount(){
-        
-
-
         const url1= "http://10.2.1.94:4000/api/attributes";
         fetch(url1,{
             method : "GET"
@@ -218,29 +177,20 @@ console.log(this.state.status2)
             this.setState({attributes:res.Attributes})
         } 
             )
-
             const url2= "http://10.2.1.94:4000/api/status";
             fetch(url2,{
                 method : "GET"
             }).then(Response => Response.json()).then(res =>{
                 this.setState({status:res.Statuss})
-                
-            } 
-
-            
+            }
                 )
-                
                 const url4= "http://10.2.1.94:4000/api/status";
                 fetch(url4,{
                     method : "GET"
                 }).then(Response => Response.json()).then(res =>{
-                    this.setState({status3:res.Statuss})
-                    
-                } 
-    
-                
+                    this.setState({status3:res.Statuss})  
+                }
                     )
-
             const url= "http://10.2.1.94:4000/api/tests";
             fetch(url,{
                 method : "GET"
@@ -248,96 +198,68 @@ console.log(this.state.status2)
                 this.setState({tests:res.Tests})
             } 
                 )
- 
     }
     
     deleteRow(name){
-    
         const index = this.state.attributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
             return attributes.name === name
         })
-    
         let copyattributes = [...this.state.attributes]
         copyattributes.splice(index,1)                   // estas tres lineas es para el borrado logico 
         this.setState({attributes:copyattributes})
-        
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
           };
-    
           this.setState({
             attributes2: [...this.state.attributes2, item]       // llenamos la info en el arreglo de alado 
           });
-          
-
- 
-
-
-    
     }
     
     deleteRow2(name){
-    
         const index = this.state.attributes2.findIndex(attributes2=>{ // aqui seleccionas el que quieres es como un pointer
             return attributes2.name === name
         })
-    
         let copyattributes2 = [...this.state.attributes2]
         copyattributes2.splice(index,1)                   // estas tres lineas es para el borrado logico 
         this.setState({attributes2:copyattributes2})
-        
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
           };
-    
           this.setState({
             attributes: [...this.state.attributes, item]       // llenamos la info en el arreglo de alado 
           });
-    
     }
 
     deleteRow3(name){
-
         const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
             return status.name === name
         })
-    
         let copyStatus = [...this.state.status]
         copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
         this.setState({status:copyStatus})
-        
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
           };
-    
           this.setState({
             status2: [...this.state.status2, item] ,      // llenamos la info en el arreglo de alado 
             validTest4:true
           });
-    
-   
-                   
-
     }
     
     deleteRow4(name){
-    
         const index = this.state.status2.findIndex(status2=>{ // aqui seleccionas el que quieres es como un pointer
             return status2.name === name
         })
-    
         let copyStatus2 = [...this.state.status2]
         copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
         this.setState({status2:copyStatus2})
-        
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
           };
-    
           this.setState({
             status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
           });
@@ -347,13 +269,14 @@ console.log(this.state.status2)
                 validTest4:false,
             })
             }
-    
     }
+
     renderOption(){
         return this.state.status3.map(name=>{
             return <option value={name.name}>{name.name}</option>
         })
     }
+
     render(){
         const {
             columns =[
@@ -375,19 +298,13 @@ console.log(this.state.status2)
                             
                             onClick={()=>{
                                 this.deleteRow(props.original.name)
-                                
-
                             }}>🡺</button>
                         )
                     }
                 },
-    
-            
             ],            
             columns2 =[
-     
                 {
-                    
                     Header: "Name",
                     accessor: "name",
                 },
@@ -409,10 +326,7 @@ console.log(this.state.status2)
                         )
                     }
                 },
-    
-            
             ],
-
             columns3 =[
                 {
                     Header: "Name",
@@ -431,19 +345,13 @@ console.log(this.state.status2)
                             <button className="" 
                             onClick={()=>{
                                 this.deleteRow3(props.original.name)
-                                
-    
                             }}>🡺</button>
                         )
                     }
                 },
-    
-            
             ],            
             columns4 =[
-     
                 {
-                    
                     Header: "Name",
                     accessor: "name",
                 },
@@ -459,60 +367,33 @@ console.log(this.state.status2)
                             <button className="" 
                             onClick={()=>{
                                 this.deleteRow4(props.original.name)
-                                
-    
                             }}>	🡸</button>
                         )
                     }
                 },
-    
-            
             ],
-
             state: {
-            
                 messageOp,
-                validOp,
+                ValidNameTest,
                 validTest1,
                 validTest2,
                 validTest3,
                 validTest4,
                 messageAPI,
-   
             }
-
-            
         } = this;
-
-        
         const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
-
-
-
-
         let operatorInput= inputs
         let data
-
-        // if(validStatus===false){
-        //     operatorInput= operatorInput += ' border-danger'
-        // }else if(validStatus===true){
-        //     operatorInput= operatorInput += ' border-success'
-        // }else{
-        //     operatorInput = inputs
-        // }
 
         if (this.state.loading) {
           data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
         } 
 
-
-
         return(
         <div className='content row justify-content-center'>
-           
-           
             <div className='col-lg-4 col-sm-12 m-4'>
                 <h1 className='text-center'>Tests</h1>
             </div>
@@ -520,19 +401,14 @@ console.log(this.state.status2)
                 <form onSubmit={this.handleSubmitTest}>
                     <div className='row justify-content-center form-inline mb-3'>
                     <div className="container">
-{/* <button onBlur={this.handlePostStatusTest()}>hola</button> */}
-
                         <div className="row">
                         <div className="col-md-4"></div>
                         <div className="col-md-4">
-                           
                         </div>
                         <div className="col-md-4"></div>
                         </div>
-
                     </div>
                         <label className={regularLabels}>Name:</label>
-
                         <input
                             type='text'
                             className={operatorInput}
@@ -543,10 +419,8 @@ console.log(this.state.status2)
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className='row justify-content-center form-inline mb-3'>
-                    
                     <label className={regularLabels}>Samples Lenght:</label>
                     <input
-                   
                         type='number'
                         className={operatorInput}
                         name='Status' 
@@ -555,20 +429,7 @@ console.log(this.state.status2)
                     />
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
-                {/* <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Attributes:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={this.handleAttributesTest}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div> */}
                 <div className='row justify-content-center form-inline mb-3'>
-                    
                     <label className={regularLabels}>Status:</label>
                     <input
                         type='checkbox'
@@ -580,52 +441,28 @@ console.log(this.state.status2)
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    
                     <label className={regularLabels}>Pre Status:</label>
                         <select id="status" onBlur={this.handlePreStatusTest} defaultValue="Sample Ready For Electricity" placeholder="Status">
                             {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
-
-                {/* <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Post Status:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={this.handlePostStatusTest}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div> */}
-
-
-
-
-
-
-
                     <div className='row justify-content-center'>
 					<button
                         type='submit'
                         className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(validOp && validTest1 && validTest2&& validTest3&& validTest4) ? false : true}
-                        title={(validOp) ? 'Form is ready' : 'Form not ready'}
+                        disabled={(ValidNameTest && validTest1 && validTest2&& validTest3&& validTest4) ? false : true}
+                        title={(ValidNameTest) ? 'Form is ready' : 'Form not ready'}
                     >
                     Save Data
                     {data}
                     </button>
-                    
 					</div>
                     {messageAPI}
 					<div id="tables" className='row justify-content-center'>                
                     <ReactTable
                         columns={columns3}
                         data={this.state.status}
-                        
-                        //defaultPageSize={5}
                     ></ReactTable>
                     <ReactTable
                         columns={columns4}
@@ -633,28 +470,19 @@ console.log(this.state.status2)
                         noDataText={"Select a Status..."}>
                     </ReactTable>
 					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                   
-                    
                     </label>
-                    
 					</div>
-                   
-                
                 </form>
-
             </div>
-
             <ReactTable
-            columns={columns}
-            data={this.state.attributes}
-            //defaultPageSize={5}
+                columns={columns}
+                data={this.state.attributes}
             ></ReactTable>
             <ReactTable
-            columns={columns2}
-            data={this.state.attributes2}
-            noDataText={"Select an Attribute..."}
+                columns={columns2}
+                data={this.state.attributes2}
+                noDataText={"Select an Attribute..."}
             ></ReactTable>
-
         </div>)
     }
 }
