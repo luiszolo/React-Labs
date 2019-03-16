@@ -1,128 +1,23 @@
 import React from 'react';
 import axios from 'axios';
 
-
-
-import ReactTable from "react-table";
-import "react-table/react-table.css";
-
+import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminAtrributes extends React.Component{
     constructor(props){
         super(props);
         this.state={
             status:[],
-            status2:[],
-            nameAtt:'',
-            unitAtt:'',
-            typeAtt:'',
-            regexAtt:'',
-            validAttGet: undefined,
+            name:'',
+            validName: false,
+            unit:'',
+            validUnit: false,
+            type:'',
+            validType: false,
+            regex:'',
+            validRegex: false,
+            messageAPI: '',
         }
-    }
-
-    handleAtt=(e)=>{
-        const nameAtt=e.target.value
-        if(nameAtt.length>=1){
-            this.setState({
-                validOp:true
-            })
-        }
-        else{
-            this.setState({
-                validOp:false
-            })
-        }
-        this.state.status.forEach((value,index)=>{
-            
-            if(value.name===nameAtt){
-                this.setState({
-                    validOp:false
-                })
-            }
-        })
-
-    }
-
-    handleUnitAtt=(e)=>{
-        const unitAtt=e.target.value
-        if(unitAtt.length>=1){
-            this.setState({
-                validAtt1: true,
-                unitAtt:unitAtt
-
-            })
-            }
-            else if(unitAtt===''){
-                this.setState({
-                    validAtt1: false,
-                })
-            }
-    }
-
-    handleRegexAtt=(e)=>{
-        const regexAtt=e.target.value
-        if(regexAtt.length>=1){
-            this.setState({
-                validAtt3: true,
-                regexAtt:regexAtt
-            })
-            }
-            else if(regexAtt===''){
-                this.setState({
-                    validAtt3: false,
-                    //messageOp:"cant be blank"
-                })
-            }
-    }
-
-    handleTypeAtt=(e)=>{
-        const typeAtt=e.target.value
-        if(typeAtt.length>=1){
-            this.setState({
-                validAtt2: true,
-                typeAtt:typeAtt
-            })
-            }
-            else if(typeAtt===''){
-                this.setState({
-                    validAtt2: false,
-                })
-            }
-    }
-
-    handleSubmitAtt = event => {
-        event.preventDefault();
-        this.setState({
-            loading:true
-        })
-       
-        const regex=this.state.regexAtt
-		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
-            name:this.state.nameAtt,
-            unit:this.state.unitAtt,
-            type:this.state.typeAtt,
-            regex:regex
-		})
-		.then( res=> {
-			if (res.data.message==='Insertion completed') {
-				this.setState({
-					messageAPI: res.data.message,
-					validStatus: false,
-					loading:false
-				})
-			} else {
-				this.setState({
-					loading:false,
-				})
-			}
-			})
-		.catch( () => {
-			alert('Conection Timed Out');
-			this.setState({
-				loading: false
-			});
-		});
     }
 
     componentDidMount(){
@@ -134,45 +29,128 @@ export default class AdminAtrributes extends React.Component{
         } 
             )
     }
-    
-    deleteRow(name){
-        const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
-            return status.name === name
+
+    handleNameAttribute = (e) => {
+        const name = e.target.value
+        this.setState({
+            name: name,
         })
-    
-        let copyStatus = [...this.state.status]
-        copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
-        this.setState({status:copyStatus})
-        
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-          };
-    
-          this.setState({
-            status2: [...this.state.status2, item]       // llenamos la info en el arreglo de alado 
-          });
+        if(name.length >= 1) {
+            this.setState({
+                validName: true
+            })
+        } else {
+            this.setState({
+                validName: false
+            })
+        }
+        this.state.status.forEach((value) => {
+            if(value.name === name) {
+                this.setState({
+                    validName: false
+                })
+            }
+        })
+
+    }
+
+    handleUnitAttribute = (e) => {
+        const unit = e.target.value
+
+        this.setState({
+            unit: unit,
+        })
+        if(unit.length >= 1) {
+            this.setState({
+                validUnit: true,
+            })
+        } else if(unit === '') {
+            this.setState({
+                validUnit: false,
+            })
+        }
+    }
+
+    handleRegexAttribute = (e) => {
+        const regex = e.target.value
+
+        this.setState({
+            regex: regex,
+        })
+        if(regex.length >= 1) {
+            this.setState({
+                validRegex: true,
+            })
+        } else if(regex === '') {
+            this.setState({
+                validRegex: false,
+            })
+        }
+    }
+
+    handleTypeAttribute = (e) => {
+        const type = e.target.value
+
+        this.setState({
+            type: type,
+        })
+        if(type.length >= 1) {
+            this.setState({
+                validType: true,
+            })
+        } else if(type === '') {
+            this.setState({
+                validType: false,
+            })
+        }
+    }
+
+    handleSubmitAttribute = event => {
+        event.preventDefault();
+
+		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
+            name: this.state.name,
+            unit: this.state.unit,
+            type: this.state.type,
+            regex: this.state.regex
+		})
+		.then( res => {
+			if (res.data.message === 'Insertion completed') {
+				this.setState({
+                    name:'',
+                    validName: false,
+                    unit:'',
+                    validUnit: false,
+                    type:'',
+                    validType: false,
+                    regex:'',
+                    validRegex: false,
+                    messageAPI: res.data.message,
+				})
+			}
+			})
+		.catch( () => {
+			alert('Conection Timed Out');
+		});
     }
 
     render(){
         const {
-            columns =[
-                {
-                    Header: "Name",
-                    accessor: "name"
-                },
-            ], 
-            handleAtt,
-            handleSubmitAtt,
-            handleUnitAtt,
-            handleRegexAtt,
-            handleTypeAtt,
+            handleNameAttribute,
+            handleSubmitAttribute,
+            handleUnitAttribute,
+            handleRegexAttribute,
+            handleTypeAttribute,
             state: {
                 messageOp,
-                validOp,
-                validAtt1,
-                validAtt2,
-                validAtt3,
+                name,
+                validName,
+                unit,
+                validUnit,
+                type,
+                validType,
+                regex,
+                validRegex,
                 messageAPI,
             }
         } = this;
@@ -181,94 +159,88 @@ export default class AdminAtrributes extends React.Component{
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
-        let operatorInput= inputs
-        let data
-
-        if (this.state.loading) {
-          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
-        } 
-
         return(
-        <div className='content row justify-content-center'>
-            <div className='col-lg-4 col-sm-12 m-4'>
-                <h1 className='text-center'>Attributes</h1>
-            </div>
-            <div className='col-sm-12 col-xl-10'>
-                <form onSubmit={handleSubmitAtt}>
-                    <div className='row justify-content-center form-inline mb-3'>
-                    
-                        <label className={regularLabels}>Name:</label>
+            <div className='content row justify-content-center'>
+                <div className='col-sm-12 m-4'>
+                    <h1 className='text-center'>Add attributes</h1>
+                </div>
+                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+                    <form onSubmit={handleSubmitAttribute}>
+                        <div className='row justify-content-center form-inline mb-3'>
+                            <label className={regularLabels}>Name:</label>
+                            <input
+                                type='text'
+                                className={inputs}
+                                name='Status' 
+                                placeholder='#####'
+                                onChange={handleNameAttribute}
+                                value={name}
+                            />
+                            <label className={warningLabels}>{messageOp}</label>
+                        </div>
+                        <div className='row justify-content-center form-inline mb-3'>
+                        <label className={regularLabels}>Unit:</label>
                         <input
+                    
                             type='text'
-                            className={operatorInput}
+                            className={inputs}
                             name='Status' 
                             placeholder='#####'
-                            onBlur={handleAtt}
+                            onChange={handleUnitAttribute}
+                            value={unit}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Unit:</label>
-                    <input
-                   
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleUnitAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
+                        <label className={regularLabels}>Type:</label>
+                        <input
+                            type='text'
+                            className={inputs}
+                            name='Status' 
+                            placeholder='#####'
+                            onChange={handleTypeAttribute}
+                            value={type}
+                        />
+                        <label className={warningLabels}>{messageOp}</label>
+                    </div>
+                    <div className='row justify-content-center form-inline mb-3'>
+                        <label className={regularLabels}>Regex:</label>
+                        <input
+                            type='text'
+                            className={inputs}
+                            name='Status' 
+                            placeholder='#####'
+                            onChange={handleRegexAttribute}
+                            value={regex}
+                        />
+                        <label className={warningLabels}>{messageOp}</label>
+                    </div>
+                        <SpinnerButton name='submitButton'
+                                    text='Save status'
+                                    titlePass='Form is ready'
+                                    titleNoPass='Form not ready'
+                                    type='submit'
+                                    disabled={
+                                        !(validName && validUnit && validType && validRegex)
+                                    } 
+                                    onClick={ this.handleSubmitAttribute }
+                            />
+                        <div className='row justify-content-center'>
+                        <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
+                        {messageAPI}
+                        </label>
+                        </div>
+                    </form>
                 </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Type:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleTypeAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
+                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12 status rounded-right'>
+                    <h4>Available attributes</h4>
+                    <ul>
+                        {this.state.status.map((value, idx)=>{
+                                return (<li key={idx}>{value.name}</li>)
+                            })
+                        }
+                    </ul>
                 </div>
-                <div className='row justify-content-center form-inline mb-3'>
-                    
-                    <label className={regularLabels}>Regex:</label>
-                    <input
-                        type='text'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={handleRegexAtt}
-                    />
-                    <label className={warningLabels}>{messageOp}</label>
-                </div>
-
-                    <div className='row justify-content-center'>
-					<button
-                        type='submit'
-                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(validOp && validAtt1 && validAtt2 && validAtt3) ? false : true}
-                        title={(validOp) ? 'Form is ready' : 'Form not ready'}
-                    >
-                    Save Data
-                    {data}
-                    </button>
-					</div>
-					<div className='row justify-content-center'>
-					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                    {messageAPI}
-                    </label>
-					</div>
-                </form>
-            </div>
-            <ReactTable
-            columns={columns}
-            data={this.state.status}
-            filtrable
-            sortable
-            ></ReactTable>
-        </div>)
+            </div>)
     }
 }
