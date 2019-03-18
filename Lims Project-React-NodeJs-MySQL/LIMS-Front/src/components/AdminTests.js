@@ -14,6 +14,7 @@ export default class AdminTests extends React.Component{
             validTest4:undefined,
             attributes2:[],
             tests:[],
+            attributes2:[],
             status:[],
             status2:[],
             status3:[],
@@ -296,7 +297,7 @@ export default class AdminTests extends React.Component{
                     Cell: props=>{
                         return(
                             <button className="" 
-                            
+
                             onClick={()=>{
                                 this.deleteRow(props.original.name)
                             }}>🡺</button>
@@ -395,10 +396,10 @@ export default class AdminTests extends React.Component{
 
         return(
         <div className='content row justify-content-center'>
-            <div className='col-lg-4 col-sm-12 m-4'>
+            <div className='col-sm-12 m-4'>
                 <h1 className='text-center'>Tests</h1>
             </div>
-            <div className='col-sm-12 col-xl-10'>
+            <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
                 <form onSubmit={this.handleSubmitTest}>
                     <div className='row justify-content-center form-inline mb-3'>
                     <div className="container">
@@ -459,31 +460,47 @@ export default class AdminTests extends React.Component{
                     {data}
                     </button>
 					</div>
+                    <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                     {messageAPI}
-					<div id="tables" className='row justify-content-center'>                
-                    <ReactTable
-                        columns={columns3}
-                        data={this.state.status}
-                    ></ReactTable>
-                    <ReactTable
-                        columns={columns4}
-                        data={this.state.status2}
-                        noDataText={"Select a Status..."}>
-                    </ReactTable>
-					<label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                     </label>
-					</div>
+
                 </form>
             </div>
-            <ReactTable
-                columns={columns}
-                data={this.state.attributes}
-            ></ReactTable>
-            <ReactTable
-                columns={columns2}
-                data={this.state.attributes2}
-                noDataText={"Select an Attribute..."}
-            ></ReactTable>
+            <div id="tables" className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+                <div className='row'>
+                    <div className='col-6'>
+                        <ReactTable
+                            columns={columns3}
+                            data={this.state.status}
+                        >
+                        </ReactTable>
+                    </div>
+                    <div className='col-6'>
+                        <ReactTable
+                            columns={columns4}
+                            data={this.state.status2}
+                            noDataText={"Select a Status..."}>
+                        </ReactTable>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-6'>
+                        <ReactTable
+                            columns={columns}
+                            data={this.state.attributes}
+                        >
+                        </ReactTable>
+                    </div>
+                    <div className='col-6'>
+                        <ReactTable
+                            columns={columns2}
+                            data={this.state.attributes2}
+                            noDataText={"Select an Attribute..."}
+                        >
+                        </ReactTable>
+                    </div>
+                </div>
+            </div>
         </div>)
     }
 }
