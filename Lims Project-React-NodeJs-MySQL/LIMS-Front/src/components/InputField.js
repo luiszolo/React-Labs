@@ -124,7 +124,6 @@ export default class InputField extends React.Component {
 				warningText: ''
 			});
 			if (this.state.input !== '') this.handleValidation(regex);
-			
 		} 
 		if(this.state.input === '' && this.props.canBlank === true && this.state.focused === true) {
 			this.setState({
@@ -133,7 +132,7 @@ export default class InputField extends React.Component {
 				warningText: ''
 			});
 			if(this.props.addToForm) this.props.addToForm();
-			return
+			return;
 		}
 		if(this.props.addToForm) this.props.addToForm();
 	}

@@ -14,6 +14,7 @@ export default class AdminTests extends React.Component{
             validTest2:undefined,
             validTest3:undefined,
             validTest4:undefined,
+            attributes2:[],
             tests:[],
             attributes2:[],
             status:[],

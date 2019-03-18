@@ -9,13 +9,13 @@ export default class AdminAtrributes extends React.Component{
         this.state={
             status:[],
             name:'',
-            validName: false,
+            validName: undefined,
             unit:'',
-            validUnit: false,
+            validUnit: undefined,
             type:'',
-            validType: false,
+            validType: undefined,
             regex:'',
-            validRegex: false,
+            validRegex: undefined,
             messageAPI: '',
         }
     }
@@ -170,7 +170,13 @@ export default class AdminAtrributes extends React.Component{
                             <label className={regularLabels}>Name:</label>
                             <input
                                 type='text'
-                                className={inputs}
+                                type='text'
+                                className={
+                                    validName === undefined ? (inputs) : (
+                                        validName === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                        inputs.concat(inputs, " ", "border border-danger")
+                                    )
+                                }
                                 name='Status' 
                                 placeholder='#####'
                                 onChange={handleNameAttribute}
@@ -183,7 +189,13 @@ export default class AdminAtrributes extends React.Component{
                         <input
                     
                             type='text'
-                            className={inputs}
+                            type='text'
+                            className={
+                                validUnit === undefined ? (inputs) : (
+                                    validUnit === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                    inputs.concat(inputs, " ", "border border-danger")
+                                )
+                            }
                             name='Status' 
                             placeholder='#####'
                             onChange={handleUnitAttribute}
@@ -195,7 +207,13 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Type:</label>
                         <input
                             type='text'
-                            className={inputs}
+                            type='text'
+                            className={
+                                validType === undefined ? (inputs) : (
+                                    validType === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                    inputs.concat(inputs, " ", "border border-danger")
+                                )
+                            }
                             name='Status' 
                             placeholder='#####'
                             onChange={handleTypeAttribute}
@@ -207,7 +225,13 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Regex:</label>
                         <input
                             type='text'
-                            className={inputs}
+                            type='text'
+                            className={
+                                validRegex === undefined ? (inputs) : (
+                                    validRegex === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                    inputs.concat(inputs, " ", "border border-danger")
+                                )
+                            }
                             name='Status' 
                             placeholder='#####'
                             onChange={handleRegexAttribute}
