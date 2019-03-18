@@ -9,7 +9,7 @@ export default class Admin extends React.Component{
         this.state={
             status:[],
             nameStatus: '',
-            validStatus: false,
+            validStatus: undefined,
             messageAPI:'',
         }
     }
@@ -83,6 +83,7 @@ export default class Admin extends React.Component{
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
+
         return(
             <div className='content row justify-content-center'>
                 <div className='col-sm-12 m-4'>
@@ -94,7 +95,12 @@ export default class Admin extends React.Component{
                             <label className={regularLabels}>Status:</label>
                             <input
                                 type='text'
-                                className={inputs}
+                                className={
+                                    validStatus === undefined ? (inputs) : (
+                                        validStatus === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                        inputs.concat(inputs, " ", "border border-danger")
+                                    )
+                                }
                                 name='Status' 
                                 placeholder='#####'
                                 onChange={handleStatus}
