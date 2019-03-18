@@ -4,6 +4,8 @@ import axios from 'axios';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
+import SpinnerButton from './../components/SpinnerButton';
+
 export default class AdminTests extends React.Component{
     constructor(props){
         super(props);
@@ -34,105 +36,136 @@ export default class AdminTests extends React.Component{
         }
     }
 
-    handleAttributesTest=(e)=>{
-        const attributeTest=e.target.value
-        if(attributeTest.length>=1){
-            this.setState({
-                attributeTest:attributeTest
+    componentDidMount() {
+        const url1= "http://10.2.1.94:4000/api/attributes";
+        fetch(url1,{
+            method : "GET"
+        })
+        .then(Response => Response.json())
+        .then(res => {
+        this.setState({attributes:res.Attributes})
+        })
+
+        const url2= "http://10.2.1.94:4000/api/status";
+
+        fetch(url2,
+            {
+                method : "GET"
             })
-            }
-            else if(attributeTest===''){
-            }
+        .then(Response => Response.json())
+        .then(res => {
+            this.setState({status: res.Statuss})
+        })
+
+        const url4= "http://10.2.1.94:4000/api/status";
+
+        fetch(url4,
+            {
+            method : "GET"
+        })
+        .then(Response => Response.json())
+        .then(res => {
+            this.setState({status3: res.Statuss})  
+        })
+
+        const url= "http://10.2.1.94:4000/api/tests";
+
+        fetch(url,{
+            method : "GET"
+        })
+        .then(Response => Response.json())
+        .then(res => {
+            this.setState({tests: res.Tests})
+        })
     }
 
-    handleSamplesLTest=(e)=>{
-        const samplelenghtTest=e.target.value
-        if(samplelenghtTest.length>=1){
+    handleAttributesTest = (e) => {
+        const attributeTest = e.target.value
+
+        if(attributeTest.length >= 1) {
+            this.setState({
+                attributeTest: attributeTest
+            })
+        } else if(attributeTest === '') {
+        }
+    }
+
+    handleSamplesLTest = (e) => {
+        const samplelenghtTest = e.target.value
+
+        if(samplelenghtTest.length >= 1){
             this.setState({
                 samplelenghtTest:samplelenghtTest,
-                validTest1:true,
+                validTest1: true,
             })
-            }
-            else if(samplelenghtTest===''){
-                this.setState({
-                    validTest1:false,
-                })
-            }
+        } else if(samplelenghtTest === '') {
+            this.setState({
+                validTest1: false,
+            })
+        }
     }
 
-    handleNameTest=(e)=>{
-        const nameTest=e.target.value
-        if(nameTest.length>=1){
+    handleNameTest = (e) => {
+        const nameTest = e.target.value
+
+        if(nameTest.length >= 1) {
             this.setState({
-                ValidNameTest:true,
-                nameTest:nameTest
+                ValidNameTest: true,
+                nameTest: nameTest
+            })
+        } else {
+            this.setState({
+                ValidNameTest: false
             })
         }
-        else{
-            this.setState({
-                ValidNameTest:false
-            })
-        }
-        this.state.tests.forEach((value,index)=>{
-            
-            if(value.name===nameTest){
+        this.state.tests.forEach((value, index) => {
+            if(value.name === nameTest) {
                 this.setState({
-                    ValidNameTest:false
+                    ValidNameTest: false
                 })
             }
         })
     }
 
-    handleStatusTest=(e)=>{
-        const statusTest=e.target.value
-        if(statusTest.length>=1){
-            this.setState({
-                statusTest: statusTest === 'on' ? true : false,
-                validTest2:true,
-            });
-            }
-            else if(statusTest===''){
-                this.setState({
-                    validTest2:false,
-                })
-            }
+    handleStatusTest = () => {
+        this.setState({
+            validTest2: !this.state.validTest2,
+        })
     }
 
-    handlePreStatusTest=(e)=>{
-        const preStatusTest=e.target.value
+    handlePreStatusTest = (e) => {
+        const preStatusTest = e.target.value
+
         console.log("preStatusTes")
         console.log(preStatusTest)
-        if(preStatusTest.length>=1){
+
+        if(preStatusTest.length>=1) {
             this.setState({
-                preStatusTest:preStatusTest,
-                validTest3:true,
+                preStatusTest: preStatusTest,
+                validTest3: true,
             })
-            }
-            else if(preStatusTest===''){
-                this.setState({
-                    validTest3:false,
-                })
-            }
+        } else if(preStatusTest === '') {
+            this.setState({
+                validTest3: false,
+            })
+        }
     }
 
-    handlePostStatusTest=(e)=>{
-        if(this.state.status2.length===0){
+    handlePostStatusTest = (e) => {
+        if(this.state.status2.length === 0) {
             this.setState({
-                validTest4:false,
+                validTest4: false,
             })
-            }
-            else{
-              this.setState({
-                    validTest4:true,
-                })
-            }
+        } else {
+            this.setState({
+                validTest4: true,
+            })
+        }
     }
 
     handleSubmitTest = event => {
         event.preventDefault();
-        this.setState({
-            loading:true
-        })
+
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
@@ -151,139 +184,113 @@ export default class AdminTests extends React.Component{
 				this.setState({
 					messageAPI: res.data.message,
 					ValidNameTest: false,
-                    loading:false,
-                    nameTest:' ',
-                    status2:[],
-                    attributes2:[],
-				})
-			} else {
-				this.setState({
-					loading:false,
+                    nameTest: '',
+                    status2: [],
+                    attributes2: [],
 				})
 			}
-			})
+		})
 		.catch( () => {
 			alert('Conection Timed Out');
-			this.setState({
-				loading: false
-			});
 		});
-    }
-
-    componentDidMount(){
-        const url1= "http://10.2.1.94:4000/api/attributes";
-        fetch(url1,{
-            method : "GET"
-        }).then(Response => Response.json()).then(res =>{
-            this.setState({attributes:res.Attributes})
-        } 
-            )
-            const url2= "http://10.2.1.94:4000/api/status";
-            fetch(url2,{
-                method : "GET"
-            }).then(Response => Response.json()).then(res =>{
-                this.setState({status:res.Statuss})
-            }
-                )
-                const url4= "http://10.2.1.94:4000/api/status";
-                fetch(url4,{
-                    method : "GET"
-                }).then(Response => Response.json()).then(res =>{
-                    this.setState({status3:res.Statuss})  
-                }
-                    )
-            const url= "http://10.2.1.94:4000/api/tests";
-            fetch(url,{
-                method : "GET"
-            }).then(Response => Response.json()).then(res =>{
-                this.setState({tests:res.Tests})
-            } 
-                )
     }
     
     deleteRow(name){
         const index = this.state.attributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
             return attributes.name === name
         })
+
         let copyattributes = [...this.state.attributes]
-        copyattributes.splice(index,1)                   // estas tres lineas es para el borrado logico 
+
+        copyattributes.splice(index, 1)                           // estas tres lineas es para el borrado logico 
+
         this.setState({attributes:copyattributes})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
-          };
-          this.setState({
+        };
+        this.setState({
             attributes2: [...this.state.attributes2, item]       // llenamos la info en el arreglo de alado 
-          });
+        });
     }
     
     deleteRow2(name){
         const index = this.state.attributes2.findIndex(attributes2=>{ // aqui seleccionas el que quieres es como un pointer
             return attributes2.name === name
         })
+
         let copyattributes2 = [...this.state.attributes2]
-        copyattributes2.splice(index,1)                   // estas tres lineas es para el borrado logico 
+
+        copyattributes2.splice(index,1)                 // estas tres lineas es para el borrado logico 
+
         this.setState({attributes2:copyattributes2})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
-          };
-          this.setState({
-            attributes: [...this.state.attributes, item]       // llenamos la info en el arreglo de alado 
-          });
+        };
+        this.setState({
+            attributes: [...this.state.attributes, item]       // llenamos la info en el arreglo de al lado 
+        });
     }
 
     deleteRow3(name){
         const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
             return status.name === name
         })
+
         let copyStatus = [...this.state.status]
+
         copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
+
         this.setState({status:copyStatus})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
-          };
-          this.setState({
-            status2: [...this.state.status2, item] ,      // llenamos la info en el arreglo de alado 
-            validTest4:true
-          });
+        };
+        this.setState({
+            status2: [...this.state.status2, item] ,      // llenamos la info en el arreglo de al lado 
+            validTest4: true
+        });
     }
     
     deleteRow4(name){
         const index = this.state.status2.findIndex(status2=>{ // aqui seleccionas el que quieres es como un pointer
             return status2.name === name
         })
+
         let copyStatus2 = [...this.state.status2]
+
         copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
+
         this.setState({status2:copyStatus2})
+
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
-          };
-          this.setState({
+        };
+        this.setState({
             status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
-          });
-          if(this.state.status2.length===1){
-              console.log("funciona")
+        });
+        if(this.state.status2.length === 1) {
+            console.log("funciona")
             this.setState({
-                validTest4:false,
+                validTest4: false,
             })
-            }
+        }
     }
 
     renderOption(){
-        return this.state.status3.map(name=>{
+        return this.state.status3.map(name => {
             return <option value={name.name}>{name.name}</option>
         })
     }
 
     render(){
         const {
-            columns =[
+            columns = [
                 {
                     Header: "Name",
-                    accessor: "name"
+                    accessor: "name",
                 },
                 {
                     Header: "Action",
@@ -295,16 +302,18 @@ export default class AdminTests extends React.Component{
                     minWidth:100,
                     Cell: props=>{
                         return(
-                            <button className="" 
-
-                            onClick={()=>{
-                                this.deleteRow(props.original.name)
-                            }}>🡺</button>
+                            <button
+                                onClick={() => {
+                                    this.deleteRow(props.original.name)
+                                }}
+                            >
+                            🡺
+                            </button>
                         )
                     }
                 },
             ],            
-            columns2 =[
+            columns2 = [
                 {
                     Header: "Name",
                     accessor: "name",
@@ -318,12 +327,12 @@ export default class AdminTests extends React.Component{
                     Header: "Action",
                     Cell: props=>{
                         return(
-                            <button className="" 
-                            onClick={()=>{
-                                this.deleteRow2(props.original.name)
-                                
-    
-                            }}>	🡸</button>
+                            <button
+                                onClick={() => {
+                                    this.deleteRow2(props.original.name)
+                                }}
+                            >🡸
+                            </button>
                         )
                     }
                 },
@@ -343,10 +352,13 @@ export default class AdminTests extends React.Component{
                     minWidth:100,
                     Cell: props=>{
                         return(
-                            <button className="" 
-                            onClick={()=>{
-                                this.deleteRow3(props.original.name)
-                            }}>🡺</button>
+                            <button
+                                onClick={() => {
+                                    this.deleteRow3(props.original.name)
+                                }}
+                            >
+                            🡺
+                            </button>
                         )
                     }
                 },
@@ -365,10 +377,13 @@ export default class AdminTests extends React.Component{
                     Header: "Action",
                     Cell: props=>{
                         return(
-                            <button className="" 
-                            onClick={()=>{
-                                this.deleteRow4(props.original.name)
-                            }}>	🡸</button>
+                            <button
+                                onClick={() => {
+                                    this.deleteRow4(props.original.name)
+                                }}
+                            >
+                            🡸
+                            </button>
                         )
                     }
                 },
@@ -383,117 +398,121 @@ export default class AdminTests extends React.Component{
                 messageAPI,
             }
         } = this;
+
         const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
-        let operatorInput= inputs
-        let data
 
-        if (this.state.loading) {
-          data = <img src='/images/spinner.gif' alt='loading' id='spinner'/>
-        } 
-
-        return(
-        <div className='content row justify-content-center'>
-            <div className='col-sm-12 m-4'>
-                <h1 className='text-center'>Tests</h1>
+        return(<div className='row justify-content-center m-0'>
+            <div className='m-4'>
+                <h1 className='text-center'>Add test</h1>
             </div>
-            <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+            <div className='container-fluid'>
                 <form onSubmit={this.handleSubmitTest}>
                     <div className='row justify-content-center form-inline mb-3'>
-                    <div className="container">
-                        <div className="row">
-                        <div className="col-md-4"></div>
-                        <div className="col-md-4">
-                        </div>
-                        <div className="col-md-4"></div>
-                        </div>
-                    </div>
                         <label className={regularLabels}>Name:</label>
                         <input
                             type='text'
-                            className={operatorInput}
-                            name='Status' 
+                            className={inputs}
+                            name='testName'
                             placeholder='#####'
                             onBlur={this.handleNameTest}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Samples Lenght:</label>
+                    <label className={regularLabels}>Number of samples:</label>
                     <input
                         type='number'
-                        className={operatorInput}
-                        name='Status' 
+                        className={inputs}
+                        name='numberSamples' 
                         placeholder='#####'
                         onBlur={this.handleSamplesLTest}
                     />
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Status:</label>
+                    <label className='mr-3'>Status:</label>
                     <input
                         type='checkbox'
-                        className={operatorInput}
-                        name='Status' 
-                        placeholder='#####'
-                        onBlur={this.handleStatusTest}
-                    /> Active
-                    <label className={warningLabels}>{messageOp}</label>
+                        className='form-check-input'
+                        name='testStatus'
+                        checked={validTest2}
+                        onChange={this.handleStatusTest}
+                    />
+                    <label className='form-check-label'>Active</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
                     <label className={regularLabels}>Pre Status:</label>
-                        <select id="status" onBlur={this.handlePreStatusTest} defaultValue="Sample Ready For Electricity" placeholder="Status">
+                        <select 
+                            className={inputs} 
+                            id="status" 
+                            onBlur={this.handlePreStatusTest} 
+                            defaultValue="Sample Ready For Electricity" 
+                            placeholder="Status">
                             {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
-                    <div className='row justify-content-center'>
-					<button
+                    <SpinnerButton
+                        name='submitButton'
+                        text='Save status'
+                        titlePass='Form is ready'
+                        titleNoPass='Form not ready'
                         type='submit'
-                        className='btn btn-primary col-md-6 col-sm-10 col-lg-3'
-                        disabled={(ValidNameTest && validTest1 && validTest2&& validTest3&& validTest4) ? false : true}
-                        title={(ValidNameTest) ? 'Form is ready' : 'Form not ready'}
-                    >
-                    Save Data
-                    {data}
-                    </button>
-					</div>
+                        disabled={
+                            !(ValidNameTest && validTest1 && validTest2 && validTest3&& validTest4)
+                        } 
+                        onClick={ this.handleSubmitStatus }
+                    />
                     <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                     {messageAPI}
                     </label>
-
                 </form>
             </div>
-            <div id="tables" className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+            <div id="tables" className='tables'>
                 <div className='row'>
-                    <div className='col-6'>
-                        <ReactTable
-                            columns={columns3}
-                            data={this.state.status}
-                        >
-                        </ReactTable>
+                    <div className='col-6 text-center'>
+                        <h3>Status</h3>
                     </div>
-                    <div className='col-6'>
-                        <ReactTable
-                            columns={columns4}
-                            data={this.state.status2}
-                            noDataText={"Select a Status..."}>
-                        </ReactTable>
+                    <div className='col-6 text-center'>
+                        <h3>Attributes</h3>
                     </div>
                 </div>
                 <div className='row'>
-                    <div className='col-6'>
+                    <div className='col-3'>
                         <ReactTable
-                            columns={columns}
-                            data={this.state.attributes}
+                            columns={columns3}
+                            data={this.state.status}
+                            defaultPageSize= {10}
+                            showPageSizeOptions={false}
                         >
                         </ReactTable>
                     </div>
-                    <div className='col-6'>
+                    <div className='col-3'>
+                        <ReactTable
+                            columns={columns4}
+                            data={this.state.status2}
+                            defaultPageSize= {10}
+                            showPageSizeOptions={false}
+                            noDataText={"Select a Status..."}>
+                        </ReactTable>
+                    </div>
+                    <div className='col-3'>
+                        <ReactTable
+                            columns={columns}
+                            data={this.state.attributes}
+                            defaultPageSize= {10}
+                            showPageSizeOptions={false}
+                        >
+                        </ReactTable>
+                    </div>
+                    <div className='col-3'>
                         <ReactTable
                             columns={columns2}
                             data={this.state.attributes2}
+                            defaultPageSize= {10}
+                            showPageSizeOptions={false}
                             noDataText={"Select an Attribute..."}
                         >
                         </ReactTable>

@@ -71,7 +71,7 @@ export default class Navbar extends React.Component {
 						</div>
 					</div>
 				</nav>
-				<div className='col-lg-10 col-xl-10 col-md-12 col-sm-12 offset-lg-2'>
+				<div className='col-lg-10 col-xl-10 col-md-12 col-sm-12 offset-lg-2 p-0'>
 					{
 						this.props.children.map(child => {
 							if (child.props.label !== this.state.activeTest) return undefined;
