@@ -64,7 +64,6 @@ async function addLog(req, res) {
 }
 
 async function getLogsBySample(req, res) {
-    const sample = req.params.id;
     const sampleId = await require('./SampleController')
         .getSample(req, res);
     if (sampleId === false) {

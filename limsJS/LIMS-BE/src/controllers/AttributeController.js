@@ -16,9 +16,16 @@ async function addAttribute(req, res) {
         return;
     }
 
+    console.log(newAttribute)
+
     const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Attribute SET ?`,
-        [newAttribute]
+        `INSERT INTO Attribute SET 
+            name='${newAttribute.name}',
+            unit='${newAttribute.unit}',
+            placeholder='${newAttribute.placeholder}',
+            regex='${newAttribute.regex}',
+            active=${newAttribute.actived}
+        `
     );
     if (insertion === false) {
         res.status(503).send({

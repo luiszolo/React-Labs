@@ -1,6 +1,11 @@
 const dbInteract = require('./../middlewares/db-interact');
-const miscs = require('./../middlewares/miscs');
-const pool = require('./../config/database');
+const asyncForEach = require('./../middlewares/miscs').asyncForEach;
+const capitalizeWord = require('./../middlewares/miscs').capitalizeWord;
+const getDuplication = require('./../middlewares/miscs').getDuplications;
+const removeDuplication = require('./../middlewares/miscs').removeDuplications;
+const notNumberField = require('./../middlewares/regex').notNumber;
+const validateSampleName = require('./../middlewares/regex').validateSampleName;
+
 
 // Testing
 async function insertData(req, res) {
