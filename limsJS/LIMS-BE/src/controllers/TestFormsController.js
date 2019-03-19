@@ -5,7 +5,6 @@ const pool = require('./../config/database');
 // Testing
 async function insertData(req, res) {
 	let body = req.body;
-	console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
@@ -32,7 +31,7 @@ async function insertData(req, res) {
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 
-	let sampleError;
+	let sampleError = false;
 	let sampleErrorList = {
 		NotExists: [],
 		Exists: [],
@@ -43,10 +42,11 @@ async function insertData(req, res) {
 
 	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
 	if (sampleErrorList.RepeatSample.length > 0) {
+		console.log('Analyze samples: Repeat Sample')
 		sampleError = true;
 	}
-	
-	if(test.result.id == 1) {
+	const firstTest = await pool.query(`SELECT id FROM Test WHERE name='ELECTRICITY TEST'`);
+	if(test.result.id == firstTest[0].id) {
 		let reqCopy = req;
 		for await (const sample of  body.samples) {
 			reqCopy.body = {
@@ -54,23 +54,34 @@ async function insertData(req, res) {
 			};
 			if (sample === '') continue;
 			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == true){
+				console.log('Analyze samples: Exists Sample')
 				sampleErrorList.Exists.push(sample.toUpperCase());
 				continue;
-			} else await require('./SampleController').addSample(reqCopy, res);
+			} else {
+				await require('./SampleController').addSample(reqCopy, res);
+				reqCopy.body = {
+					operator: body.operator,
+					sample: sample,
+					test: body.test,
+					status: 'New Sample'
+				}
+				await require('./LogController').addLog(reqCopy, res);
+			}
 		}
 	}
-
 	for await (const element of body.samples) {
 		if (element === '') continue;
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
+			console.log('Analyze samples: Not Exists')
 			sampleError = true;
 			sampleErrorList.NotExists.push(element.toUpperCase());
 			continue;
 		} 
 
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
-		if (logValidation.pass == true) {
+		if (logValidation.pass == true && logValidation.result.test_Id != firstTest[0].id) {
+			console.log('Analyze samples: Repeat Test')
 			sampleError = true;
 			sampleErrorList.RepeatTest.push(element.toUpperCase());
 			continue;
@@ -85,20 +96,24 @@ async function insertData(req, res) {
 				let logValidation3 = await dbInteract.isExists(`
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required} AND sample_Id=${sample.result.id}
 				`);
-				if (logValidation3 == false && test.result.id != 1) {
+				if (logValidation3 == false && test.result.id != firstTest[0].id) {
+					console.log('Analyze samples: Not PrevState Required Sample')
 					sampleError = true;
 					sampleErrorList.NotPrev.push(element.toUpperCase());
 					break;
 				}
 				continue;
 			} else {
-				if(test.result.id == 1) continue;
+				if(test.result.id == firstTest[0].id) continue;
+				console.log('Analyze samples: Not PrevState Required Sample')
 				sampleError = true;
 				sampleErrorList.NotPrev.push(element.toUpperCase());
 				continue;
 			}
 		}
 	}
+	console.log('Analyze samples: Final Validations ')
+
 	
 	let attributeError = false;
 	if (body.attributes) {
@@ -123,6 +138,7 @@ async function insertData(req, res) {
 		sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
 		sampleErrorList.RepeatTest = miscs.getDuplications(sampleErrorList.RepeatTest).filter(e => e != null && e != "");
 
+		console.log(sampleErrorList)
 		res.send({
 			message: 'Samples are wrong',
 			test: test.result.name,
