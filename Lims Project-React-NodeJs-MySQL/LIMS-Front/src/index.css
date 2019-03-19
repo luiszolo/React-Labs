@@ -71,9 +71,12 @@ html, body{
     height: 100%;
 }
 
+.selectable{
+    list-style-type: none;
+}
+
 .selectable:hover{
-	background-color: black;
-	color: white;
+	background-color: #e3f2fd;
 }
 
 .logo{

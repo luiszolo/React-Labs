@@ -34,8 +34,8 @@ export default class AdminTests extends React.Component{
             attributeTest: '',
         }
 
-        // this.handleSelectStatus = this.handleSelectStatus.bind(this);
-        // this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
+        this.handleSelectStatus = this.handleSelectStatus.bind(this);
+        this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
     }
 
     componentDidMount() {
@@ -188,7 +188,7 @@ export default class AdminTests extends React.Component{
 					ValidNameTest: false,
                     nameTest: '',
                     selectedAttributes: [],
-                    selectedAttributes: [],
+                    availableAttributes: [],
 				})
 			}
 		})
@@ -197,51 +197,44 @@ export default class AdminTests extends React.Component{
 		});
     }
 
-    // handleSelectStatus(e){
-    //     const status = e.target.textContent
+    handleSelectStatus(e){
+        const status = e.target.textContent
 
         
-    //     console.log(this.state.selectedStatus)
-    //     let selectedStatus = this.state.selectedStatus
+        console.log(this.state.selectedStatus)
 
-    //     selectedStatus.forEach((element)=>{
-    //         if(element !== status) {
-    //             selectedStatus.push(status)
-    //             this.setState({
-    //                 selectedStatus: selectedStatus
-    //             })
-    //         } else {
-    //             console.log('Status already in the array')
-    //         }
-    //     })
+        let selectedStatus = this.state.selectedStatus
 
-    // }
+        const exists = selectedStatus.filter((item)=> {return item === status})
+        if(exists.length !== 1){
+            selectedStatus.forEach((element)=>{
+                if(element !== status) {
+                    selectedStatus.push(status)
+                    this.setState({
+                        selectedStatus: selectedStatus
+                    })
+                } else {
+                    console.log('Status already in the array')
+                }
+            })
+        }
+    }
 
-    // handleSelectAttribute(e){
-    //     const attribute = e.target.textContent
+    handleSelectAttribute(e){
+        const attribute = e.target.textContent
 
-    //     // console.log(this.state.selectedAttributes)
+        // console.log(this.state.selectedAttributes)
 
-    //     let selectedAttributes = this.state.selectedAttributes
+        let selectedAttributes = this.state.selectedAttributes
 
-    //     if(selectedAttributes.length > 0){
-    //         selectedAttributes.forEach((element)=>{
-    //             if(attribute !== element) {
-    //                 selectedAttributes.push(attribute)
-    //                 this.setState({
-    //                     selectedAttributes: selectedAttributes
-    //                 })
-    //             } else {
-    //                 console.log('Attribute already in the array')
-    //             }
-    //         })
-    //     } else {
-    //         selectedAttributes.push(attribute)
-    //         this.setState({
-    //             selectedAttributes: selectedAttributes
-    //         })
-    //     }
-    // }
+        const exists = selectedAttributes.filter((item)=> {return item === attribute})
+        if(exists.length !== 1){
+            selectedAttributes.push(attribute)
+            this.setState({
+                selectedAttributes: selectedAttributes
+            })
+        }
+    }
     
     deleteRow(name){
         const index = this.state.availableAttributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
@@ -451,7 +444,7 @@ export default class AdminTests extends React.Component{
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
-        return(<div className='row justify-content-center m-0'>
+        return(<div className='content justify-content-center m-0'>
             <div className='m-4'>
                 <h1 className='text-center'>Add test</h1>
             </div>
@@ -480,7 +473,7 @@ export default class AdminTests extends React.Component{
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className='mr-3'>availableStatus:</label>
+                    <label className='mr-3'>Status:</label>
                     <input
                         type='checkbox'
                         className='form-check-input'
@@ -491,35 +484,35 @@ export default class AdminTests extends React.Component{
                     <label className='form-check-label'>Active</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Pre availableStatus:</label>
+                    <label className={regularLabels}>Pre-Status:</label>
                         <select 
                             className={inputs} 
-                            id="availableStatus" 
-                            onCHange={this.handlePreStatusTest} 
+                            id="Status" 
+                            onChange={this.handlePreStatusTest} 
                             defaultValue="Sample Ready For Electricity" 
                             placeholder="availableStatus">
                             {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
-                {/* <div className='row'>
-                    <div className='col-6'>
-                        <h3>Select one or more availableStatus</h3>
-                        <ul>
+                <div className='row'>
+                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6'>
+                        <h3>Select one or more Status</h3>
+                        <ul className='p-0'>
                         {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
                             return <li className='selectable' name={status.name} key={status.id} onClick={this.handleSelectStatus}>{status.name}</li>
                         }) : <li className='selectable'>Nothing</li>}
                         </ul>
                     </div>
-                    <div className='col-6'>
+                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6'>
                         <h3>Select one or more attribute</h3>
-                        <ul>
+                        <ul className='p-0'>
                         {(this.state.availableAttributes) ? this.state.availableAttributes.map((attribute) => {
                             return <li className='selectable' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute}>{attribute.name}</li>
                         }) : <li className='selectable'>Nothing</li>}
                         </ul>
                     </div>
-                </div> */}
+                </div>
                 <SpinnerButton
                     name='submitButton'
                     text='Save test'
@@ -536,10 +529,10 @@ export default class AdminTests extends React.Component{
                 </label>
                 </form>
             </div>
-            <div id="tables" className='tables'>
+            {/* <div id="tables" className='tables'>
                 <div className='row'>
                     <div className='col-6 text-center'>
-                        <h3>availableStatus</h3>
+                        <h3>Status</h3>
                     </div>
                     <div className='col-6 text-center'>
                         <h3>Attributes</h3>
@@ -586,7 +579,7 @@ export default class AdminTests extends React.Component{
                         </ReactTable>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>)
     }
 }
