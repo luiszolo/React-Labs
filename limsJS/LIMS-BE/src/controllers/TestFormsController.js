@@ -31,6 +31,7 @@ async function insertData(req, res) {
 
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
+	console.log(postStatus, prevStatus);
 
 	let sampleError;
 	let sampleErrorList = {
