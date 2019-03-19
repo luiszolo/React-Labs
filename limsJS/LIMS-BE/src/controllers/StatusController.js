@@ -16,12 +16,6 @@ async function addStatus (req, res) {
 		});
 		return;
 	}
-	if (!regex.notNumber(newStatus.name)) {
-		res.send({
-			message: 'Cannot add status with numbers'
-		})
-		return;
-	}
 	else {
 		res.send({
 			message: 'Insertion completed'

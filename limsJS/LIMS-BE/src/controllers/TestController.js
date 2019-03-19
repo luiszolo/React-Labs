@@ -22,14 +22,8 @@ async function addTest (req, res) {
 		});
 		return;
 	}
-	if (!regex.notNumber(newTest.name)) {
-		res.send({
-			message: 'Cannot add a test with numbers'
-		});
-		return;
-	}
+	await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state}`);
 	if (newTest.attributes != null) {
-		await pool.query(`INSERT INTO Test SET name='${newTest.name.toUpperCase()}', samplesLength=${newTest.samplesLength}, status=${newTest.state}`);
 		for await (const element of newTest.attributes) {
 			const auxAttribute = await pool.query(`SELECT * FROM Attribute WHERE name='${element.toUpperCase()}'`);
 			if(auxAttribute != null || auxAttribute != [{  }]) {
@@ -48,7 +42,7 @@ async function addTest (req, res) {
 
 	if (newTest.prevStatus && newTest.postStatus) {
         const id = await pool.query(`SELECT id FROM Test WHERE name='${newTest.name.toUpperCase()}'`);
-        const prevId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.prevStatus.name.toUpperCase()}'`);
+        const prevId = await pool.query(`SELECT id FROM Status WHERE name='${newTest.prevStatus.toUpperCase()}'`);
         for await (const status of newTest.postStatus) {
             const postId = await pool.query(`SELECT id FROM Status WHERE name='${status.toUpperCase()}'`);
             if (postId === undefined || prevId === undefined) {
@@ -56,19 +50,13 @@ async function addTest (req, res) {
                     message: "Status invalid"
                 });
                 return;
-            }
+			}
+			console.log(id, prevId, postId)
             await pool.query(`INSERT INTO statussequence SET status_Id=${postId[0].id}, status_Required=${prevId[0].id}`);
 
 		    await pool.query(`INSERT INTO teststatus SET test_Id=${id[0].id}, prev_State=${prevId[0].id}, post_State=${postId[0].id}`);
         
         }
-	}
-	
-	if (newTest.attributes == null) {
-		res.send({
-			message: 'The Test can\'t be saved!'
-		});
-		return;
 	}
 	res.send({
 		message: "Insertion successful"

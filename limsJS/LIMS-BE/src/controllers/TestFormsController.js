@@ -46,8 +46,8 @@ async function insertData(req, res) {
 	if (sampleErrorList.RepeatSample.length > 0) {
 		sampleError = true;
 	}
-	
-	if(test.result.id == 1) {
+	const firstTest = await pool.query(`SELECT id FROM Test WHERE name='ELECTRICITY TEST'`);
+	if(test.result.id == firstTest[0].id) {
 		let reqCopy = req;
 		for await (const sample of  body.samples) {
 			reqCopy.body = {
@@ -86,14 +86,14 @@ async function insertData(req, res) {
 				let logValidation3 = await dbInteract.isExists(`
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required} AND sample_Id=${sample.result.id}
 				`);
-				if (logValidation3 == false && test.result.id != 1) {
+				if (logValidation3 == false && test.result.id != firstTest[0].id) {
 					sampleError = true;
 					sampleErrorList.NotPrev.push(element.toUpperCase());
 					break;
 				}
 				continue;
 			} else {
-				if(test.result.id == 1) continue;
+				if(test.result.id == firstTest[0].id) continue;
 				sampleError = true;
 				sampleErrorList.NotPrev.push(element.toUpperCase());
 				continue;

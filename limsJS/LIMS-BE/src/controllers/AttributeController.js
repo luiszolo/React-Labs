@@ -19,12 +19,6 @@ async function addAttribute (req, res) {
 		});
 		return;
 	}
-	if (!regex.notNumber(newAttribute.name)) {
-		res.send({
-			message: 'Cannot add attribute with numbers'
-		})
-		return;
-	}
 	await pool.query(`INSERT INTO Attribute SET name='${newAttribute.name}', unit='${newAttribute.unit}', type='${newAttribute.type}', structure='${newAttribute.structure}'`);
 	res.send({
 		message: 'Insertion successful'
