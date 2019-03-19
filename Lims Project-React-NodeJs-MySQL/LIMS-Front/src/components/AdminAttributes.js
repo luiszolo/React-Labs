@@ -170,7 +170,6 @@ export default class AdminAtrributes extends React.Component{
                             <label className={regularLabels}>Name:</label>
                             <input
                                 type='text'
-                                type='text'
                                 className={
                                     validName === undefined ? (inputs) : (
                                         validName === true ? inputs.concat(inputs, " ", "border border-success") : 
@@ -187,8 +186,6 @@ export default class AdminAtrributes extends React.Component{
                         <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Unit:</label>
                         <input
-                    
-                            type='text'
                             type='text'
                             className={
                                 validUnit === undefined ? (inputs) : (
@@ -207,7 +204,6 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Type:</label>
                         <input
                             type='text'
-                            type='text'
                             className={
                                 validType === undefined ? (inputs) : (
                                     validType === true ? inputs.concat(inputs, " ", "border border-success") : 
@@ -225,7 +221,6 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Regex:</label>
                         <input
                             type='text'
-                            type='text'
                             className={
                                 validRegex === undefined ? (inputs) : (
                                     validRegex === true ? inputs.concat(inputs, " ", "border border-success") : 
@@ -240,14 +235,14 @@ export default class AdminAtrributes extends React.Component{
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                         <SpinnerButton name='submitButton'
-                                    text='Save status'
-                                    titlePass='Form is ready'
-                                    titleNoPass='Form not ready'
-                                    type='submit'
-                                    disabled={
-                                        !(validName && validUnit && validType && validRegex)
-                                    } 
-                                    onClick={ this.handleSubmitAttribute }
+                            text='Save attribute'
+                            titlePass='Form is ready'
+                            titleNoPass='Form not ready'
+                            type='submit'
+                            disabled={
+                                !(validName && validUnit && validType && validRegex)
+                            } 
+                            onClick={ this.handleSubmitAttribute }
                             />
                         <div className='row justify-content-center'>
                         <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>

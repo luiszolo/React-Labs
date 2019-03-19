@@ -10,17 +10,16 @@ export default class AdminTests extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            validTest1:undefined,
-            validTest2:undefined,
-            validTest3:undefined,
-            validTest4:undefined,
-            attributes2:[],
-            tests:[],
-            attributes2:[],
-            status:[],
-            status2:[],
-            status3:[],
-            nameAtt:'',
+            validTest1: undefined,
+            validTest2: undefined,
+            validTest3: undefined,
+            validTest4: undefined,
+            attributes2: [],
+            tests: [],
+            status: [],
+            status2: [],
+            status3: [],
+            nameAtt: '',
             name: 'Electricity Test',           //Name of the test
             operator: 0,                        //State of the operator
             messageOp: '',                      //Message for the operator field
@@ -28,12 +27,12 @@ export default class AdminTests extends React.Component{
             validAtt: undefined,
             messageAPI: '',                     //Message of the API
             loading: false,                     //Loading state
-            samplelenghtTest:'',
-            statusTest:'',
-            preStatusTest:'',
-            requiredTest:'',
-            postStatusTest:'',
-            attributeTest:'',
+            samplelenghtTest: '',
+            statusTest: '',
+            preStatusTest: '',
+            requiredTest: '',
+            postStatusTest: '',
+            attributeTest: '',
         }
     }
 
@@ -457,7 +456,7 @@ export default class AdminTests extends React.Component{
                 </div>
                     <SpinnerButton
                         name='submitButton'
-                        text='Save status'
+                        text='Save test'
                         titlePass='Form is ready'
                         titleNoPass='Form not ready'
                         type='submit'
@@ -487,6 +486,7 @@ export default class AdminTests extends React.Component{
                             data={this.state.status}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
+                            noDataText={"No available status"}
                         >
                         </ReactTable>
                     </div>
@@ -496,7 +496,7 @@ export default class AdminTests extends React.Component{
                             data={this.state.status2}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
-                            noDataText={"Select a Status..."}>
+                            noDataText={"Select a status..."}>
                         </ReactTable>
                     </div>
                     <div className='col-3'>
@@ -505,6 +505,7 @@ export default class AdminTests extends React.Component{
                             data={this.state.attributes}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
+                            noDataText={"No available attributes"}
                         >
                         </ReactTable>
                     </div>
@@ -514,7 +515,7 @@ export default class AdminTests extends React.Component{
                             data={this.state.attributes2}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
-                            noDataText={"Select an Attribute..."}
+                            noDataText={"Select an attribute..."}
                         >
                         </ReactTable>
                     </div>
