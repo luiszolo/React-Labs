@@ -5,7 +5,6 @@ const pool = require('./../config/database');
 // Testing
 async function insertData(req, res) {
 	let body = req.body;
-	console.log(body)
 	const operator = await dbInteract.isExists(`SELECT * FROM Operator WHERE id=${body.operator}`);
 	if(operator == false) {
 		res.send({
@@ -31,9 +30,8 @@ async function insertData(req, res) {
 
 	const postStatus = await pool.query(`SELECT post_State FROM TestStatus WHERE test_Id=${test.result.id}`);
 	const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.result.id}`);
-	console.log(postStatus, prevStatus);
 
-	let sampleError;
+	let sampleError = false;
 	let sampleErrorList = {
 		NotExists: [],
 		Exists: [],
@@ -44,6 +42,7 @@ async function insertData(req, res) {
 
 	sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
 	if (sampleErrorList.RepeatSample.length > 0) {
+		console.log('Analyze samples: Repeat Sample')
 		sampleError = true;
 	}
 	const firstTest = await pool.query(`SELECT id FROM Test WHERE name='ELECTRICITY TEST'`);
@@ -55,6 +54,7 @@ async function insertData(req, res) {
 			};
 			if (sample === '') continue;
 			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == true){
+				console.log('Analyze samples: Exists Sample')
 				sampleErrorList.Exists.push(sample.toUpperCase());
 				continue;
 			} else {
@@ -73,6 +73,7 @@ async function insertData(req, res) {
 		if (element === '') continue;
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
 		if (sample == false) { 
+			console.log('Analyze samples: Not Exists')
 			sampleError = true;
 			sampleErrorList.NotExists.push(element.toUpperCase());
 			continue;
@@ -96,6 +97,7 @@ async function insertData(req, res) {
 					SELECT * FROM Log WHERE status_Id=${logValidation2.result.status_Required} AND sample_Id=${sample.result.id}
 				`);
 				if (logValidation3 == false && test.result.id != firstTest[0].id) {
+					console.log('Analyze samples: Not PrevState Required Sample')
 					sampleError = true;
 					sampleErrorList.NotPrev.push(element.toUpperCase());
 					break;
@@ -103,12 +105,15 @@ async function insertData(req, res) {
 				continue;
 			} else {
 				if(test.result.id == firstTest[0].id) continue;
+				console.log('Analyze samples: Not PrevState Required Sample')
 				sampleError = true;
 				sampleErrorList.NotPrev.push(element.toUpperCase());
 				continue;
 			}
 		}
 	}
+	console.log('Analyze samples: Final Validations ')
+
 	
 	let attributeError = false;
 	if (body.attributes) {

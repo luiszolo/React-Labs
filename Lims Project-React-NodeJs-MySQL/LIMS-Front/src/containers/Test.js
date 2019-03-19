@@ -149,6 +149,7 @@ export default class Test extends React.Component {
 
 	handleValidateSample(sample, idx){
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
+			console.log('here')
 			this.handleMoveFormData(idx)
 			this.handleMoveSamplesData(idx)
 			if (idx !== 0) {
@@ -200,7 +201,7 @@ export default class Test extends React.Component {
 
 		this.setState({
 			passedSamples: (this.state.passedSamples && sample.passValidation && (this.refs[`sample${idx + 1}`].state.warningText === ''))
-		});
+		},()=>{console.log(this.state.passedSamples)});
 	}
 
 	handleSubmit(e) {
@@ -315,8 +316,8 @@ export default class Test extends React.Component {
 								))
 							}
 						</div>
-						<SpinnerButton name='submitButton'
-							ref='submitButton'
+						<SpinnerButton 
+							name='submitButton'
 							text='Save data'
 							titlePass='Form is ready'
 							titleNoPass='Form not ready'
