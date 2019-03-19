@@ -5,35 +5,37 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 import SpinnerButton from './../components/SpinnerButton';
+import { element } from 'prop-types';
 
 export default class AdminTests extends React.Component{
     constructor(props){
         super(props);
         this.state={
+            tests: [],
+            nameTest: '',
+            nameAtt: '',
+            samplelenghtTest: '',
+            activeTest: undefined,
+            preStatus: [],
+            availableAttributes: [],
+            selectedAttributes: [],
+            availableStatus: [],
+            selectedStatus: [],
+            ValidNameTest: undefined,
             validTest1: undefined,
             validTest2: undefined,
             validTest3: undefined,
-            validTest4: undefined,
-            attributes2: [],
-            tests: [],
-            status: [],
-            status2: [],
-            status3: [],
-            nameAtt: '',
-            name: 'Electricity Test',           //Name of the test
-            operator: 0,                        //State of the operator
             messageOp: '',                      //Message for the operator field
-            ValidNameTest: undefined,
-            validAtt: undefined,
             messageAPI: '',                     //Message of the API
-            loading: false,                     //Loading state
-            samplelenghtTest: '',
             statusTest: '',
             preStatusTest: '',
             requiredTest: '',
             postStatusTest: '',
             attributeTest: '',
         }
+
+        // this.handleSelectStatus = this.handleSelectStatus.bind(this);
+        // this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
     }
 
     componentDidMount() {
@@ -43,7 +45,7 @@ export default class AdminTests extends React.Component{
         })
         .then(Response => Response.json())
         .then(res => {
-        this.setState({attributes:res.Attributes})
+        this.setState({availableAttributes: res.Attributes})
         })
 
         const url2= "http://10.2.1.94:4000/api/status";
@@ -54,7 +56,7 @@ export default class AdminTests extends React.Component{
             })
         .then(Response => Response.json())
         .then(res => {
-            this.setState({status: res.Statuss})
+            this.setState({availableStatus: res.Statuss})
         })
 
         const url4= "http://10.2.1.94:4000/api/status";
@@ -65,7 +67,7 @@ export default class AdminTests extends React.Component{
         })
         .then(Response => Response.json())
         .then(res => {
-            this.setState({status3: res.Statuss})  
+            this.setState({preStatus: res.Statuss})  
         })
 
         const url= "http://10.2.1.94:4000/api/tests";
@@ -129,7 +131,7 @@ export default class AdminTests extends React.Component{
 
     handleStatusTest = () => {
         this.setState({
-            validTest2: !this.state.validTest2,
+            activeTest: !this.state.activeTest,
         })
     }
 
@@ -142,23 +144,23 @@ export default class AdminTests extends React.Component{
         if(preStatusTest.length>=1) {
             this.setState({
                 preStatusTest: preStatusTest,
-                validTest3: true,
+                validTest2: true,
             })
         } else if(preStatusTest === '') {
             this.setState({
-                validTest3: false,
+                validTest2: false,
             })
         }
     }
 
     handlePostStatusTest = (e) => {
-        if(this.state.status2.length === 0) {
+        if(this.state.selectedAttributes.length === 0) {
             this.setState({
-                validTest4: false,
+                validTest3: false,
             })
         } else {
             this.setState({
-                validTest4: true,
+                validTest3: true,
             })
         }
     }
@@ -169,13 +171,13 @@ export default class AdminTests extends React.Component{
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
-            attributes:this.state.attributes2.map((x, i) => x.name),
-            status: this.state.statusTest,
+            availableAttributes:this.state.selectedAttributes.map((x, i) => x.name),
+            availableStatus: this.state.statusTest,
             prevStatus:
             {
                 name:this.state.preStatusTest, 
             },
-            postStatus:this.state.status2.map((x, i) => x.name)
+            postStatus:this.state.selectedAttributes.map((x, i) => x.name)
 		})
 		.then( res=> {
             console.log(res.data.message)
@@ -185,8 +187,8 @@ export default class AdminTests extends React.Component{
 					messageAPI: res.data.message,
 					ValidNameTest: false,
                     nameTest: '',
-                    status2: [],
-                    attributes2: [],
+                    selectedAttributes: [],
+                    selectedAttributes: [],
 				})
 			}
 		})
@@ -194,94 +196,140 @@ export default class AdminTests extends React.Component{
 			alert('Conection Timed Out');
 		});
     }
+
+    // handleSelectStatus(e){
+    //     const status = e.target.textContent
+
+        
+    //     console.log(this.state.selectedStatus)
+    //     let selectedStatus = this.state.selectedStatus
+
+    //     selectedStatus.forEach((element)=>{
+    //         if(element !== status) {
+    //             selectedStatus.push(status)
+    //             this.setState({
+    //                 selectedStatus: selectedStatus
+    //             })
+    //         } else {
+    //             console.log('Status already in the array')
+    //         }
+    //     })
+
+    // }
+
+    // handleSelectAttribute(e){
+    //     const attribute = e.target.textContent
+
+    //     // console.log(this.state.selectedAttributes)
+
+    //     let selectedAttributes = this.state.selectedAttributes
+
+    //     if(selectedAttributes.length > 0){
+    //         selectedAttributes.forEach((element)=>{
+    //             if(attribute !== element) {
+    //                 selectedAttributes.push(attribute)
+    //                 this.setState({
+    //                     selectedAttributes: selectedAttributes
+    //                 })
+    //             } else {
+    //                 console.log('Attribute already in the array')
+    //             }
+    //         })
+    //     } else {
+    //         selectedAttributes.push(attribute)
+    //         this.setState({
+    //             selectedAttributes: selectedAttributes
+    //         })
+    //     }
+    // }
     
     deleteRow(name){
-        const index = this.state.attributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
+        const index = this.state.availableAttributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
             return attributes.name === name
         })
 
-        let copyattributes = [...this.state.attributes]
+        let copyattributes = [...this.state.availableAttributes]
 
         copyattributes.splice(index, 1)                           // estas tres lineas es para el borrado logico 
 
-        this.setState({attributes:copyattributes})
+        this.setState({availableAttributes: copyattributes})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
         };
         this.setState({
-            attributes2: [...this.state.attributes2, item]       // llenamos la info en el arreglo de alado 
+            selectedAttributes: [...this.state.selectedAttributes, item]       // llenamos la info en el arreglo de alado 
         });
     }
     
     deleteRow2(name){
-        const index = this.state.attributes2.findIndex(attributes2=>{ // aqui seleccionas el que quieres es como un pointer
-            return attributes2.name === name
+        const index = this.state.selectedAttributes.findIndex(selectedAttributes=>{ // aqui seleccionas el que quieres es como un pointer
+            return selectedAttributes.name === name
         })
 
-        let copyattributes2 = [...this.state.attributes2]
+        let copyattributes2 = [...this.state.selectedAttributes]
 
         copyattributes2.splice(index,1)                 // estas tres lineas es para el borrado logico 
 
-        this.setState({attributes2:copyattributes2})
+        this.setState({selectedAttributes: copyattributes2})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
         };
         this.setState({
-            attributes: [...this.state.attributes, item]       // llenamos la info en el arreglo de al lado 
+            availableAttributes: [...this.state.availableAttributes, item]       // llenamos la info en el arreglo de al lado 
         });
     }
 
     deleteRow3(name){
-        const index = this.state.status.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
+        const index = this.state.availableStatus.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
             return status.name === name
         })
 
-        let copyStatus = [...this.state.status]
+        let copyStatus = [...this.state.availableStatus]
 
         copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
 
-        this.setState({status:copyStatus})
+        this.setState({availableStatus: copyStatus})
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
         };
         this.setState({
-            status2: [...this.state.status2, item] ,      // llenamos la info en el arreglo de al lado 
-            validTest4: true
+            selectedStatus: [...this.state.selectedStatus, item] ,      // llenamos la info en el arreglo de al lado 
+            validTest3: true
         });
     }
     
     deleteRow4(name){
-        const index = this.state.status2.findIndex(status2=>{ // aqui seleccionas el que quieres es como un pointer
-            return status2.name === name
+        const index = this.state.selectedStatus.findIndex(selectedStatus=>{ // aqui seleccionas el que quieres es como un pointer
+            return selectedStatus.name === name
         })
 
-        let copyStatus2 = [...this.state.status2]
+        let copyStatus2 = [...this.state.selectedStatus]
 
         copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
 
-        this.setState({status2:copyStatus2})
+        this.setState({selectedStatus: copyStatus2})
 
         const item = {
             id: index,                              // asignamos al los states los valores seleccionados con el pointer 
             name: name
         };
         this.setState({
-            status: [...this.state.status, item]       // llenamos la info en el arreglo de alado 
+            availableStatus: [...this.state.availableStatus, item]       // llenamos la info en el arreglo de alado 
         });
-        if(this.state.status2.length === 1) {
+        if(this.state.selectedAttributes.length === 1) {
             console.log("funciona")
             this.setState({
-                validTest4: false,
+                validTest3: false,
             })
         }
     }
 
     renderOption(){
-        return this.state.status3.map(name => {
-            return <option value={name.name}>{name.name}</option>
+        return this.state.preStatus.map(name => {
+            return <option key={name} value={name.name}>{name.name}</option>
         })
     }
 
@@ -392,9 +440,9 @@ export default class AdminTests extends React.Component{
                 messageOp,
                 ValidNameTest,
                 validTest1,
+                activeTest,
                 validTest2,
                 validTest3,
-                validTest4,
                 messageAPI,
             }
         } = this;
@@ -432,48 +480,66 @@ export default class AdminTests extends React.Component{
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className='mr-3'>Status:</label>
+                    <label className='mr-3'>availableStatus:</label>
                     <input
                         type='checkbox'
                         className='form-check-input'
                         name='testStatus'
-                        checked={validTest2}
+                        checked={activeTest}
                         onChange={this.handleStatusTest}
                     />
                     <label className='form-check-label'>Active</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Pre Status:</label>
+                    <label className={regularLabels}>Pre availableStatus:</label>
                         <select 
                             className={inputs} 
-                            id="status" 
-                            onBlur={this.handlePreStatusTest} 
+                            id="availableStatus" 
+                            onCHange={this.handlePreStatusTest} 
                             defaultValue="Sample Ready For Electricity" 
-                            placeholder="Status">
+                            placeholder="availableStatus">
                             {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
-                    <SpinnerButton
-                        name='submitButton'
-                        text='Save test'
-                        titlePass='Form is ready'
-                        titleNoPass='Form not ready'
-                        type='submit'
-                        disabled={
-                            !(ValidNameTest && validTest1 && validTest2 && validTest3&& validTest4)
-                        } 
-                        onClick={ this.handleSubmitStatus }
-                    />
-                    <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                    {messageAPI}
-                    </label>
+                {/* <div className='row'>
+                    <div className='col-6'>
+                        <h3>Select one or more availableStatus</h3>
+                        <ul>
+                        {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
+                            return <li className='selectable' name={status.name} key={status.id} onClick={this.handleSelectStatus}>{status.name}</li>
+                        }) : <li className='selectable'>Nothing</li>}
+                        </ul>
+                    </div>
+                    <div className='col-6'>
+                        <h3>Select one or more attribute</h3>
+                        <ul>
+                        {(this.state.availableAttributes) ? this.state.availableAttributes.map((attribute) => {
+                            return <li className='selectable' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute}>{attribute.name}</li>
+                        }) : <li className='selectable'>Nothing</li>}
+                        </ul>
+                    </div>
+                </div> */}
+                <SpinnerButton
+                    name='submitButton'
+                    text='Save test'
+                    titlePass='Form is ready'
+                    titleNoPass='Form not ready'
+                    type='submit'
+                    disabled={
+                        !(ValidNameTest && validTest1 && activeTest && validTest2&& validTest3)
+                    } 
+                    onClick={ this.handleSubmitStatus }
+                />
+                <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
+                {messageAPI}
+                </label>
                 </form>
             </div>
             <div id="tables" className='tables'>
                 <div className='row'>
                     <div className='col-6 text-center'>
-                        <h3>Status</h3>
+                        <h3>availableStatus</h3>
                     </div>
                     <div className='col-6 text-center'>
                         <h3>Attributes</h3>
@@ -483,26 +549,26 @@ export default class AdminTests extends React.Component{
                     <div className='col-3'>
                         <ReactTable
                             columns={columns3}
-                            data={this.state.status}
+                            data={this.state.availableStatus}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
-                            noDataText={"No available status"}
+                            noDataText={"No available availableStatus"}
                         >
                         </ReactTable>
                     </div>
                     <div className='col-3'>
                         <ReactTable
                             columns={columns4}
-                            data={this.state.status2}
+                            data={this.state.selectedStatus}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
-                            noDataText={"Select a status..."}>
+                            noDataText={"Select a availableStatus..."}>
                         </ReactTable>
                     </div>
                     <div className='col-3'>
                         <ReactTable
                             columns={columns}
-                            data={this.state.attributes}
+                            data={this.state.availableAttributes}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
                             noDataText={"No available attributes"}
@@ -512,7 +578,7 @@ export default class AdminTests extends React.Component{
                     <div className='col-3'>
                         <ReactTable
                             columns={columns2}
-                            data={this.state.attributes2}
+                            data={this.state.selectedAttributes}
                             defaultPageSize= {10}
                             showPageSizeOptions={false}
                             noDataText={"Select an attribute..."}
