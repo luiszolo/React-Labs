@@ -69,7 +69,6 @@ async function insertData(req, res) {
 			}
 		}
 	}
-
 	for await (const element of body.samples) {
 		if (element === '') continue;
 		let sample = await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${element.toUpperCase()}'`);
@@ -80,7 +79,8 @@ async function insertData(req, res) {
 		} 
 
 		let logValidation = await dbInteract.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.result.id} AND test_Id=${test.result.id}`);
-		if (logValidation.pass == true) {
+		if (logValidation.pass == true && logValidation.result.test_Id != firstTest[0].id) {
+			console.log('Analyze samples: Repeat Test')
 			sampleError = true;
 			sampleErrorList.RepeatTest.push(element.toUpperCase());
 			continue;
