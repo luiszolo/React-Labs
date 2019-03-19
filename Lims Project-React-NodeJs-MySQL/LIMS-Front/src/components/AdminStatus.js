@@ -24,6 +24,13 @@ export default class Admin extends React.Component{
         )
     }
 
+    renderOption(){
+        return this.state.status.map(name => {
+            return <option value={name.name}>{name.name}</option>
+        })
+    }
+
+
     handleStatus=(e)=>{
         const nameStatus = e.target.value
 
@@ -51,7 +58,9 @@ export default class Admin extends React.Component{
     handleSubmitStatus = event => {
         event.preventDefault();
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
-			name: this.state.nameStatus
+            name: this.state.nameStatus
+            // requiredPrev: 0 o 1,
+            // prevStatus: hoaisgh
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
@@ -107,7 +116,18 @@ export default class Admin extends React.Component{
                                 value={nameStatus}
                             />
                             <label className={warningLabels}></label>
-                        </div>
+                     
+                        <label className={regularLabels}>Pre Status:</label>
+                        <select 
+                            className={inputs} 
+                            id="status" 
+                            onBlur={this.handlePreStatusTest} 
+                            defaultValue="Sample Ready For Electricity" 
+                            placeholder="Status">
+                            {this.renderOption()}
+                        </select>
+                    {/* <label className={warningLabels}>{messageOp}</label> */}
+                </div>
                         <SpinnerButton name='submitButton'
                                 text='Save status'
                                 titlePass='Form is ready'

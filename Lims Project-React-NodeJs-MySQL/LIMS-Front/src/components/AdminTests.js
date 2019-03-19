@@ -170,11 +170,8 @@ export default class AdminTests extends React.Component{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
             attributes:this.state.attributes2.map((x, i) => x.name),
-            status: this.state.statusTest,
-            prevStatus:
-            {
-                name:this.state.preStatusTest, 
-            },
+            status: this.state.validTest2,
+            prevStatus: this.state.preStatusTest,
             postStatus:this.state.status2.map((x, i) => x.name)
 		})
 		.then( res=> {
@@ -413,7 +410,12 @@ export default class AdminTests extends React.Component{
                         <label className={regularLabels}>Name:</label>
                         <input
                             type='text'
-                            className={inputs}
+                            className={
+                                ValidNameTest === undefined ? (inputs) : (
+                                    ValidNameTest === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                    inputs.concat(inputs, " ", "border border-danger")
+                                )
+                            }
                             name='testName'
                             placeholder='#####'
                             onBlur={this.handleNameTest}
@@ -424,7 +426,12 @@ export default class AdminTests extends React.Component{
                     <label className={regularLabels}>Number of samples:</label>
                     <input
                         type='number'
-                        className={inputs}
+                        className={
+                            validTest1 === undefined ? (inputs) : (
+                                validTest1 === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                inputs.concat(inputs, " ", "border border-danger")
+                            )
+                        }
                         name='numberSamples' 
                         placeholder='#####'
                         onBlur={this.handleSamplesLTest}
