@@ -7,7 +7,9 @@ async function addStatus (req, res) {
 	let params  = req.body;
 	console.log(params);
 	const newStatus = {
-		name: params.name.toUpperCase()
+		name: params.name.toUpperCase(),
+		requiredPrev: params.reqPrev,
+		prevStatus: params.prevStatus
 	};
 	const validateStatus = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.name}'`);
 	if (validateStatus.length == 1) {
@@ -17,12 +19,16 @@ async function addStatus (req, res) {
 		return;
 	}
 	else {
+		await pool.query(`INSERT INTO Status SET name='${newStatus.name}'`);
+		if (newStatus.requiredPrev) {
+			const newStatusId = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.name}'`);
+			const reqStatusId = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.prevStatus}'`);
+			await pool.query(`INSERT INTO StatusSequence SET status_Id=${newStatusId[0].id}, status_Required=${reqStatusId[0].id}`);
+		}
 		res.send({
 			message: 'Insertion completed'
-		})
+		});
 	}
-	await pool.query('INSERT INTO Status SET ?', [newStatus]);
-	console.log(`Saved Status: ${newStatus.name}`);
 };
 
 // Finish
