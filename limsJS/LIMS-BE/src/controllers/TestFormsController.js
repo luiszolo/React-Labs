@@ -57,7 +57,16 @@ async function insertData(req, res) {
 			if (await dbInteract.isExists(`SELECT * FROM Sample WHERE name='${sample}'`) == true){
 				sampleErrorList.Exists.push(sample.toUpperCase());
 				continue;
-			} else await require('./SampleController').addSample(reqCopy, res);
+			} else {
+				await require('./SampleController').addSample(reqCopy, res);
+				reqCopy.body = {
+					operator: body.operator,
+					sample: sample,
+					test: body.test,
+					status: 'New Sample'
+				}
+				await require('./LogController').addLog(reqCopy, res);
+			}
 		}
 	}
 
@@ -124,6 +133,7 @@ async function insertData(req, res) {
 		sampleErrorList.RepeatSample = miscs.getDuplications(body.samples).filter(e => e != null && e != "");
 		sampleErrorList.RepeatTest = miscs.getDuplications(sampleErrorList.RepeatTest).filter(e => e != null && e != "");
 
+		console.log(sampleErrorList)
 		res.send({
 			message: 'Samples are wrong',
 			test: test.result.name,
