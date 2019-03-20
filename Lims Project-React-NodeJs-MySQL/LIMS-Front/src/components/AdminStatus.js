@@ -11,7 +11,7 @@ export default class Admin extends React.Component{
             nameStatus: '',
             validStatus: undefined,
             messageAPI:'',
-            activeTest:undefined,
+            activeTest: false,
         }
     }
 
@@ -35,6 +35,7 @@ export default class Admin extends React.Component{
         this.setState({
             activeTest: !this.state.activeTest,
         })
+        console.log(!this.state.activeTest)
     }
 
     handleStatus=(e)=>{
@@ -76,14 +77,14 @@ export default class Admin extends React.Component{
                 validTest2: false,
             })
         }
-        console.log(validTest2)
+        
     }
 
     handleSubmitStatus = event => {
         event.preventDefault();
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
             name: this.state.nameStatus,
-            requiredPrev: this.state.validTest2,
+            requiredPrev: this.state.activeTest,
             prevStatus: this.state.preStatusTest
 		})
 		.then( res=> {

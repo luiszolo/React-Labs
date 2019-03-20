@@ -176,25 +176,24 @@ async function insertData(req, res) {
 	let logInserted;
 	for await (const reqSample of body.samples) {
 		if (reqSample === '') continue;
-		for await (const reqPrev of prevStatus) {
-			let status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPrev.prev_State}`);
+		const reqPrev = prevStatus[0];
+		let status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPrev.prev_State}`);
+		req.body = {
+			operator: body.operator,
+			sample: reqSample,
+			test: body.test,
+			status: status.result.name
+		}
+		await require('./LogController').addLog(req, res);
+		for await  (const reqPost of postStatus) {
+			status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPost.post_State}`);
 			req.body = {
 				operator: body.operator,
 				sample: reqSample,
 				test: body.test,
 				status: status.result.name
 			}
-			await require('./LogController').addLog(req, res);
-			for await  (const reqPost of postStatus) {
-				status = await dbInteract.isExists(`SELECT * FROM Status WHERE id=${reqPost.post_State}`);
-				req.body = {
-					operator: body.operator,
-					sample: reqSample,
-					test: body.test,
-					status: status.result.name
-				}
-				logInserted = await require('./LogController').addLog(req, res);
-			}
+			logInserted = await require('./LogController').addLog(req, res);
 		}
 	}
 	if (logInserted.message) {

@@ -8,7 +8,7 @@ async function addStatus (req, res) {
 	console.log(params);
 	const newStatus = {
 		name: params.name.toUpperCase(),
-		requiredPrev: params.reqPrev,
+		requiredPrev: params.requiredPrev,
 		prevStatus: params.prevStatus
 	};
 	const validateStatus = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.name}'`);

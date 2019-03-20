@@ -237,9 +237,6 @@ export default class Test extends React.Component {
 		this.refs.submitButton.setState({
 			loading: false
 		});
-		setTimeout(()=> this.refs.submitButton.setState({
-			resultMessage: ''
-		}), 2000);
 	}
 
 	render(){
@@ -316,13 +313,8 @@ export default class Test extends React.Component {
 								))
 							}
 						</div>
-<<<<<<< HEAD
 						<SpinnerButton
 						ref='submitButton'
-=======
-						<SpinnerButton 
-							ref='submitButton'
->>>>>>> 17f405aa625b18f7a9b5b81380ec60ddbbff47c3
 							name='submitButton'
 							text='Save data'
 							titlePass='Form is ready'
