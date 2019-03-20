@@ -20,6 +20,7 @@ async function addStatus (req, res) {
 	}
 	else {
 		await pool.query(`INSERT INTO Status SET name='${newStatus.name}'`);
+		console.log(newStatus)
 		if (newStatus.requiredPrev) {
 			const newStatusId = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.name}'`);
 			const reqStatusId = await pool.query(`SELECT * FROM Status WHERE name='${newStatus.prevStatus}'`);

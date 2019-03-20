@@ -69,13 +69,14 @@ export default class Admin extends React.Component{
         if(preStatusTest.length>=1) {
             this.setState({
                 preStatusTest: preStatusTest,
-                // validTest2: true,
+                validTest2: true,
             })
         } else if(preStatusTest === '') {
-            // this.setState({
-            //     validTest2: false,
-            // })
+            this.setState({
+                validTest2: false,
+            })
         }
+        console.log(validTest2)
     }
 
     handleSubmitStatus = event => {
