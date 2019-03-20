@@ -17,9 +17,9 @@ export default class AdminTests extends React.Component{
             samplelenghtTest: '',
             activeTest: undefined,
             preStatus: [],
-            availableAttributes: [],
+            availableAttributes: [{name:'name1'},{name:'name2'},{name:'name3'}],
             selectedAttributes: [],
-            availableStatus: [],
+            availableStatus: [{name:'status1'},{name:'status2'},{name:'status3'}],
             selectedStatus: [],
             ValidNameTest: undefined,
             validTest1: undefined,
@@ -198,21 +198,16 @@ export default class AdminTests extends React.Component{
         const status = e.target.textContent
 
         
-        console.log(this.state.selectedStatus)
+        //console.log(this.state.selectedStatus)
 
         let selectedStatus = this.state.selectedStatus
 
         const exists = selectedStatus.filter((item)=> {return item === status})
+        
         if(exists.length !== 1){
-            selectedStatus.forEach((element)=>{
-                if(element !== status) {
-                    selectedStatus.push(status)
-                    this.setState({
-                        selectedStatus: selectedStatus
-                    })
-                } else {
-                    console.log('Status already in the array')
-                }
+            selectedStatus.push(status)
+            this.setState({
+                selectedStatus: selectedStatus
             })
         }
     }
