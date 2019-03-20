@@ -11,6 +11,7 @@ export default class Admin extends React.Component{
             nameStatus: '',
             validStatus: undefined,
             messageAPI:'',
+            activeTest:undefined,
         }
     }
 
@@ -30,10 +31,17 @@ export default class Admin extends React.Component{
         })
     }
 
+    handleStatusTest = () => {
+        this.setState({
+            activeTest: !this.state.activeTest,
+        })
+    }
 
     handleStatus=(e)=>{
         const nameStatus = e.target.value
-
+        this.setState({
+            messageAPI:""
+        })
         this.setState({
             nameStatus: nameStatus
         })
@@ -55,19 +63,38 @@ export default class Admin extends React.Component{
         })
     }
 
+    handlePreStatusTest = (e) => {
+        const preStatusTest = e.target.value
+
+        if(preStatusTest.length>=1) {
+            this.setState({
+                preStatusTest: preStatusTest,
+                // validTest2: true,
+            })
+        } else if(preStatusTest === '') {
+            // this.setState({
+            //     validTest2: false,
+            // })
+        }
+    }
+
     handleSubmitStatus = event => {
         event.preventDefault();
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
-            name: this.state.nameStatus
-            // requiredPrev: 0 o 1,
-            // prevStatus: hoaisgh
+            name: this.state.nameStatus,
+            requiredPrev: this.state.validTest2,
+            prevStatus: this.state.preStatusTest
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
 				this.setState({
 					messageAPI: res.data.message,
-					validStatus: false,
-				})
+                    validStatus: false,
+                    nameStatus:"",
+                    validStatus: undefined
+
+                })
+                this.componentDidMount()
 			} else {
 			}
 			})
@@ -75,6 +102,8 @@ export default class Admin extends React.Component{
 			alert('Conection Timed Out');
 		});
     }
+
+    
 
     render(){
         const {
@@ -84,6 +113,7 @@ export default class Admin extends React.Component{
                 nameStatus,
                 validStatus,
                 messageAPI,
+                activeTest,
             }
         } = this;
 
@@ -116,6 +146,19 @@ export default class Admin extends React.Component{
                                 value={nameStatus}
                             />
                             <label className={warningLabels}></label>
+                            </div>
+                            <div className='row justify-content-center form-inline mb-3'>
+                    <label className='mr-3'>Status:</label>
+                    <input
+                        type='checkbox'
+                        className='form-check-input'
+                        name='testStatus'
+                        checked={activeTest}
+                        onChange={this.handleStatusTest}
+                    />
+                    <label className='form-check-label'>Active</label>
+                </div>
+                            <div className='row justify-content-center form-inline mb-3'>
                      
                         <label className={regularLabels}>Pre Status:</label>
                         <select 
@@ -145,7 +188,7 @@ export default class Admin extends React.Component{
                         </div>
                     </form>
                 </div>
-                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12 status rounded-right'>
+                <div className='col-lg-6 col-xl-5 col-md-12 col-sm-12 status rounded-right'>
                     <h4>Available status</h4>
                     <ul>
                         {this.state.status.map((value, idx)=>{

@@ -34,6 +34,7 @@ export default class AdminAtrributes extends React.Component{
         const name = e.target.value
         this.setState({
             name: name,
+            messageAPI:""
         })
         if(name.length >= 1) {
             this.setState({
@@ -59,6 +60,7 @@ export default class AdminAtrributes extends React.Component{
 
         this.setState({
             unit: unit,
+            messageAPI:""
         })
         if(unit.length >= 1) {
             this.setState({
@@ -76,6 +78,7 @@ export default class AdminAtrributes extends React.Component{
 
         this.setState({
             regex: regex,
+            messageAPI:""
         })
         if(regex.length >= 1) {
             this.setState({
@@ -93,6 +96,7 @@ export default class AdminAtrributes extends React.Component{
 
         this.setState({
             type: type,
+            messageAPI:""
         })
         if(type.length >= 1) {
             this.setState({
@@ -115,18 +119,19 @@ export default class AdminAtrributes extends React.Component{
             regex: this.state.regex
 		})
 		.then( res => {
-			if (res.data.message === 'Insertion completed') {
+			if (res.data.message === 'Insertion successful') {
 				this.setState({
                     name:'',
-                    validName: false,
+                    validName: undefined,
                     unit:'',
-                    validUnit: false,
+                    validUnit: undefined,
                     type:'',
-                    validType: false,
+                    validType: undefined,
                     regex:'',
-                    validRegex: false,
+                    validRegex: undefined,
                     messageAPI: res.data.message,
-				})
+                })
+                this.componentDidMount()
 			}
 			})
 		.catch( () => {
