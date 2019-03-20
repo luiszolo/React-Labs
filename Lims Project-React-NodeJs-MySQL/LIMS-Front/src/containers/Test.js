@@ -317,6 +317,7 @@ export default class Test extends React.Component {
 							}
 						</div>
 						<SpinnerButton 
+							ref='submitButton'
 							name='submitButton'
 							text='Save data'
 							titlePass='Form is ready'

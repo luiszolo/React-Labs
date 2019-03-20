@@ -1,11 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 
-import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 import SpinnerButton from './../components/SpinnerButton';
-import { element } from 'prop-types';
 
 export default class AdminTests extends React.Component{
     constructor(props){
@@ -167,14 +165,14 @@ export default class AdminTests extends React.Component{
 
     handleSubmitTest = event => {
         event.preventDefault();
-
+        
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
-            attributes:this.state.attributes2.map((x, i) => x.name),
+            attributes:this.state.selectedAttributes.map((x, i) => x),
             status: this.state.validTest2,
             prevStatus: this.state.preStatusTest,
-            postStatus:this.state.status2.map((x, i) => x.name)
+            postStatus:this.state.selectedStatus.map((x, i) => x)
 		})
 		.then( res=> {
             console.log(res.data.message)
@@ -197,7 +195,6 @@ export default class AdminTests extends React.Component{
     handleSelectStatus(e){
         const status = e.target.textContent
 
-        
         //console.log(this.state.selectedStatus)
 
         let selectedStatus = this.state.selectedStatus
@@ -208,6 +205,24 @@ export default class AdminTests extends React.Component{
             selectedStatus.push(status)
             this.setState({
                 selectedStatus: selectedStatus
+            })
+        } else {
+            selectedStatus.forEach((element, position) =>{
+                if(element===status){
+                    const prevSelected = selectedStatus.slice(0, position)
+                    const postSelected = selectedStatus.slice(position + 1, selectedStatus.length)
+                    const newSelectedStatus =prevSelected.concat(postSelected)
+                    this.setState({
+                        selectedStatus: newSelectedStatus
+                    })
+                    console.log(newSelectedStatus)
+                }
+            })
+        }
+
+        if(this.state.selectedAttributes.length===0){
+            this.setState({
+                validTest3: false
             })
         }
     }
@@ -225,89 +240,17 @@ export default class AdminTests extends React.Component{
             this.setState({
                 selectedAttributes: selectedAttributes
             })
-        }
-    }
-    
-    deleteRow(name){
-        const index = this.state.availableAttributes.findIndex(attributes=>{ // aqui seleccionas el que quieres es como un pointer
-            return attributes.name === name
-        })
-
-        let copyattributes = [...this.state.availableAttributes]
-
-        copyattributes.splice(index, 1)                           // estas tres lineas es para el borrado logico 
-
-        this.setState({availableAttributes: copyattributes})
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-        };
-        this.setState({
-            selectedAttributes: [...this.state.selectedAttributes, item]       // llenamos la info en el arreglo de alado 
-        });
-    }
-    
-    deleteRow2(name){
-        const index = this.state.selectedAttributes.findIndex(selectedAttributes=>{ // aqui seleccionas el que quieres es como un pointer
-            return selectedAttributes.name === name
-        })
-
-        let copyattributes2 = [...this.state.selectedAttributes]
-
-        copyattributes2.splice(index,1)                 // estas tres lineas es para el borrado logico 
-
-        this.setState({selectedAttributes: copyattributes2})
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-        };
-        this.setState({
-            availableAttributes: [...this.state.availableAttributes, item]       // llenamos la info en el arreglo de al lado 
-        });
-    }
-
-    deleteRow3(name){
-        const index = this.state.availableStatus.findIndex(status=>{ // aqui seleccionas el que quieres es como un pointer
-            return status.name === name
-        })
-
-        let copyStatus = [...this.state.availableStatus]
-
-        copyStatus.splice(index,1)                   // estas tres lineas es para el borrado logico 
-
-        this.setState({availableStatus: copyStatus})
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-        };
-        this.setState({
-            selectedStatus: [...this.state.selectedStatus, item] ,      // llenamos la info en el arreglo de al lado 
-            validTest3: true
-        });
-    }
-    
-    deleteRow4(name){
-        const index = this.state.selectedStatus.findIndex(selectedStatus=>{ // aqui seleccionas el que quieres es como un pointer
-            return selectedStatus.name === name
-        })
-
-        let copyStatus2 = [...this.state.selectedStatus]
-
-        copyStatus2.splice(index,1)                   // estas tres lineas es para el borrado logico 
-
-        this.setState({selectedStatus: copyStatus2})
-
-        const item = {
-            id: index,                              // asignamos al los states los valores seleccionados con el pointer 
-            name: name
-        };
-        this.setState({
-            availableStatus: [...this.state.availableStatus, item]       // llenamos la info en el arreglo de alado 
-        });
-        if(this.state.selectedAttributes.length === 1) {
-            console.log("funciona")
-            this.setState({
-                validTest3: false,
+        } else {
+            selectedAttributes.forEach((element, position) =>{
+                if(element===attribute){
+                    const prevSelected = selectedAttributes.slice(0, position)
+                    const postSelected = selectedAttributes.slice(position + 1, selectedAttributes.length)
+                    const newSelectedAttributes =prevSelected.concat(postSelected)
+                    this.setState({
+                        selectedAttributes: newSelectedAttributes
+                    })
+                    console.log(newSelectedAttributes)
+                }
             })
         }
     }
@@ -320,107 +263,6 @@ export default class AdminTests extends React.Component{
 
     render(){
         const {
-            columns = [
-                {
-                    Header: "Name",
-                    accessor: "name",
-                },
-                {
-                    Header: "Action",
-                    maxWidth:100,
-                    style:{
-                        textAlign:"center"
-                    },
-                    width:100,
-                    minWidth:100,
-                    Cell: props=>{
-                        return(
-                            <button
-                                onClick={() => {
-                                    this.deleteRow(props.original.name)
-                                }}
-                            >
-                            🡺
-                            </button>
-                        )
-                    }
-                },
-            ],            
-            columns2 = [
-                {
-                    Header: "Name",
-                    accessor: "name",
-                },
-                {
-                    style:{
-                        textAlign:"center"
-                    },
-                    width:100,
-                    minWidth:100,
-                    Header: "Action",
-                    Cell: props=>{
-                        return(
-                            <button
-                                onClick={() => {
-                                    this.deleteRow2(props.original.name)
-                                }}
-                            >🡸
-                            </button>
-                        )
-                    }
-                },
-            ],
-            columns3 =[
-                {
-                    Header: "Name",
-                    accessor: "name"
-                },
-                {
-                    Header: "Action",
-                    maxWidth:100,
-                    style:{
-                        textAlign:"center"
-                    },
-                    width:100,
-                    minWidth:100,
-                    Cell: props=>{
-                        return(
-                            <button
-                                onClick={() => {
-                                    this.deleteRow3(props.original.name)
-                                }}
-                            >
-                            🡺
-                            </button>
-                        )
-                    }
-                },
-            ],            
-            columns4 =[
-                {
-                    Header: "Name",
-                    accessor: "name",
-                },
-                {
-                    style:{
-                        textAlign:"center"
-                    },
-                    width:100,
-                    minWidth:100,
-                    Header: "Action",
-                    Cell: props=>{
-                        return(
-                            <button
-                                onClick={() => {
-                                    this.deleteRow4(props.original.name)
-                                }}
-                            >
-                            🡸
-                            </button>
-                        )
-                    }
-                },
-            ],
             state: {
                 messageOp,
                 ValidNameTest,
@@ -499,7 +341,7 @@ export default class AdminTests extends React.Component{
                 </div>
                 <div className='row'>
                     <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6'>
-                        <h3>Select one or more Status</h3>
+                        <h3>Select one or more status</h3>
                         <ul className='p-0'>
                         {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
                             return <li className='selectable' name={status.name} key={status.id} onClick={this.handleSelectStatus}>{status.name}</li>
@@ -521,9 +363,6 @@ export default class AdminTests extends React.Component{
                     titlePass='Form is ready'
                     titleNoPass='Form not ready'
                     type='submit'
-                    disabled={
-                        !(ValidNameTest && validTest1 && activeTest && validTest2&& validTest3)
-                    } 
                     onClick={ this.handleSubmitStatus }
                 />
                 <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
@@ -531,57 +370,6 @@ export default class AdminTests extends React.Component{
                 </label>
                 </form>
             </div>
-            {/* <div id="tables" className='tables'>
-                <div className='row'>
-                    <div className='col-6 text-center'>
-                        <h3>Status</h3>
-                    </div>
-                    <div className='col-6 text-center'>
-                        <h3>Attributes</h3>
-                    </div>
-                </div>
-                <div className='row'>
-                    <div className='col-3'>
-                        <ReactTable
-                            columns={columns3}
-                            data={this.state.availableStatus}
-                            defaultPageSize= {10}
-                            showPageSizeOptions={false}
-                            noDataText={"No available availableStatus"}
-                        >
-                        </ReactTable>
-                    </div>
-                    <div className='col-3'>
-                        <ReactTable
-                            columns={columns4}
-                            data={this.state.selectedStatus}
-                            defaultPageSize= {10}
-                            showPageSizeOptions={false}
-                            noDataText={"Select a availableStatus..."}>
-                        </ReactTable>
-                    </div>
-                    <div className='col-3'>
-                        <ReactTable
-                            columns={columns}
-                            data={this.state.availableAttributes}
-                            defaultPageSize= {10}
-                            showPageSizeOptions={false}
-                            noDataText={"No available attributes"}
-                        >
-                        </ReactTable>
-                    </div>
-                    <div className='col-3'>
-                        <ReactTable
-                            columns={columns2}
-                            data={this.state.selectedAttributes}
-                            defaultPageSize= {10}
-                            showPageSizeOptions={false}
-                            noDataText={"Select an attribute..."}
-                        >
-                        </ReactTable>
-                    </div>
-                </div>
-            </div> */}
         </div>)
     }
 }
