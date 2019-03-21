@@ -28,6 +28,7 @@ export default class Test extends React.Component {
 		this.handleValidateSample = this.handleValidateSample.bind(this);
 		this.handleMoveFormData = this.handleMoveFormData.bind(this);
 		this.handleMoveSamplesData = this.handleMoveSamplesData.bind(this);
+		this.handleClearFormData = this.handleClearFormData.bind(this);
 	}
 
 	componentWillMount(){
@@ -109,6 +110,32 @@ export default class Test extends React.Component {
 		}
 	}
 
+	handleClearFormData(idx, prevPassed=true){
+		if( idx < this.props.samplesLength && idx !== 0) {
+			this.refs[`sample${idx + 1}`].setState({
+				input: '',
+				warningText: undefined,
+				prevPassed: prevPassed,
+				passValidation: undefined,
+				passRegex: undefined,
+			});
+			this.handleClearFormData(idx + 1, false);
+		} else if( idx === 0) {
+			this.setState({
+				passedSamples: false,
+				passedRepeatedSample: true
+			});
+			this.refs[`sample${idx + 1}`].setState({
+				input: '',
+				warningText: undefined,
+				prevPassed: prevPassed,
+				passValidation: undefined,
+				passRegex: undefined,
+			});
+			this.handleClearFormData(idx + 1, false);
+		}
+	}
+
 	handleValidateAttribute(attribute, idx) {
 		if (this.refs[`attribute${idx + 2}`] === undefined ||  (this.refs[`attribute${idx + 2}`].state.input === '')) {
 			this.handleAppendAttributeArray(attribute.props, attribute.state.input, idx);
@@ -150,8 +177,10 @@ export default class Test extends React.Component {
 	handleValidateSample(sample, idx){
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
 			console.log('here')
-			this.handleMoveFormData(idx)
-			this.handleMoveSamplesData(idx)
+			if(this.state.samples.length > 1){
+				this.handleMoveFormData(idx)
+				this.handleMoveSamplesData(idx)
+			}
 			if (idx !== 0) {
 				this.setState({
 					passedSamples: true,
@@ -226,7 +255,7 @@ export default class Test extends React.Component {
 						passedSamples: false,
 						samples: Array(this.props.samplesLength).fill('')
 					});
-					this.handleMoveFormData(0);
+					this.handleClearFormData(0, true);
 				}
 			}).catch( _ => {
 				alert('Connection Timed Out');

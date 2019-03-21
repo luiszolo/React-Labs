@@ -71,6 +71,10 @@ html, body{
     height: 100%;
 }
 
+.selected{
+	background-color: #e3f2fd;
+}
+
 .selectable{
     list-style-type: none;
 }
