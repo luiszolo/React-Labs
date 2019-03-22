@@ -250,17 +250,17 @@ export default class AdminAtrributes extends React.Component{
                             onClick={ this.handleSubmitAttribute }
                             />
                         <div className='row justify-content-center'>
-                        <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
+                        <label id='success' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                         {messageAPI}
                         </label>
                         </div>
                     </form>
                 </div>
                 <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12 status rounded-right'>
-                    <h4>Available attributes</h4>
+                    <h3 className='header'>Available attributes</h3>
                     <ul>
                         {this.state.status.map((value, idx)=>{
-                                return (<li key={idx}>{value.name}</li>)
+                                return (<li key={idx} className='selectable mt-1 p-1 rounded'>{value.name}</li>)
                             })
                         }
                     </ul>

@@ -15,14 +15,13 @@ export default class AdminTests extends React.Component{
             samplelenghtTest: '',
             activeTest: undefined,
             preStatus: [],
-            availableAttributes: [{name:'name1'},{name:'name2'},{name:'name3'}],
+            availableAttributes: [],
             selectedAttributes: [],
-            availableStatus: [{name:'status1'},{name:'status2'},{name:'status3'}],
+            availableStatus: [],
             selectedStatus: [],
-            ValidNameTest: undefined,
-            validTest1: undefined,
+            validNameTest: undefined, //using
+            validNumberSamples: undefined,
             validTest2: undefined,
-            validTest3: undefined,
             messageOp: '',                      //Message for the operator field
             messageAPI: '',                     //Message of the API
             statusTest: '',
@@ -65,7 +64,7 @@ export default class AdminTests extends React.Component{
         })
         .then(Response => Response.json())
         .then(res => {
-            this.setState({preStatus: res.Statuss})  
+            this.setState({preStatus: res.Statuss, postStatus: res.Statuss[0].name})  
         })
 
         const url= "http://10.2.1.94:4000/api/tests";
@@ -96,11 +95,11 @@ export default class AdminTests extends React.Component{
         if(samplelenghtTest.length >= 1){
             this.setState({
                 samplelenghtTest:samplelenghtTest,
-                validTest1: true,
+                validNumberSamples: true,
             })
         } else if(samplelenghtTest === '') {
             this.setState({
-                validTest1: false,
+                validNumberSamples: false,
             })
         }
     }
@@ -110,18 +109,18 @@ export default class AdminTests extends React.Component{
 
         if(nameTest.length >= 1) {
             this.setState({
-                ValidNameTest: true,
+                validNameTest: true,
                 nameTest: nameTest
             })
         } else {
             this.setState({
-                ValidNameTest: false
+                validNameTest: false
             })
         }
         this.state.tests.forEach((value, index) => {
             if(value.name === nameTest) {
                 this.setState({
-                    ValidNameTest: false
+                    validNameTest: false
                 })
             }
         })
@@ -151,18 +150,6 @@ export default class AdminTests extends React.Component{
         }
     }
 
-    handlePostStatusTest = (e) => {
-        if(this.state.selectedAttributes.length === 0) {
-            this.setState({
-                validTest3: false,
-            })
-        } else {
-            this.setState({
-                validTest3: true,
-            })
-        }
-    }
-
     handleSubmitTest = event => {
         event.preventDefault();
         
@@ -180,7 +167,7 @@ export default class AdminTests extends React.Component{
                 this.componentDidMount()
 				this.setState({
 					messageAPI: res.data.message,
-					ValidNameTest: false,
+					validNameTest: false,
                     nameTest: '',
                     selectedAttributes: [],
                     availableAttributes: [],
@@ -204,33 +191,27 @@ export default class AdminTests extends React.Component{
         if(exists.length !== 1){
             selectedStatus.push(status)
             this.setState({
-                selectedStatus: selectedStatus
+                selectedStatus: selectedStatus,
             })
         } else {
             selectedStatus.forEach((element, position) =>{
-                if(element===status){
+                if(element === status){
                     const prevSelected = selectedStatus.slice(0, position)
                     const postSelected = selectedStatus.slice(position + 1, selectedStatus.length)
                     const newSelectedStatus =prevSelected.concat(postSelected)
                     this.setState({
                         selectedStatus: newSelectedStatus
                     })
-                    console.log(newSelectedStatus)
                 }
             })
         }
 
-        if(this.state.selectedAttributes.length===0){
-            this.setState({
-                validTest3: false
-            })
-        }
     }
 
     handleSelectAttribute(e){
         const attribute = e.target.textContent
 
-        // console.log(this.state.selectedAttributes)
+        // console.log(attribute)
 
         let selectedAttributes = this.state.selectedAttributes
 
@@ -249,15 +230,15 @@ export default class AdminTests extends React.Component{
                     this.setState({
                         selectedAttributes: newSelectedAttributes
                     })
-                    console.log(newSelectedAttributes)
+                    // console.log(newSelectedAttributes)
                 }
             })
         }
     }
 
     renderOption(){
-        return this.state.preStatus.map(name => {
-            return <option key={name} value={name.name}>{name.name}</option>
+        return this.state.preStatus.map((name) => {
+            return <option key={name.name} value={name.name}>{name.name}</option>
         })
     }
 
@@ -265,11 +246,10 @@ export default class AdminTests extends React.Component{
         const {
             state: {
                 messageOp,
-                ValidNameTest,
-                validTest1,
+                validNameTest,
+                validNumberSamples,
                 activeTest,
                 validTest2,
-                validTest3,
                 messageAPI,
             }
         } = this;
@@ -289,8 +269,8 @@ export default class AdminTests extends React.Component{
                         <input
                             type='text'
                             className={
-                                ValidNameTest === undefined ? (inputs) : (
-                                    ValidNameTest === true ? inputs.concat(inputs, " ", "border border-success") : 
+                                validNameTest === undefined ? (inputs) : (
+                                    validNameTest === true ? inputs.concat(inputs, " ", "border border-success") : 
                                     inputs.concat(inputs, " ", "border border-danger")
                                 )
                             }
@@ -305,8 +285,8 @@ export default class AdminTests extends React.Component{
                     <input
                         type='number'
                         className={
-                            validTest1 === undefined ? (inputs) : (
-                                validTest1 === true ? inputs.concat(inputs, " ", "border border-success") : 
+                            validNumberSamples === undefined ? (inputs) : (
+                                validNumberSamples === true ? inputs.concat(inputs, " ", "border border-success") : 
                                 inputs.concat(inputs, " ", "border border-danger")
                             )
                         }
@@ -329,30 +309,41 @@ export default class AdminTests extends React.Component{
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
                     <label className={regularLabels}>Pre-Status:</label>
-                        <select 
+                        <select
                             className={inputs} 
                             id="Status" 
                             onChange={this.handlePreStatusTest} 
-                            defaultValue="Sample Ready For Electricity" 
-                            placeholder="availableStatus">
-                            {this.renderOption()}
+                            defaultValue={this.state.preStatusTest}
+                            placeholder="availableStatus"
+                        >
+                        {this.renderOption()}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row'>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6'>
-                        <h3>Select one or more status</h3>
-                        <ul className='p-0'>
+                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 status rounded-left p-1'>
+                        <h3 className='header'>Select one or more status</h3>
+                        <ul>
                         {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
-                            return <li className='selectable' name={status.name} key={status.id} onClick={this.handleSelectStatus}>{status.name}</li>
+                            const exists = this.state.selectedStatus.filter((item)=> {return item === status.name})
+                            if(exists.length !== 1){
+                                return <li className='selectable mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                            } else {
+                                return <li className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                            }
                         }) : <li className='selectable'>Nothing</li>}
                         </ul>
                     </div>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6'>
-                        <h3>Select one or more attribute</h3>
-                        <ul className='p-0'>
+                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 attributes rounded-right border-left-0 p-1'>
+                        <h3 className='header'>Select one or more attribute</h3>
+                        <ul>
                         {(this.state.availableAttributes) ? this.state.availableAttributes.map((attribute) => {
-                            return <li className='selectable' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute}>{attribute.name}</li>
+                            const exists = this.state.selectedAttributes.filter((item)=> {return item === attribute.name})
+                            if(exists.length !== 1){
+                                return <li className='selectable mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                            } else {
+                                return <li className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                            }
                         }) : <li className='selectable'>Nothing</li>}
                         </ul>
                     </div>
@@ -363,9 +354,10 @@ export default class AdminTests extends React.Component{
                     titlePass='Form is ready'
                     titleNoPass='Form not ready'
                     type='submit'
+                    disabled={!(validNameTest && validNumberSamples && validTest2 && (this.state.selectedStatus.length > 0))}
                     onClick={ this.handleSubmitStatus }
                 />
-                <label id='succes' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
+                <label id='success' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
                 {messageAPI}
                 </label>
                 </form>

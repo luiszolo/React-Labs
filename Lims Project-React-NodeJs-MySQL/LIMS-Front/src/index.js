@@ -33,11 +33,11 @@ class App extends React.Component {
 
     //Render function for the app
     render() {
-		let app = ['Home'].concat(this.state.tests.map(e => e['name']))
+		let app = ['Home'].concat(this.state.tests.map((e) => e['name']))
 		.concat('Generate Report', 'Admin Site');
 
-		let components = [(<Home/>)].concat(this.state.tests.map(e => (
-			<Test name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
+		let components = [(<Home/>)].concat(this.state.tests.map((e) => (
+			<Test key={e.name}name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
 		))).concat(<Report/>, <Admin/>);
 
         return(<div>
