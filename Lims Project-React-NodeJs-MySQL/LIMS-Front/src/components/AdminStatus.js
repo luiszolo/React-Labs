@@ -10,7 +10,6 @@ export default class Admin extends React.Component{
             status:[],
             nameStatus: '',
             validStatus: undefined,
-            messageAPI:'',
             activeTest: false,
         }
     }
@@ -89,8 +88,11 @@ export default class Admin extends React.Component{
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
+                this.refs.submitButton.setState({
+                    resultMessage: res.data.message,
+                    pass: res.data.pass
+				});
 				this.setState({
-					messageAPI: res.data.message,
                     nameStatus:"",
                     validStatus: undefined
 
@@ -113,7 +115,6 @@ export default class Admin extends React.Component{
             state: {
                 nameStatus,
                 validStatus,
-                messageAPI,
                 activeTest,
             }
         } = this;
@@ -172,21 +173,18 @@ export default class Admin extends React.Component{
                         </select>
                     {/* <label className={warningLabels}>{messageOp}</label> */}
                 </div>
-                        <SpinnerButton name='submitButton'
-                                text='Save status'
-                                titlePass='Form is ready'
-                                titleNoPass='Form not ready'
-                                type='submit'
-                                disabled={
-                                    !(validStatus)
-                                } 
-                                onClick={ this.handleSubmitStatus }
+                        <SpinnerButton 
+                            ref='submitButton'
+                            name='submitButton'
+                            text='Save status'
+                            titlePass='Form is ready'
+                            titleNoPass='Form not ready'
+                            type='submit'
+                            disabled={
+                                !(validStatus)
+                            } 
+                            onClick={ this.handleSubmitStatus }
                         />
-                        <div className='row justify-content-center'>
-                        <label id='success' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                        {messageAPI}
-                        </label>
-                        </div>
                     </form>
                 </div>
                 <div className='col-lg-6 col-xl-5 col-md-12 col-sm-12 status rounded-right'>

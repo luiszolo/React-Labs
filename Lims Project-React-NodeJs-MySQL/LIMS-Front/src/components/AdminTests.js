@@ -11,7 +11,6 @@ export default class AdminTests extends React.Component{
         this.state={
             tests: [],
             nameTest: '',
-            nameAtt: '',
             samplelenghtTest: '',
             activeTest: undefined,
             preStatus: [],
@@ -21,14 +20,9 @@ export default class AdminTests extends React.Component{
             selectedStatus: [],
             validNameTest: undefined, //using
             validNumberSamples: undefined,
-            validTest2: undefined,
-            messageOp: '',                      //Message for the operator field
-            messageAPI: '',                     //Message of the API
-            statusTest: '',
+            validPreStatus: undefined,
             preStatusTest: '',
-            requiredTest: '',
-            postStatusTest: '',
-            attributeTest: '',
+            postStatus: '',
         }
 
         this.handleSelectStatus = this.handleSelectStatus.bind(this);
@@ -78,52 +72,45 @@ export default class AdminTests extends React.Component{
         })
     }
 
-    handleAttributesTest = (e) => {
-        const attributeTest = e.target.value
-
-        if(attributeTest.length >= 1) {
-            this.setState({
-                attributeTest: attributeTest
-            })
-        } else if(attributeTest === '') {
-        }
-    }
-
-    handleSamplesLTest = (e) => {
-        const samplelenghtTest = e.target.value
-
-        if(samplelenghtTest.length >= 1){
-            this.setState({
-                samplelenghtTest:samplelenghtTest,
-                validNumberSamples: true,
-            })
-        } else if(samplelenghtTest === '') {
-            this.setState({
-                validNumberSamples: false,
-            })
-        }
-    }
-
     handleNameTest = (e) => {
         const nameTest = e.target.value
 
+        this.setState({
+            nameTest: nameTest
+        })
         if(nameTest.length >= 1) {
             this.setState({
                 validNameTest: true,
-                nameTest: nameTest
             })
         } else {
             this.setState({
                 validNameTest: false
             })
         }
-        this.state.tests.forEach((value, index) => {
+        this.state.tests.forEach((value) => {
             if(value.name === nameTest) {
                 this.setState({
                     validNameTest: false
                 })
             }
         })
+    }
+
+    handleSamplesLTest = (e) => {
+        const samplelenghtTest = e.target.value
+
+        this.setState({
+            samplelenghtTest:samplelenghtTest,
+        })
+        if(samplelenghtTest.length >= 1){
+            this.setState({
+                validNumberSamples: true,
+            })
+        } else {
+            this.setState({
+                validNumberSamples: false,
+            })
+        }
     }
 
     handleStatusTest = () => {
@@ -135,17 +122,14 @@ export default class AdminTests extends React.Component{
     handlePreStatusTest = (e) => {
         const preStatusTest = e.target.value
 
-        console.log("preStatusTes")
-        console.log(preStatusTest)
-
-        if(preStatusTest.length>=1) {
+        if(preStatusTest.length >= 1) {
             this.setState({
                 preStatusTest: preStatusTest,
-                validTest2: true,
+                validPreStatus: true,
             })
         } else if(preStatusTest === '') {
             this.setState({
-                validTest2: false,
+                validPreStatus: false,
             })
         }
     }
@@ -157,20 +141,27 @@ export default class AdminTests extends React.Component{
             name:this.state.nameTest,
             samplesLength:this.state.samplelenghtTest,
             attributes:this.state.selectedAttributes.map((x, i) => x),
-            status: this.state.validTest2,
+            status: this.state.validPreStatus,
             prevStatus: this.state.preStatusTest,
             postStatus:this.state.selectedStatus.map((x, i) => x)
 		})
-		.then( res=> {
+		.then(res => {
             console.log(res.data.message)
-			if (res.data.message==='Insertion successful') {
+			if (res.data.message === 'Insertion successful') {
                 this.componentDidMount()
+                this.refs.submitButton.setState({
+                    resultMessage: res.data.message,
+                    pass: res.data.pass
+				});
 				this.setState({
-					messageAPI: res.data.message,
-					validNameTest: false,
                     nameTest: '',
+                    validNameTest: undefined,
+                    samplelenghtTest: '',
+                    validNumberSamples: undefined,
+                    activeTest: false,
+                    validPreStatus: undefined,
                     selectedAttributes: [],
-                    availableAttributes: [],
+                    selectedStatus: [],
 				})
 			}
 		})
@@ -249,8 +240,7 @@ export default class AdminTests extends React.Component{
                 validNameTest,
                 validNumberSamples,
                 activeTest,
-                validTest2,
-                messageAPI,
+                validPreStatus,
             }
         } = this;
 
@@ -276,7 +266,8 @@ export default class AdminTests extends React.Component{
                             }
                             name='testName'
                             placeholder='#####'
-                            onBlur={this.handleNameTest}
+                            value={this.state.nameTest}
+                            onChange={this.handleNameTest}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
@@ -292,7 +283,8 @@ export default class AdminTests extends React.Component{
                         }
                         name='numberSamples' 
                         placeholder='#####'
-                        onBlur={this.handleSamplesLTest}
+                        value={this.state.samplelenghtTest}
+                        onChange={this.handleSamplesLTest}
                     />
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
@@ -312,7 +304,7 @@ export default class AdminTests extends React.Component{
                         <select
                             className={inputs} 
                             id="Status" 
-                            onChange={this.handlePreStatusTest} 
+                            onBlur={this.handlePreStatusTest} 
                             defaultValue={this.state.preStatusTest}
                             placeholder="availableStatus"
                         >
@@ -321,7 +313,7 @@ export default class AdminTests extends React.Component{
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
                 <div className='row'>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 status rounded-left p-1'>
+                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 status rounded-left p-1'>
                         <h3 className='header'>Select one or more status</h3>
                         <ul>
                         {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
@@ -334,7 +326,8 @@ export default class AdminTests extends React.Component{
                         }) : <li className='selectable'>Nothing</li>}
                         </ul>
                     </div>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 attributes rounded-right border-left-0 p-1'>
+                    <div className='col-md-12 col-sm-12 col-lg-2 col-xl-2'></div>
+                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 attributes rounded-right p-1'>
                         <h3 className='header'>Select one or more attribute</h3>
                         <ul>
                         {(this.state.availableAttributes) ? this.state.availableAttributes.map((attribute) => {
@@ -349,17 +342,15 @@ export default class AdminTests extends React.Component{
                     </div>
                 </div>
                 <SpinnerButton
+                    ref='submitButton'
                     name='submitButton'
                     text='Save test'
                     titlePass='Form is ready'
                     titleNoPass='Form not ready'
                     type='submit'
-                    disabled={!(validNameTest && validNumberSamples && validTest2 && (this.state.selectedStatus.length > 0))}
+                    disabled={!(validNameTest && validNumberSamples && validPreStatus && (this.state.selectedStatus.length > 0))}
                     onClick={ this.handleSubmitStatus }
                 />
-                <label id='success' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                {messageAPI}
-                </label>
                 </form>
             </div>
         </div>)

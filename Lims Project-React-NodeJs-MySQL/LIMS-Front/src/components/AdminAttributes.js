@@ -16,7 +16,6 @@ export default class AdminAtrributes extends React.Component{
             validType: undefined,
             regex:'',
             validRegex: undefined,
-            messageAPI: '',
         }
     }
 
@@ -120,6 +119,10 @@ export default class AdminAtrributes extends React.Component{
 		})
 		.then( res => {
 			if (res.data.message === 'Insertion successful') {
+                this.refs.submitButton.setState({
+                    resultMessage: res.data.message,
+                    pass: res.data.pass
+				});
 				this.setState({
                     name:'',
                     validName: undefined,
@@ -129,7 +132,6 @@ export default class AdminAtrributes extends React.Component{
                     validType: undefined,
                     regex:'',
                     validRegex: undefined,
-                    messageAPI: res.data.message,
                 })
                 this.componentDidMount()
 			}
@@ -156,7 +158,6 @@ export default class AdminAtrributes extends React.Component{
                 validType,
                 regex,
                 validRegex,
-                messageAPI,
             }
         } = this;
     
@@ -239,7 +240,9 @@ export default class AdminAtrributes extends React.Component{
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
-                        <SpinnerButton name='submitButton'
+                        <SpinnerButton
+                            ref='submitButton'
+                            name='submitButton'
                             text='Save attribute'
                             titlePass='Form is ready'
                             titleNoPass='Form not ready'
@@ -249,11 +252,6 @@ export default class AdminAtrributes extends React.Component{
                             } 
                             onClick={ this.handleSubmitAttribute }
                             />
-                        <div className='row justify-content-center'>
-                        <label id='success' className={'col-lg-3 col-sm-10 text-center col-md-6  mt-3'}>
-                        {messageAPI}
-                        </label>
-                        </div>
                     </form>
                 </div>
                 <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12 status rounded-right'>
