@@ -182,8 +182,8 @@ export default class AdminAtrributes extends React.Component{
                                         inputs.concat(inputs, " ", "border border-danger")
                                     )
                                 }
-                                name='Status' 
-                                placeholder='#####'
+                                name='status' 
+                                placeholder='e.g. Time elapse'
                                 onChange={handleNameAttribute}
                                 value={name}
                             />
@@ -200,7 +200,7 @@ export default class AdminAtrributes extends React.Component{
                                 )
                             }
                             name='Status' 
-                            placeholder='#####'
+                            placeholder='e.g. C, s'
                             onChange={handleUnitAttribute}
                             value={unit}
                         />
@@ -217,7 +217,7 @@ export default class AdminAtrributes extends React.Component{
                                 )
                             }
                             name='Status' 
-                            placeholder='#####'
+                            placeholder='e.g. SA-##-#####'
                             onChange={handleTypeAttribute}
                             value={type}
                         />

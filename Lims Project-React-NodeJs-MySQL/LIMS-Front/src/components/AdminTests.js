@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import "react-table/react-table.css";
-
 import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminTests extends React.Component{
@@ -12,7 +10,7 @@ export default class AdminTests extends React.Component{
             tests: [],
             nameTest: '',
             samplelenghtTest: '',
-            activeTest: undefined,
+            activeTest: true,
             preStatus: [],
             availableAttributes: [],
             selectedAttributes: [],
@@ -265,7 +263,7 @@ export default class AdminTests extends React.Component{
                                 )
                             }
                             name='testName'
-                            placeholder='#####'
+                            placeholder='e.g. Taste Test'
                             value={this.state.nameTest}
                             onChange={this.handleNameTest}
                         />
@@ -282,7 +280,7 @@ export default class AdminTests extends React.Component{
                             )
                         }
                         name='numberSamples' 
-                        placeholder='#####'
+                        placeholder='##'
                         value={this.state.samplelenghtTest}
                         onChange={this.handleSamplesLTest}
                     />
@@ -300,7 +298,7 @@ export default class AdminTests extends React.Component{
                     <label className='form-check-label'>Active</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Pre-Status:</label>
+                    <label className={regularLabels}>Pre-status:</label>
                         <select
                             className={inputs} 
                             id="Status" 
@@ -314,7 +312,7 @@ export default class AdminTests extends React.Component{
                 </div>
                 <div className='row'>
                     <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 status rounded-left p-1'>
-                        <h3 className='header'>Select one or more status</h3>
+                        <h3 className='header'>Post-status</h3>
                         <ul>
                         {(this.state.availableStatus) ? this.state.availableStatus.map((status) => {
                             const exists = this.state.selectedStatus.filter((item)=> {return item === status.name})
@@ -328,7 +326,7 @@ export default class AdminTests extends React.Component{
                     </div>
                     <div className='col-md-12 col-sm-12 col-lg-2 col-xl-2'></div>
                     <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 attributes rounded-right p-1'>
-                        <h3 className='header'>Select one or more attribute</h3>
+                        <h3 className='header'>Attributes</h3>
                         <ul>
                         {(this.state.availableAttributes) ? this.state.availableAttributes.map((attribute) => {
                             const exists = this.state.selectedAttributes.filter((item)=> {return item === attribute.name})

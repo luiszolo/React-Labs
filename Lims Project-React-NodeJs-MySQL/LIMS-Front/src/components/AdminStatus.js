@@ -3,14 +3,14 @@ import axios from 'axios';
 
 import SpinnerButton from './../components/SpinnerButton';
 
-export default class Admin extends React.Component{
+export default class AdminStatus extends React.Component{
     constructor(props){
         super(props);
         this.state={
             status:[],
             nameStatus: '',
             validStatus: undefined,
-            activeTest: false,
+            activeTest: true,
         }
     }
 
@@ -22,12 +22,6 @@ export default class Admin extends React.Component{
             this.setState({status: res.Statuss})
             }
         )
-    }
-
-    renderOption(){
-        return this.state.status.map(name => {
-            return <option key={name.name} value={name.name}>{name.name}</option>
-        })
     }
 
     handleStatusTest = () => {
@@ -84,7 +78,6 @@ export default class Admin extends React.Component{
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
             name: this.state.nameStatus,
             requiredPrev: this.state.activeTest,
-            prevStatus: this.state.preStatusTest
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
@@ -143,36 +136,23 @@ export default class Admin extends React.Component{
                                     )
                                 }
                                 name='Status' 
-                                placeholder='#####'
+                                placeholder='e.g. Ready for Heat'
                                 onChange={handleStatus}
                                 value={nameStatus}
                             />
                             <label className={warningLabels}></label>
-                            </div>
-                            <div className='row justify-content-center form-inline mb-3'>
-                    <label className='mr-3'>Status:</label>
-                    <input
-                        type='checkbox'
-                        className='form-check-input'
-                        name='testStatus'
-                        checked={activeTest}
-                        onChange={this.handleStatusTest}
-                    />
-                    <label className='form-check-label'>Active</label>
-                </div>
-                            <div className='row justify-content-center form-inline mb-3'>
-                     
-                        <label className={regularLabels}>Pre Status:</label>
-                        <select 
-                            className={inputs} 
-                            id="status" 
-                            onBlur={this.handlePreStatusTest} 
-                            defaultValue="Sample Ready For Electricity" 
-                            placeholder="Status">
-                            {this.renderOption()}
-                        </select>
-                    {/* <label className={warningLabels}>{messageOp}</label> */}
-                </div>
+                        </div>
+                        <div className='row justify-content-center form-inline mb-3'>
+                            <label className='mr-3'>Status:</label>
+                            <input
+                                type='checkbox'
+                                className='form-check-input'
+                                name='testStatus'
+                                checked={activeTest}
+                                onChange={this.handleStatusTest}
+                            />
+                            <label className='form-check-label'>Active</label>
+                        </div>
                         <SpinnerButton 
                             ref='submitButton'
                             name='submitButton'
@@ -182,7 +162,7 @@ export default class Admin extends React.Component{
                             type='submit'
                             disabled={
                                 !(validStatus)
-                            } 
+                            }
                             onClick={ this.handleSubmitStatus }
                         />
                     </form>
