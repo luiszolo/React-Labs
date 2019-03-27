@@ -9,24 +9,22 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addStatus(req, res) {
     const newStatus = req.body.status;
 
-    if (await getStatus(req, res) !== false) {
+    const repeatStatus = await getStatus({
+        params: {
+            name: newStatus.name.toUpperCase()
+    }});
+    if (repeatStatus === false) {
         res.status(403).send({
             message: 'The status is already exists'
         });
         return;
     }
-
-    if (!notNumberField(newStatus.name)) {
-        res.status(403).send({
-            message: 'The status can\'t have numbers'
-        });
-        return;
-    }
-
     const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Status SET ?`,
-        [newStatus]
+        `INSERT INTO State SET 
+        name='${newStatus.name.toUpperCase()}',
+        actived=${newStatus.actived}`
     );
+    console.log('reach here')
     if (insertion === false) {
         res.status(503).send({
             message: 'Something is wrong in INSERT method'
@@ -39,10 +37,16 @@ async function addStatus(req, res) {
     return;
 }
 
-async function getStatus(req, res) {
-    const statusId = req.params.id | req.body.status.name;
+async function getStatus(req) {
+    const statusId = req.params.id;
     const validateExistence = await dbInteract
-        .isExists(`SELECT * FROM Sample WHERE id=${statusId} OR name='${statusId}'`);
+        .isExists(`SELECT * FROM State ${typeof statusId === 'number' ? 
+            (`WHERE id=${statusId};`) : 
+            ( typeof statusId === 'string' ?
+                (`WHERE name='${statusId}';`) :
+                (';')
+            )
+        }`);
     if (validateExistence.pass) {
         return {
             status: validateExistence.result[0]
@@ -69,9 +73,9 @@ async function getStatusList(req, res) {
     let query = "";
     if (option != null) {
         if (option === "id") {
-            query = `SELECT * FROM Status ORDER BY id ASC`;
+            query = `SELECT * FROM State ORDER BY id ASC`;
         } else if (option === "name") {
-            query = `SELECT * FROM Status ORDER BY name ASC`;
+            query = `SELECT * FROM State ORDER BY name ASC`;
         } else {
             res.status(404).send({
                 message: 'The option doesn\'t exists'
@@ -79,13 +83,13 @@ async function getStatusList(req, res) {
             return;
         }
     } else {
-        query =  `SELECT * FROM Status ORDER BY id ASC`;
+        query =  `SELECT * FROM State ORDER BY id ASC`;
     }
 
     const status = await dbInteract.isExists(query);
     if (status == false) {
         res.status(404).send({
-            message: 'Add some status first!'
+            message: 'Add some states first!'
         });
         return;
     }
@@ -99,19 +103,19 @@ async function removeStatus(req, res) {
 
     if (status.id === undefined) {
         res.status(404).send({
-            message: 'There is no data to search the status'
+            message: 'There is no data to search the state'
         });
         return;
     }
 
     if (await getStatus(req, res) === false) {
         res.status(404).send({
-            message: 'The status doesn\'t exists'
+            message: 'The state doesn\'t exists'
         });
         return;
     }
 
-    const deleted = await dbInteract.manipulateData(`UPDATE Status SET actived=0 WHERE id=${status.id}`);
+    const deleted = await dbInteract.manipulateData(`UPDATE State SET actived=0 WHERE id=${status.id}`);
     if (deleted === false) {
         res.status(503).send({
             message: 'Something is wrong in DELETE method'
@@ -130,13 +134,13 @@ async function updateStatus(req, res) {
 
     if (await getStatus(req, res) !== false) {
         res.status(403).send({
-            message: 'The status is already exists'
+            message: 'The state is already exists'
         });
         return;
     }
 
     const update = await dbInteract.manipulateData(
-        `UPDATE Status SET ?
+        `UPDATE State SET ?
         name='${newStatus.name}',
         actived='${newStatus.actived}'
         WHERE id=${id}`

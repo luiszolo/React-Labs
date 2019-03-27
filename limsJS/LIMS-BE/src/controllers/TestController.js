@@ -16,13 +16,6 @@ async function addTest(req, res) {
         return;
     }
 
-    if (!notNumberField(newTest.name)) {
-        res.status(403).send({
-            message: 'The test can\'t have numbers'
-        });
-        return;
-    }
-
     if (newTest.samplesLength <= 0) {
         res.status(403).send({
 			message: 'The Test can\'t be saved!'
@@ -30,15 +23,23 @@ async function addTest(req, res) {
 		return;
     }
 
-    if (!newTest.initialState || !newTest.postStatus) {
+    if (!newTest.postStatus) {
         res.status(403).send({
             message: 'Missing Status!'
         });
         return;
     } 
 
+    await require('./StatusController').addStatus({
+        body: {
+            name: `Sample Passed ${capitalizeWord(newTest.name.toUpperCase())}`,
+            actived: 1
+        }
+    }, res);
+
     const initialStateId = await dbInteract.isExists(
-        `SELECT id FROM Status WHERE name='${newTest.initialState.toUpperCase()}'`
+        `SELECT id FROM Status 
+        WHERE name='Sample Passed ${capitalizeWord(newTest.name.toUpperCase())}'`
     );
     if (initialStateId === false) {
         res.status(403).send({
@@ -57,7 +58,7 @@ async function addTest(req, res) {
                 name: newTest.name.toUpperCase(),
                 require_State: null,
                 initial_State: initialStateId.result[0].id,
-                actived: 1
+                actived: newTest.actived
             }]
         );
     } else {
@@ -70,7 +71,7 @@ async function addTest(req, res) {
                 name: newTest.name.toUpperCase(),
                 require_State: requiredStateId.result[0].id,
                 initial_State: initialStateId.result[0].id,
-                actived: 1
+                actived: newTest.actived
             }]
         );
     }

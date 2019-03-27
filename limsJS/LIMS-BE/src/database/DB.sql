@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Test (
     name VARCHAR(199) NOT NULL,
     require_State INT NULL REFERENCES State(id),
     initial_State INT NOT NULL REFERENCES State(id),
-    actived BOOLEAN DEFAULT 0
+    actived BOOLEAN DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS SampleValue(

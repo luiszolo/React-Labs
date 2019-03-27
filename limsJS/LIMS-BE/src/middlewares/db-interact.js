@@ -2,10 +2,11 @@ const pool = require('./../config/database')
 
 async function manipulateData(query, params=null) {
 	let result;
-	await pool.query(query, params, (err, rows) => {
-		if (err) result = false;
-		else result = true;
-	});
+	const operation = await pool.query(query);
+	console.log(operation)
+	if (operation.OkPacket !== (null | undefined)) {
+		result = true;
+	} else result = false;
 
 	return result;
 }
