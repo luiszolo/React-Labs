@@ -7,11 +7,14 @@ export default class AdminStatus extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            status:[],
+            availableStatus: [],
+            selectedStatus: '',
             nameStatus: '',
             validStatus: undefined,
-            activeTest: true,
+            active: true,
         }
+
+        this.handleSelectStatus = this.handleSelectStatus.bind(this);
     }
 
     componentDidMount(){
@@ -19,16 +22,16 @@ export default class AdminStatus extends React.Component{
         fetch(url,{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
-            this.setState({status: res.Statuss})
+            this.setState({availableStatus: res.Statuss})
             }
         )
     }
 
-    handleStatusTest = () => {
+    handleActive = () => {
         this.setState({
-            activeTest: !this.state.activeTest,
+            active: !this.state.active,
         })
-        console.log(!this.state.activeTest)
+        console.log(!this.state.active)
     }
 
     handleStatus=(e)=>{
@@ -48,7 +51,7 @@ export default class AdminStatus extends React.Component{
                 validStatus: false
             })
         }
-        this.state.status.forEach((value)=>{
+        this.state.availableStatus.forEach((value)=>{
             if(value.name === nameStatus){
                 this.setState({
                     validStatus: false
@@ -77,7 +80,7 @@ export default class AdminStatus extends React.Component{
         event.preventDefault();
 		axios.post(`http://10.2.1.94:4000/api/status/add`,{
             name: this.state.nameStatus,
-            requiredPrev: this.state.activeTest,
+            requiredPrev: this.state.active,
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {
@@ -86,8 +89,8 @@ export default class AdminStatus extends React.Component{
                     pass: res.data.pass
 				});
 				this.setState({
-                    nameStatus:"",
-                    validStatus: undefined
+                    nameStatus:'',
+                    validStatus: false
 
                 })
                 this.componentDidMount()
@@ -99,7 +102,23 @@ export default class AdminStatus extends React.Component{
 		});
     }
 
-    
+    handleSelectStatus(e){
+        const status = e.target.textContent
+
+        if(status === this.state.selectedStatus){
+            this.setState({
+                selectedStatus: '',
+                nameStatus: '',
+                validStatus: undefined
+            })
+        } else {
+            this.setState({
+                selectedStatus: status,
+                nameStatus: status,
+                validStatus: true
+            })
+        }
+    }
 
     render(){
         const {
@@ -108,7 +127,7 @@ export default class AdminStatus extends React.Component{
             state: {
                 nameStatus,
                 validStatus,
-                activeTest,
+                active,
             }
         } = this;
 
@@ -121,12 +140,24 @@ export default class AdminStatus extends React.Component{
         return(
             <div className='content row justify-content-center'>
                 <div className='col-sm-12 m-4'>
-                    <h1 className='text-center'>Add status</h1>
+                    <h1 className='text-center'>Status</h1>
                 </div>
-                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+                <div className='col-lg-4 col-xl-4 col-md-12 col-sm-12 status rounded-right'>
+                    <h3 className='header'>Available status</h3>
+                    <ul>
+                        {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
+                            if(this.state.selectedStatus !== status.name){
+                                return <li id={status.id} className='selectable mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                            } else {
+                                return <li id={status.id} className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                            }
+                        }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
+                        </ul>
+                </div>
+                <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
                     <form onSubmit={handleSubmitStatus}>
                         <div className='row justify-content-center form-inline mb-3'>
-                            <label className={regularLabels}>Status:</label>
+                            <label className={regularLabels}>Add new status:</label>
                             <input
                                 type='text'
                                 className={
@@ -135,7 +166,7 @@ export default class AdminStatus extends React.Component{
                                         inputs.concat(inputs, " ", "border border-danger")
                                     )
                                 }
-                                name='Status' 
+                                name='statusName' 
                                 placeholder='e.g. Ready for Heat'
                                 onChange={handleStatus}
                                 value={nameStatus}
@@ -147,16 +178,16 @@ export default class AdminStatus extends React.Component{
                             <input
                                 type='checkbox'
                                 className='form-check-input'
-                                name='testStatus'
-                                checked={activeTest}
-                                onChange={this.handleStatusTest}
+                                name='status'
+                                checked={active}
+                                onChange={this.handleActive}
                             />
                             <label className='form-check-label'>Active</label>
                         </div>
                         <SpinnerButton 
                             ref='submitButton'
                             name='submitButton'
-                            text='Save status'
+                            text={(this.state.selectedStatus !== '') ? 'Modify status' : 'Save status'}
                             titlePass='Form is ready'
                             titleNoPass='Form not ready'
                             type='submit'
@@ -167,15 +198,7 @@ export default class AdminStatus extends React.Component{
                         />
                     </form>
                 </div>
-                <div className='col-lg-6 col-xl-5 col-md-12 col-sm-12 status rounded-right'>
-                    <h3 className='header'>Available status</h3>
-                    <ul>
-                        {this.state.status.map((value, idx)=>{
-                                return (<li key={idx} className='selectable mt-1 p-1 rounded'>{value.name}</li>)
-                            })
-                        }
-                    </ul>
-                </div>
+
             </div>)
     }
 }

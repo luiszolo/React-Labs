@@ -48,7 +48,7 @@ export default class Admin extends React.Component{
                     className = {(this.state.activeTab === 0) ? active : unactive}
                     onClick={this.handleButtonMenu}
                 >
-                Add status
+                Status
                 </button>
                 <button 
                     type='button' 
@@ -56,7 +56,7 @@ export default class Admin extends React.Component{
                     className = {(this.state.activeTab === 1) ? active : unactive}
                     onClick={this.handleButtonMenu}
                 >
-                Add attributes
+                Attributes
                 </button>
                 <button 
                     type='button'
@@ -64,7 +64,7 @@ export default class Admin extends React.Component{
                     className = {(this.state.activeTab === 2) ? active : unactive}
                     onClick={this.handleButtonMenu}
                 >
-                Add tests
+                Tests
                 </button>
             </div>
             <div className='container-fluid'>

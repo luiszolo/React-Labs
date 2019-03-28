@@ -125,7 +125,7 @@ export default class Report extends React.Component{
                     </button>
                 </div>
                 <div className='row justify-content-center'>
-                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p class='Danger'>{messageAPI}</p></label>
+                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p className='Danger'>{messageAPI}</p></label>
 					</div>
             </div>
             <h3 className='col-12 text-center pb-2'>{sampleSearched}</h3>

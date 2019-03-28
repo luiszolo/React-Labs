@@ -7,7 +7,8 @@ export default class AdminAtrributes extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            status:[],
+            availableAttributes:[],
+            selectedAttribute: '',
             name:'',
             validName: undefined,
             unit:'',
@@ -16,7 +17,10 @@ export default class AdminAtrributes extends React.Component{
             validType: undefined,
             regex:'',
             validRegex: undefined,
+            active: true,
         }
+
+        this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
     }
 
     componentDidMount(){
@@ -24,7 +28,7 @@ export default class AdminAtrributes extends React.Component{
         fetch(url,{
             method : "GET"
         }).then(Response => Response.json()).then(res =>{
-            this.setState({status:res.Attributes})
+            this.setState({availableAttributes:res.Attributes})
         } 
             )
     }
@@ -44,7 +48,7 @@ export default class AdminAtrributes extends React.Component{
                 validName: false
             })
         }
-        this.state.status.forEach((value) => {
+        this.state.availableAttributes.forEach((value) => {
             if(value.name === name) {
                 this.setState({
                     validName: false
@@ -141,6 +145,50 @@ export default class AdminAtrributes extends React.Component{
 		});
     }
 
+    handleActive = () => {
+        this.setState({
+            active: !this.state.active,
+        })
+        console.log(!this.state.active)
+    }
+
+    handleSelectAttribute(e){
+        const attribute = parseInt(e.target.id)
+
+        if (this.state.selectedAttribute === e.target.textContent){
+            this.setState({
+                selectedAttribute: '',
+                name:'',
+                validName: undefined,
+                unit:'',
+                validUnit: undefined,
+                type:'',
+                validType: undefined,
+                regex:'',
+                validRegex: undefined,
+                
+            })
+        } else {
+            this.state.availableAttributes.forEach((value) => {
+                if (value.id === attribute) {
+                    this.setState({
+                        selectedAttribute: value.name,
+                        name: value.name,
+                        validName: true,
+                        unit: value.unit,
+                        validUnit: true,
+                        type: value.type,
+                        validType: true,
+                        regex: value.structure,
+                        validRegex: true,
+                    })
+                }
+            })
+        }
+
+
+    }
+
     render(){
         const {
             handleNameAttribute,
@@ -158,6 +206,7 @@ export default class AdminAtrributes extends React.Component{
                 validType,
                 regex,
                 validRegex,
+                active
             }
         } = this;
     
@@ -170,7 +219,20 @@ export default class AdminAtrributes extends React.Component{
                 <div className='col-sm-12 m-4'>
                     <h1 className='text-center'>Add attributes</h1>
                 </div>
-                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12'>
+                <div className='col-lg-4 col-xl-4 col-md-12 col-sm-12 attributes rounded-right'>
+                    <h3 className='header'>Attributes</h3>
+                    <ul>
+                    {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
+                        
+                        if(this.state.selectedAttribute !== attribute.name){
+                            return <li id={attribute.id} className='selectable mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                        } else {
+                            return <li id={attribute.id} className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                        }
+                    }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
+                    </ul>
+                </div>
+                <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
                     <form onSubmit={handleSubmitAttribute}>
                         <div className='row justify-content-center form-inline mb-3'>
                             <label className={regularLabels}>Name:</label>
@@ -182,7 +244,7 @@ export default class AdminAtrributes extends React.Component{
                                         inputs.concat(inputs, " ", "border border-danger")
                                     )
                                 }
-                                name='status' 
+                                name='attributeName' 
                                 placeholder='e.g. Time elapse'
                                 onChange={handleNameAttribute}
                                 value={name}
@@ -199,7 +261,7 @@ export default class AdminAtrributes extends React.Component{
                                     inputs.concat(inputs, " ", "border border-danger")
                                 )
                             }
-                            name='Status' 
+                            name='attributeUnit' 
                             placeholder='e.g. C, s'
                             onChange={handleUnitAttribute}
                             value={unit}
@@ -207,7 +269,7 @@ export default class AdminAtrributes extends React.Component{
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
                     <div className='row justify-content-center form-inline mb-3'>
-                        <label className={regularLabels}>Type:</label>
+                        <label className={regularLabels}>Placeholder:</label>
                         <input
                             type='text'
                             className={
@@ -216,7 +278,7 @@ export default class AdminAtrributes extends React.Component{
                                     inputs.concat(inputs, " ", "border border-danger")
                                 )
                             }
-                            name='Status' 
+                            name='attributeType' 
                             placeholder='e.g. SA-##-#####'
                             onChange={handleTypeAttribute}
                             value={type}
@@ -233,36 +295,39 @@ export default class AdminAtrributes extends React.Component{
                                     inputs.concat(inputs, " ", "border border-danger")
                                 )
                             }
-                            name='Status' 
+                            name='attributeRegex' 
                             placeholder='#####'
                             onChange={handleRegexAttribute}
                             value={regex}
                         />
                         <label className={warningLabels}>{messageOp}</label>
                     </div>
-                        <SpinnerButton
-                            ref='submitButton'
-                            name='submitButton'
-                            text='Save attribute'
-                            titlePass='Form is ready'
-                            titleNoPass='Form not ready'
-                            type='submit'
-                            disabled={
-                                !(validName && validUnit && validType && validRegex)
-                            } 
-                            onClick={ this.handleSubmitAttribute }
-                            />
+                    <div className='row justify-content-center form-inline mb-3'>
+                        <label className='mr-3'>Status:</label>
+                        <input
+                            type='checkbox'
+                            className='form-check-input'
+                            name='attributeStatus'
+                            checked={active}
+                            onChange={this.handleActive}
+                        />
+                        <label className='form-check-label'>Active</label>
+                    </div>
+                    <SpinnerButton
+                        ref='submitButton'
+                        name='submitButton'
+                        text={(this.state.selectedAttribute !== '' ) ? 'Modify attribute' : 'Save attribute'}
+                        titlePass='Form is ready'
+                        titleNoPass='Form not ready'
+                        type='submit'
+                        disabled={
+                            !(validName && validUnit && validType && validRegex)
+                        } 
+                        onClick={ this.handleSubmitAttribute }
+                        />
                     </form>
                 </div>
-                <div className='col-lg-6 col-xl-6 col-md-12 col-sm-12 status rounded-right'>
-                    <h3 className='header'>Available attributes</h3>
-                    <ul>
-                        {this.state.status.map((value, idx)=>{
-                                return (<li key={idx} className='selectable mt-1 p-1 rounded'>{value.name}</li>)
-                            })
-                        }
-                    </ul>
-                </div>
+
             </div>)
     }
 }

@@ -87,6 +87,7 @@ html, body{
 }
 
 .selectable{
+	list-style-image: url('/images/probe.png');
 	list-style-type: none;
 	padding-top: .25rem;
 	user-select: none;
