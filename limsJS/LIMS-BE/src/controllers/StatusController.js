@@ -103,6 +103,8 @@ async function getStatusList(req, res) {
         });
         return;
     }
+
+    status.result.map((v, i) => v.name = capitalizeWord(v.name));
     res.status(200).send({
         status: status.result
     });

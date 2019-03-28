@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 
 import SpinnerButton from './../components/SpinnerButton';
 
@@ -24,13 +24,13 @@ export default class AdminAtrributes extends React.Component{
     }
 
     componentDidMount(){
-        const url= "http://10.2.1.94:4000/api/attributes";
-        fetch(url,{
-            method : "GET"
-        }).then(Response => Response.json()).then(res =>{
-            this.setState({availableAttributes:res.Attributes})
-        } 
-            )
+        Axios.get('http://localhost:4000/api/attributes/by/?option=name').then(res => {
+            console.log(res.data)
+            if (res.data === undefined | null) return;
+            else this.setState({
+                availableAttributes: res.data.attributes
+            })
+        });
     }
 
     handleNameAttribute = (e) => {
@@ -115,11 +115,14 @@ export default class AdminAtrributes extends React.Component{
     handleSubmitAttribute = event => {
         event.preventDefault();
 
-		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
-            name: this.state.name,
-            unit: this.state.unit,
-            type: this.state.type,
-            regex: this.state.regex
+		Axios.post(`http://localhost:4000/api/attributes/add`,{
+            attribute: {
+                name: this.state.name,
+                unit: this.state.unit,
+                placeholder: this.state.type,
+                regex: this.state.regex,
+                actived: this.state.active
+            }
 		})
 		.then( res => {
 			if (res.data.message === 'Insertion successful') {

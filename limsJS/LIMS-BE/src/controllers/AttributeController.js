@@ -8,6 +8,7 @@ const validateSample = require('./../middlewares/regex').validateSampleName;
 
 async function addAttribute(req, res) {
     const newAttribute = req.body.attribute;
+    console.log(newAttribute)
 
     if (await getAttribute({
         params: newAttribute.name.toUpperCase()
@@ -99,6 +100,7 @@ async function getAttributeList(req, res) {
         });
         return;
     }
+    attributes.result.map((v, i) => v.name = capitalizeWord(v.name));
     res.status(200).send({
         attributes: attributes.result
     });

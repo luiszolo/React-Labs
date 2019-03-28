@@ -1,7 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 
 import SpinnerButton from './../components/SpinnerButton';
+import Axios from 'axios';
 
 export default class AdminStatus extends React.Component{
     constructor(props){
@@ -18,13 +18,21 @@ export default class AdminStatus extends React.Component{
     }
 
     componentDidMount(){
-        const url= "http://10.2.1.94:4000/api/status";
-        fetch(url,{
-            method : "GET"
-        }).then(Response => Response.json()).then(res =>{
-            this.setState({availableStatus: res.Statuss})
+        // const url= "http://localhost:4000/api/status/by/?option=name";
+        // fetch(url,{
+        //     method : "GET"
+        // }).then( res => {
+        //     console.log(res)
+        // })
+        Axios.get('http://localhost:4000/api/status/by/?option=name').then(res => {
+            console.log(res.data.status);
+            if (res.data.status === undefined | null) {
+                return;
             }
-        )
+            else this.setState({
+                availableStatus: res.data.status
+            });
+        });
     }
 
     handleActive = () => {
@@ -78,9 +86,11 @@ export default class AdminStatus extends React.Component{
 
     handleSubmitStatus = event => {
         event.preventDefault();
-		axios.post(`http://10.2.1.94:4000/api/status/add`,{
-            name: this.state.nameStatus,
-            requiredPrev: this.state.active,
+		Axios.post(`http://localhost:4000/api/status/add`,{
+            status: {
+                name: this.state.nameStatus,
+                actived: this.state.active
+            }
 		})
 		.then( res=> {
 			if (res.data.message==='Insertion completed') {

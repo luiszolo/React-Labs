@@ -9,7 +9,11 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addTest(req, res) {
     const newTest = req.body.test;
 
-    if (await getTest(req, res) !== false) {
+    if (await getTest({
+        params: {
+            value: newTest.name
+        }
+    }, res) !== false) {
         res.status(403).send({
             message: 'The test is already exists'
         });
