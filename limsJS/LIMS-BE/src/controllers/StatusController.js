@@ -11,9 +11,9 @@ async function addStatus(req, res) {
 
     const repeatStatus = await getStatus({
         params: {
-            name: newStatus.name.toUpperCase()
+            value: newStatus.name.toUpperCase()
     }});
-    if (repeatStatus === false) {
+    if (repeatStatus !== false) {
         res.status(403).send({
             message: 'The status is already exists'
         });
@@ -38,7 +38,7 @@ async function addStatus(req, res) {
 }
 
 async function getStatus(req) {
-    const statusId = req.params.id;
+    const statusId = req.params.value;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM State ${typeof statusId === 'number' ? 
             (`WHERE id=${statusId};`) : 
@@ -73,9 +73,13 @@ async function getStatusList(req, res) {
     let query = "";
     if (option != null) {
         if (option === "id") {
-            query = `SELECT * FROM State ORDER BY id ASC`;
+            query = `SELECT * FROM State 
+            WHERE name LIKE 'Sample Ready%' 
+            ORDER BY id ASC`;
         } else if (option === "name") {
-            query = `SELECT * FROM State ORDER BY name ASC`;
+            query = `SELECT * FROM State 
+            WHERE name LIKE 'Sample Ready%' 
+            ORDER BY name ASC`;
         } else {
             res.status(404).send({
                 message: 'The option doesn\'t exists'
@@ -83,7 +87,9 @@ async function getStatusList(req, res) {
             return;
         }
     } else {
-        query =  `SELECT * FROM State ORDER BY id ASC`;
+        query =  `SELECT * FROM State 
+        WHERE name LIKE 'Sample Ready%' 
+        ORDER BY id ASC`;
     }
 
     const status = await dbInteract.isExists(query);

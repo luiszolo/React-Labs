@@ -1,13 +1,10 @@
 const pool = require('./../config/database')
 
-async function manipulateData(query, params=null) {
+async function manipulateData(query) {
 	let result;
 	const operation = await pool.query(query);
-	console.log(operation)
-	if (operation.OkPacket !== (null | undefined)) {
-		result = true;
-	} else result = false;
-
+	if (operation.OkPacket === undefined) result = true;
+	else result = false;
 	return result;
 }
 

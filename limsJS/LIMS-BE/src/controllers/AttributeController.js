@@ -9,14 +9,14 @@ const validateSample = require('./../middlewares/regex').validateSampleName;
 async function addAttribute(req, res) {
     const newAttribute = req.body.attribute;
 
-    if (await getAttribute(req, res) !== false) {
+    if (await getAttribute({
+        params: newAttribute.name.toUpperCase()
+    }, res) !== false) {
         res.status(403).send({
             message: 'The attribute is already exists'
         });
         return;
     }
-
-    console.log(newAttribute)
 
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Attribute SET 
@@ -40,11 +40,15 @@ async function addAttribute(req, res) {
 }
 
 async function getAttribute(req, res) {
-    const attributeId = req.params.id | req.body.attribute.name;
-
-    const validateExistence =  await dbInteract
-        .isExists(`SELECT * FROM Attribute WHERE 
-            id=${attributeId} OR name='${attributeId}'`);
+    const attributeId = req.params.value;
+    const validateExistence = await dbInteract
+        .isExists(`SELECT * FROM State ${typeof attributeId === 'number' ? 
+            (`WHERE id=${attributeId};`) : 
+            ( typeof attributeId === 'string' ?
+                (`WHERE name='${attributeId}';`) :
+                (';')
+            )
+        }`);
     if (validateExistence.pass) {
         return {
             attribute: validateExistence.result[0]
