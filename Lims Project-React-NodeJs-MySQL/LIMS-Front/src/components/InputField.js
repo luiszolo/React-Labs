@@ -47,7 +47,7 @@ export default class InputField extends React.Component {
 				return true;
 			} else {
 				return {
-					message: 'Incorrect syntax'
+					message: 'Incorrect syntax. Must be: ' + this.props.placeholder
 				};
 			}
 		} else {
@@ -132,6 +132,7 @@ export default class InputField extends React.Component {
 				warningText: ''
 			});
 			if(this.props.addToForm) this.props.addToForm();
+			return;
 		}
 		if(this.props.addToForm) this.props.addToForm();
 	}
@@ -148,6 +149,15 @@ export default class InputField extends React.Component {
 			warningCssClassName
 		} = this.props;
 
+		let validationIcon = <div></div>
+		if(this.state.passRegex && this.state.passValidation) {
+			validationIcon = <img src='images/correct.jpg' className='correctIcon' alt='correct'/>
+		} else if(this.state.passRegex === undefined && this.state.passValidation === undefined){
+			validationIcon = <div></div>
+		} else {
+			validationIcon = <img src='images/wrong.png' className='correctIcon' alt='correct'/>
+		}
+
 		return (
 			<div className={
 					displayCssClassName ? 'row '.concat(displayCssClassName) : 'row'
@@ -161,8 +171,9 @@ export default class InputField extends React.Component {
 				onBlur={ this.handleMessage } onFocus={ this.handleMessage }
 				ref = { name } value={ this.state.input } disabled={ !this.state.prevPassed }
 				/>
+				{ validationIcon }
 				<label className={ warningCssClassName ? 'text-danger '.concat(warningCssClassName) : 'text-danger'}>
-				{ this.state.warningText  }
+				{ this.state.warningText }
 				</label>
 			</div>
 		);

@@ -5,6 +5,19 @@ body{
 	min-height: 100vh;
 }
 
+.activeButton{
+	background-color: white;
+}
+
+.adminBar{
+	background-color: #e3f2fd;
+}
+
+.correctIcon{
+	height: 2.5rem;
+	padding: .5rem;
+}
+
 @media only screen and (max-width: 768px) {
 	h1 {
 		font-size: 1.8em;
@@ -22,12 +35,12 @@ body{
 }
 
 .test-component {
-	margin-top: 50px !important;
+	margin: 3rem 0 0 0 !important;
 }
 
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
+button[disabled] {
+    border-color: #6c757d !important;
+    background: #6c757d !important;
 }
 
 .buttonImage{
@@ -42,6 +55,10 @@ button[disabled]:hover {
 	padding: 0 !important;
 }
 
+.status, .attributes{
+	border: 2px solid #ced4da ;
+}
+
 h1,h2,h3 {
     margin: 0;
 }
@@ -52,6 +69,34 @@ header{
 
 html, body{
     height: 100%;
+}
+
+.header{
+	border-bottom: 2px solid #ced4da ;
+}
+
+.selected{
+	background-color: #007bff;
+	color: #ffffff;
+	cursor: pointer;
+	list-style-image: url('/images/check.png');
+	/* list-style-position: inside; */
+	list-style-type: none;
+	padding-top: .25rem;
+	user-select: none;
+}
+
+.selectable{
+	list-style-image: url('/images/probe.png');
+	list-style-type: none;
+	padding-top: .25rem;
+	user-select: none;
+}
+
+.selectable:hover{
+	background-color: #007bff;
+	color: #ffffff;
+	cursor: pointer;
 }
 
 .logo{
@@ -77,11 +122,20 @@ nav ul{
 	padding: 0 !important;
 }
 
+.row {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.tables{
+	margin: 0 2rem;
+}
+
 .text-danger {
 	font-size: 0.80rem
 }
 
-#succes{
+#success{
     color: #28a745;
 }
 
