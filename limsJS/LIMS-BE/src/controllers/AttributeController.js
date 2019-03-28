@@ -24,7 +24,7 @@ async function addAttribute(req, res) {
             unit='${newAttribute.unit}',
             placeholder='${newAttribute.placeholder}',
             regex='${newAttribute.regex}',
-            active=${newAttribute.actived}
+            actived=${newAttribute.actived}
         `
     );
     if (insertion === false) {
@@ -42,7 +42,7 @@ async function addAttribute(req, res) {
 async function getAttribute(req, res) {
     const attributeId = req.params.value;
     const validateExistence = await dbInteract
-        .isExists(`SELECT * FROM State ${typeof attributeId === 'number' ? 
+        .isExists(`SELECT * FROM Attribute ${typeof attributeId === 'number' ? 
             (`WHERE id=${attributeId};`) : 
             ( typeof attributeId === 'string' ?
                 (`WHERE name='${attributeId}';`) :
@@ -57,7 +57,11 @@ async function getAttribute(req, res) {
 }
 
 async function getAttributeById(req, res) {
-    const searchMethod = await getOperator(req, res);
+    const searchMethod = await getAttribute({
+        params: {
+            value: req.params.id
+        }
+    }, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The attribute doesn't exists"

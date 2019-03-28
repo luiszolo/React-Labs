@@ -47,7 +47,11 @@ async function addOperator(req, res) {
 }
 
 async function getOperatorById(req, res) {
-    const searchMethod = await getOperator(req, res);
+    const searchMethod = await getOperator({
+        params: {
+            value: req.params.id
+        }
+    }, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The operator doesn't exists"

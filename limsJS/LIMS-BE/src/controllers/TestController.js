@@ -137,18 +137,28 @@ async function addTest(req, res) {
 }
 
 async function getTest(req, res) {
-    const testId = req.params.id | req.body.test.name;
+    const testId = req.params.value;
     const validateExistence = await dbInteract
-        .isExists(`SELECT * FROM Test WHERE id=${testId} OR name='${testId}'`);
+        .isExists(`SELECT * FROM Test ${typeof testId === 'number' ? 
+            (`WHERE id=${testId};`) : 
+            ( typeof testId === 'string' ?
+                (`WHERE name='${testId}';`) :
+                (';')
+            )
+        }`);
     if (validateExistence.pass) {
         return {
-            test: validateExistence.result[0]
+            attribute: validateExistence.result[0]
         };
     } else return false;
 }
 
 async function getTestById(req, res) {
-    const searchMethod = await getTest(req, res);
+    const searchMethod = await getTest({
+        params: {
+            value: req.params.id
+        }
+    }, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The test doesn't exists"

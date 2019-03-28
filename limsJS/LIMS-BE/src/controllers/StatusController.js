@@ -55,7 +55,11 @@ async function getStatus(req) {
 }
 
 async function getStatusById(req, res) {
-    const searchMethod = await getStatus(req, res);
+    const searchMethod = await getStatus({
+        params: {
+            value: req.params.id
+        }
+    }, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The status doesn't exists"
@@ -74,11 +78,11 @@ async function getStatusList(req, res) {
     if (option != null) {
         if (option === "id") {
             query = `SELECT * FROM State 
-            WHERE name LIKE 'Sample Ready%' 
+            WHERE NOT name LIKE 'Sample Passed%'
             ORDER BY id ASC`;
         } else if (option === "name") {
             query = `SELECT * FROM State 
-            WHERE name LIKE 'Sample Ready%' 
+            WHERE NOT name LIKE 'Sample Passed%'
             ORDER BY name ASC`;
         } else {
             res.status(404).send({
@@ -88,7 +92,7 @@ async function getStatusList(req, res) {
         }
     } else {
         query =  `SELECT * FROM State 
-        WHERE name LIKE 'Sample Ready%' 
+        WHERE NOT name LIKE 'Sample Passed%' 
         ORDER BY id ASC`;
     }
 

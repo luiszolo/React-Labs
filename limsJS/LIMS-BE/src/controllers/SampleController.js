@@ -9,7 +9,11 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addSample(req, res) {
     const newSample = req.body.sample;
 
-    if (await getSample(req, res) !== false) {
+    if (await getSample({
+        params: {
+            value: newSample.name.toUpperCase()
+        }
+    }, res) !== false) {
         res.status(403).send({
             message: 'The sample is already exists'
         });
@@ -39,18 +43,28 @@ async function addSample(req, res) {
 }
 
 async function getSample(req, res) {
-    const sampleId = req.params.id | req.body.sample.name;
+    const sampleId = req.params.value;
     const validateExistence = await dbInteract
-        .isExists(`SELECT * FROM Sample WHERE id=${sampleId} OR name='${sampleId}'`);
+        .isExists(`SELECT * FROM Sample ${typeof sampleId === 'number' ? 
+            (`WHERE id=${sampleId};`) : 
+            ( typeof sampleId === 'string' ?
+                (`WHERE name='${sampleId}';`) :
+                (';')
+            )
+        }`);
     if (validateExistence.pass) {
         return {
-            sample: validateExistence.result[0]
+            status: validateExistence.result[0]
         };
     } else return false;
 }
 
 async function getSampleById(req, res) {
-    const searchMethod = await getSample(req, res);
+    const searchMethod = await getSample({
+        params: {
+            value: req.params.id
+        }
+    }, res);
     if (searchMethod === false) {
         res.status(404).send({
             message: "The sample doesn't exists"
