@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS Operator (
 CREATE TABLE IF NOT EXISTS Test (
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(199) NOT NULL,
+    samplesLength INT NOT NULL,
     require_State INT NULL REFERENCES State(id),
     initial_State INT NOT NULL REFERENCES State(id),
     actived BOOLEAN DEFAULT 1

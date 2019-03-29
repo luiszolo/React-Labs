@@ -8,15 +8,19 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
 async function addStatus(req, res) {
     const newStatus = req.body.status;
+    const auxValidation = req.params.aux;
+    console.log(newStatus)
 
     const repeatStatus = await getStatus({
         params: {
             value: newStatus.name.toUpperCase()
     }});
     if (repeatStatus !== false) {
-        res.status(403).send({
-            message: 'The status is already exists'
-        });
+        if (auxValidation) {
+            res.status(403).send({
+                message: 'The status is already exists'
+            });
+        }
         return;
     }
     const insertion = await dbInteract.manipulateData(
@@ -26,14 +30,18 @@ async function addStatus(req, res) {
     );
     console.log('reach here')
     if (insertion === false) {
-        res.status(503).send({
-            message: 'Something is wrong in INSERT method'
-        });
+        if (auxValidation) {
+            res.status(503).send({
+                message: 'Something is wrong in INSERT method'
+            });
+        }
         return;
     }
-    res.status(200).send({
-        message: 'Insertion completed'
-    });
+    if (auxValidation) {
+        res.status(200).send({
+            message: 'Insertion completed'
+        });
+    }
     return;
 }
 

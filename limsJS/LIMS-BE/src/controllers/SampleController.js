@@ -27,8 +27,9 @@ async function addSample(req, res) {
     }
 
     const insertion = await dbInteract.manipulateData(
-        `INSERT INTO Sample SET ?`,
-        [newSample]
+        `INSERT INTO Sample SET
+        barcode='${newSample.barcode}',
+        status='${newSample.status}'`
     );
     if (insertion === false) {
         res.status(503).send({
@@ -149,7 +150,7 @@ async function updateSample(req, res) {
     }
 
     const update = await dbInteract.manipulateData(
-        `UPDATE Sample SET ?
+        `UPDATE Sample SET
         barcode='${newSample.barcode}',
         status='${newSample.status}'
         WHERE id=${id}`

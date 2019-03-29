@@ -9,9 +9,13 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
 // Testing
 async function insertData(req, res) {
-	
+	const bodyForm = req.body.form;
 	const operator = await require('./OperatorController')
-        .getOperator(req, res);
+        .getOperator({
+			params: {
+				value: bodyForm.operator
+			}
+		}, res);
 	if (operator.operators === undefined) {
 		res.status(404).send({
 			message: 'The operator doesn\'t exists'
@@ -19,10 +23,23 @@ async function insertData(req, res) {
 		return;
 	}
 
-	const testResultState = await require('./TestController')
+	const test = await require('./TestController')
+		.getTest({
+			params: {
+				value: bodyForm.test
+			}
+		}, res);
+	if (test.test === undefined) {
+		res.status(404).send({
+			message: 'The test doesn\'t exists'
+		});
+		return;
+	}
+
+	const testResultStates = await require('./TestController')
 		.getTest(req, res);
 	
-	const result_State = await require('./StatusController').getStatus({
+	const result_States = await require('./StatusController').getStatus({
 		params: {
 			id: testResultState.test.result_State
 		}

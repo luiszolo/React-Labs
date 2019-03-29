@@ -11,7 +11,9 @@ async function addAttribute(req, res) {
     console.log(newAttribute)
 
     if (await getAttribute({
-        params: newAttribute.name.toUpperCase()
+        params: {
+            value: newAttribute.name.toUpperCase()
+        }
     }, res) !== false) {
         res.status(403).send({
             message: 'The attribute is already exists'
@@ -21,7 +23,7 @@ async function addAttribute(req, res) {
 
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Attribute SET 
-            name='${newAttribute.name}',
+            name='${newAttribute.name.toUpperCase()}',
             unit='${newAttribute.unit}',
             placeholder='${newAttribute.placeholder}',
             regex='${newAttribute.regex}',
@@ -140,7 +142,11 @@ async function updateAttribute(req, res) {
     const id = req.params.id;
     const newAttribute = req.body.attribute;
 
-    if (await getAttribute(req, res) === false) {
+    if (await getAttribute({
+        params: {
+            value: newAttribute.name.toUpperCase()
+        }
+    }, res) === false) {
         res.status(403).send({
             message: 'The attribute doesn\'t exists'
         });
