@@ -240,7 +240,7 @@ export default class Test extends React.Component {
 			loading: true
 		});
 		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
-			Axios.post(`http://10.2.1.94:4000/api/test-forms/add`, {
+			Axios.post(`http://localhost:4000/api/test-forms/add`, {
 				operator: this.state.operator,
 				samples: this.state.samples,
 				test: this.props.name,
@@ -304,7 +304,7 @@ export default class Test extends React.Component {
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' canBlank={false}
-							validationURL={`http://10.2.1.94:4000/api/operators/`}
+							validationURL={`http://localhost:4000/api/operators/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ event => this.handleValidateOperator(this.refs['operator']) }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
@@ -327,7 +327,7 @@ export default class Test extends React.Component {
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####'
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-										validationURL={`http://10.2.1.94:4000/api/samples/${this.props.name}/`}
+										validationURL={`http://localhost:4000/api/samples/${this.props.name}/`}
 										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ event => this.handleValidateSample(this.refs[`sample${idx + 1}`].state, idx) } 
 										prevPassed={ (idx === 0 ? (_) => {

@@ -11,6 +11,7 @@ import Test from './containers/Test';
 import './index.css';
 
 import Admin from './containers/Admin';
+import Axios from 'axios';
 
 
 class App extends React.Component {
@@ -23,12 +24,10 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        fetch('http://localhost:4000/api/tests/by/')
-            .then(res => res.json()) 
-            .then(data=> this.setState({ //Saving the tests in 'tests' state
-                tests: data.tests.actived
+        Axios.get('http://localhost:4000/api/tests/by/')
+            .then(res => {
+                console.log(res)
             })
-        );
     }
 
     //Render function for the app

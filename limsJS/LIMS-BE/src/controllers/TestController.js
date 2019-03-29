@@ -148,7 +148,7 @@ async function addTest(req, res) {
 async function getTest(req, res) {
     const testId = req.params.value;
     const validateExistence = await dbInteract
-        .isExists(`SELECT name, samplesLength, actived FROM Test ${typeof testId === 'number' ? 
+        .isExists(`SELECT id,  name, samplesLength, actived FROM Test ${(typeof testId === 'number') ? 
             (`WHERE id=${testId};`) : 
             ( typeof testId === 'string' ?
                 (`WHERE name='${testId}';`) :
@@ -178,7 +178,7 @@ async function getTest(req, res) {
 async function getTestById(req, res) {
     const searchMethod = await getTest({
         params: {
-            value: req.params.id
+            value: +req.params.id
         }
     }, res);
     if (searchMethod === false) {
@@ -188,7 +188,7 @@ async function getTestById(req, res) {
         return;
     }
     res.status(200).send({
-        test: searchMethod.test
+        test: searchMethod
     });
     return;
 }
@@ -354,22 +354,29 @@ async function updateTest(req, res) {
 		return;
     }
 
-    if (!newTest.postStatus) {
+    if (!newTest.postStates) {
         res.status(403).send({
             message: 'Missing Status!'
         });
         return;
-    } 
+    }
+
+    const auxTestName = capitalizeWord(newTest.name.toUpperCase());
 
     await require('./StatusController').addStatus({
         body: {
-            name: `Sample Passed ${capitalizeWord(newTest.name.toUpperCase())}`,
-            actived: 1
+            status: {
+                name: `Sample Passed ${auxTestName}`,
+                actived: 1
+            }
+        },
+        params: {
+            aux: false
         }
     }, res);
 
     const initialStateId = await dbInteract.isExists(
-        `SELECT id FROM Status 
+        `SELECT id FROM State 
         WHERE name='Sample Passed ${capitalizeWord(newTest.name.toUpperCase())}'`
     );
     if (initialStateId === false) {
@@ -384,32 +391,31 @@ async function updateTest(req, res) {
 
     if (newTest.requiredState === undefined) {
         insertion = await dbInteract.manipulateData(
-            `INSERT INTO Test SET ?`,
-            [{
-                name: newTest.name.toUpperCase(),
-                require_State: null,
-                initial_State: initialStateId.result[0].id,
-                actived: newTest.actived
-            }]
+            `INSERT INTO Test SET
+            name='${newTest.name.toUpperCase()}',
+            samplesLength=${newTest.samplesLength},
+            require_State=${null},
+            initial_State=${initialStateId.result[0].id},
+            actived=${newTest.actived}`
         );
     } else {
         const requiredStateId = await dbInteract.isExists(
-            `SELECT id FROM Status WHERE name='${newTest.requiredState.toUpperCase()}'`
+            `SELECT id FROM State WHERE name='${newTest.requiredState.toUpperCase()}'`
         );
+        console.log(requiredStateId)
         insertion = await dbInteract.manipulateData(
-            `INSERT INTO Test SET ?`,
-            [{
-                name: newTest.name.toUpperCase(),
-                require_State: requiredStateId.result[0].id,
-                initial_State: initialStateId.result[0].id,
-                actived: newTest.actived
-            }]
+            `INSERT INTO Test SET
+            name='${newTest.name.toUpperCase()}',
+            samplesLength=${newTest.samplesLength},
+            require_State=${requiredStateId.result[0].id},
+            initial_State=${initialStateId.result[0].id},
+            actived=${newTest.actived}`
         );
     }
 
     if (insertion === false) {
         res.status(503).send({
-            message: 'Something is wrong in UPDATE method'
+            message: 'Something is wrong in INSERT method'
         });
         return;
     }
@@ -434,16 +440,16 @@ async function updateTest(req, res) {
                 })
                 return;
             }
-            await dbInteract.manipulateData(`INSERT INTO `,[{
-                test_Id: testId,
-                attribute_Id: validateExistence.result[0].id
-            }]);
+            await dbInteract.manipulateData(`INSERT INTO TestAttributes SET 
+                test_Id=${testId.result[0].id},
+                attribute_Id=${validateExistence.result[0].id}`
+            );
         }
     }
 
-    for await (const postStatus of newTest.postStatus) {
+    for await (const postStatus of newTest.postStates) {
         const postStatusId = await dbInteract.isExists(
-            `SELECT id FROM Status WHERE name='${postStatus.toUpperCase()}'`
+            `SELECT id FROM State WHERE name='${postStatus.toUpperCase()}'`
         );
         if (postStatusId === false) {
             await restoreProcess(testId, hasAttr=(newTest.attributes !== undefined), hasStatus=true)
@@ -453,11 +459,9 @@ async function updateTest(req, res) {
             });
             return;
         }
-        await dbInteract.manipulateData(`INSERT INTO TestStatus SET ?`,
-            [{
-                test_Id: testId,
-                result_State: postStatusId.result[0].id
-            }]
+        await dbInteract.manipulateData(`INSERT INTO TestStatus SET
+            test_Id=${testId.result[0].id},
+            result_State=${postStatusId.result[0].id}`
         );
     }
 
