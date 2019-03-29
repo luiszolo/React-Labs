@@ -53,11 +53,8 @@ async function getSample(req, res) {
                 (';')
             )
         }`);
-    if (validateExistence.pass) {
-        return {
-            status: validateExistence.result[0]
-        };
-    } else return false;
+    if (validateExistence === false ) return false;
+    return validateExistence.result[0];
 }
 
 async function getSampleById(req, res) {
