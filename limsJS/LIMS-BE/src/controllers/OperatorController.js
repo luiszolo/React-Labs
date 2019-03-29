@@ -65,7 +65,7 @@ async function getOperatorById(req, res) {
 }
 
 async function getOperator(req, res) {
-    const operatorId = req.params.id | req.body.operator.id;
+    const operatorId = req.params.value;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
     if (validateExistence.pass) {

@@ -8,13 +8,29 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
 async function addLog(req, res) {
     const operator = await require('./OperatorController')
-        .getOperator(req, res);
+        .getOperator({
+            params: {
+                value: req.body.operator
+            }
+        }, res);
     const sample = await require('./SampleController')
-        .getSample(req, res);
+        .getSample({
+            params: {
+                value: req.body.sample
+            }
+        }, res);
     const test = await require('./TestController')
-        .getTest(req, res);
+        .getTest({
+            params: {
+                value: req.body.test
+            }
+        }, res);
     const status = await require('./StatusController')
-        .getStatus(req, res);
+        .getStatus({
+            params: {
+                value: req.body.status
+            }
+        }, res);
 
     if (operator.operators === undefined) {
         res.status(404).send({
@@ -23,14 +39,14 @@ async function addLog(req, res) {
         return;
     }
 
-    if (sample.sample === undefined) {
+    if (sample === undefined) {
         res.status(404).send({
             message: 'The sample doesn\'t exists'
         });
         return;
     }
 
-    if (test.test === undefined) {
+    if (test === undefined) {
         res.status(404).send({
             message: 'The test doesn\'t exists'
         });
@@ -47,8 +63,8 @@ async function addLog(req, res) {
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Log SET 
         operator_Id = ${operator.operators.id},
-        test_Id = ${test.test.id},
-        sample_Id = ${sample.sample.id},
+        test_Id = ${test.id},
+        sample_Id = ${sample.id},
         status_Id = ${status.status.id}`
     );
 
@@ -65,7 +81,11 @@ async function addLog(req, res) {
 
 async function getLogsBySample(req, res) {
     const sampleId = await require('./SampleController')
-        .getSample(req, res);
+        .getSample({
+            params: {
+                value: req.params.id
+            }
+        }, res);
     if (sampleId === false) {
         res.status(404).send({
 			message: 'The sample doesn\'t exists'

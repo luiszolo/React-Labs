@@ -29,7 +29,7 @@ async function insertData(req, res) {
 				value: bodyForm.test
 			}
 		}, res);
-	if (test.test === undefined) {
+	if (test === undefined) {
 		res.status(404).send({
 			message: 'The test doesn\'t exists'
 		});
