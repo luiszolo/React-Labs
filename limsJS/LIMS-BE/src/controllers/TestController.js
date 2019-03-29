@@ -212,6 +212,7 @@ async function getTestList(req, res) {
     }
 
     const activedTests = await dbInteract.isExists(query);
+    console.log(activedTests)
     if (activedTests === false) {
         res.status(404).send({
             message: 'Add some tests first!'
@@ -252,26 +253,22 @@ async function getTestList(req, res) {
     }
 
     const inactivedTests = await dbInteract.isExists(query);
-    if (inactivedTests === false) {
-        res.status(404).send({
-            message: 'Add some tests first!'
-        });
-        return;
-    }
-    for await ( const test of inactivedTests.result) {
-        test.name = capitalizeWord(test.name);
-        const testAttributes = await dbInteract.isExists(`
-            SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
-            FROM Attribute, TestAttributes 
-            WHERE TestAttributes.test_Id=${test.id} 
-            AND TestAttributes.attribute_Id=Attribute.id
-        `);
-
-        test['attributes'] = testAttributes.result;
-        if (test['attributes'] === undefined | null) continue;
-
-        for await (const attr of test['attributes']) {
-            attr.name = capitalizeWord(attr.name);
+    if (inactivedTests !== false) {
+        for await ( const test of inactivedTests.result) {
+            test.name = capitalizeWord(test.name);
+            const testAttributes = await dbInteract.isExists(`
+                SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
+                FROM Attribute, TestAttributes 
+                WHERE TestAttributes.test_Id=${test.id} 
+                AND TestAttributes.attribute_Id=Attribute.id
+            `);
+    
+            test['attributes'] = testAttributes.result;
+            if (test['attributes'] === undefined | null) continue;
+    
+            for await (const attr of test['attributes']) {
+                attr.name = capitalizeWord(attr.name);
+            }
         }
     }
 
