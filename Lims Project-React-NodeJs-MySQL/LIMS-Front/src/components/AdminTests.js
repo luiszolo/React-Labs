@@ -32,46 +32,27 @@ export default class AdminTests extends React.Component{
     }
 
     componentDidMount() {
-        const url1= "http://10.2.1.94:4000/api/attributes";
-        fetch(url1,{
-            method : "GET"
-        })
-        .then(Response => Response.json())
+        const testsURL= "http://10.2.1.94:4000/api/tests/by";
+        const attributesURL= "http://10.2.1.94:4000/api/attributes/by";
+        const statusURL= "http://10.2.1.94:4000/api/status/by";
+
+        axios.get(testsURL)
         .then(res => {
-        this.setState({availableAttributes: res.Attributes})
-        })
-
-        const url2= "http://10.2.1.94:4000/api/status";
-
-        fetch(url2,
-            {
-                method : "GET"
-            })
-        .then(Response => Response.json())
-        .then(res => {
-            this.setState({availableStatus: res.Statuss})
-        })
-
-        const url4= "http://10.2.1.94:4000/api/status";
-
-        fetch(url4,
-            {
-            method : "GET"
-        })
-        .then(Response => Response.json())
-        .then(res => {
-            this.setState({preStatus: res.Statuss, postStatus: res.Statuss[0].name})  
-        })
-
-        const url= "http://10.2.1.94:4000/api/tests";
-
-        fetch(url,{
-            method : "GET"
-        })
-        .then(Response => Response.json())
-        .then(res => {
-            const tests = res.Tests.concat({id:0, name: 'Add test'})
+            console.log(res.data.tests.actived)
+            const tests = res.data.tests.actived.concat({id:0, name: 'Add test'})
             this.setState({tests: tests})
+        })
+        
+        axios.get(attributesURL)
+        .then(res => {
+            this.setState({availableAttributes: res.data.attributes})
+        })
+
+        axios.get(statusURL)
+        .then(res => {
+            this.setState({availableStatus: res.data.status,
+                preStatus: res.data.status
+            })
         })
     }
 
@@ -150,7 +131,7 @@ export default class AdminTests extends React.Component{
 		})
 		.then(res => {
             console.log(res.data.message)
-			if (res.data.message === 'Insertion successful') {
+			if (res.data.message === 'Insertion completed') {
                 this.componentDidMount()
                 this.refs.submitButton.setState({
                     resultMessage: res.data.message,
@@ -250,7 +231,7 @@ export default class AdminTests extends React.Component{
                         samplelenghtTest: value.samplesLength,
                         activeTest: value.status === 1 ? true : false,
                         preStatus: [],
-                        selectedAttributes: value.attributes.map((att=>{return att.name})),
+                        selectedAttributes: value.attributes !== undefined ? value.attributes.map((att=>{return att.name}) ) : [],
                         selectedStatus: [],
                         validNameTest: true,
                         validNumberSamples: true,
@@ -279,7 +260,7 @@ export default class AdminTests extends React.Component{
                 } else {
                     return <li id={test.id} className='selected mt-1 p-1 rounded' name={test.name} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
                 }
-            }) : <li className='selectable mt-1 p-1 rounded'>Nothing</li>}
+            }) : <li className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>}
             </ul>
             </div>
         )
@@ -371,7 +352,7 @@ export default class AdminTests extends React.Component{
                             } else {
                                 return <li className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             }
-                        }) : <li className='selectable'>Nothing</li>}
+                        }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
                         </ul>
                     </div>
                     <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 attributes rounded-right p-1'>
@@ -384,7 +365,7 @@ export default class AdminTests extends React.Component{
                             } else {
                                 return <li className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                             }
-                        }) : <li className='selectable'>Nothing</li>}
+                        }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
                         </ul>
                     </div>
                 </div>

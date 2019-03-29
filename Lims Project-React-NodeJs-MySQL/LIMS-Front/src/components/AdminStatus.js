@@ -1,56 +1,51 @@
 import React from 'react';
+import axios from 'axios';
 
 import SpinnerButton from './../components/SpinnerButton';
-import Axios from 'axios';
 
 export default class AdminStatus extends React.Component{
     constructor(props){
         super(props);
+
         this.state={
             availableStatus: [],
             selectedStatus: '',
             nameStatus: '',
+            warningMessage: '',
             validStatus: undefined,
             active: true,
         }
 
         this.handleSelectStatus = this.handleSelectStatus.bind(this);
+        this.handleActive = this.handleActive.bind(this);
+        this.handleStatus = this.handleStatus.bind(this);
+        this.handleSubmitStatus = this.handleSubmitStatus.bind(this);
     }
 
     componentDidMount(){
-        // const url= "http://localhost:4000/api/status/by/?option=name";
-        // fetch(url,{
-        //     method : "GET"
-        // }).then( res => {
-        //     console.log(res)
-        // })
-        Axios.get('http://localhost:4000/api/status/by/?option=name').then(res => {
-            console.log(res.data.status);
-            if (res.data.status === undefined | null) {
-                return;
+        const url= 'http://10.2.1.94:4000/api/status/by';
+
+        axios.get(url)
+        .then((res) => {
+            console.log(res)
+            this.setState({availableStatus: res.data.status})
             }
-            else this.setState({
-                availableStatus: res.data.status
-            });
-        });
+        )
     }
 
-    handleActive = () => {
+    handleActive(){
         this.setState({
             active: !this.state.active,
         })
-        console.log(!this.state.active)
     }
 
-    handleStatus=(e)=>{
+    handleStatus(e){
         const nameStatus = e.target.value
-        this.setState({
-            messageAPI:""
-        })
+
         this.setState({
             nameStatus: nameStatus
         })
-        if(nameStatus.length >= 1){
+        if(nameStatus !== ' ' && nameStatus.length > 0){
             this.setState({
                 validStatus: true
             })
@@ -68,35 +63,40 @@ export default class AdminStatus extends React.Component{
         })
     }
 
-    handlePreStatusTest = (e) => {
-        const preStatusTest = e.target.value
+    handleSelectStatus(e){
+        const status = parseInt(e.target.id)
 
-        if(preStatusTest.length>=1) {
+        if(this.state.selectedStatus === e.target.textContent){
             this.setState({
-                preStatusTest: preStatusTest,
-                validTest2: true,
+                selectedStatus: '',
+                nameStatus: '',
+                validStatus: undefined
             })
-        } else if(preStatusTest === '') {
-            this.setState({
-                validTest2: false,
+        } else {
+            this.state.availableStatus.forEach((value) => {
+                if(value.id === status){
+                    this.setState({
+                        selectedStatus: value.name,
+                        nameStatus: value.name,
+                        active: value.actived === 1 ? true : false,
+                        validStatus: true
+                    })
+                }
             })
         }
-        
     }
 
-    handleSubmitStatus = event => {
+    handleSubmitStatus(event){
         event.preventDefault();
-		Axios.post(`http://localhost:4000/api/status/add`,{
-            status: {
-                name: this.state.nameStatus,
-                actived: this.state.active
-            }
+		axios.post(`http://10.2.1.94:4000/api/status/add`,{
+            name: this.state.nameStatus,
+            requiredPrev: this.state.active,
 		})
-		.then( res=> {
+		.then((res) => {
 			if (res.data.message==='Insertion completed') {
                 this.refs.submitButton.setState({
                     resultMessage: res.data.message,
-                    pass: res.data.pass
+                    pass: true
 				});
 				this.setState({
                     nameStatus:'',
@@ -104,48 +104,27 @@ export default class AdminStatus extends React.Component{
 
                 })
                 this.componentDidMount()
-			} else {
 			}
-			})
+		})
 		.catch( () => {
 			alert('Conection Timed Out');
 		});
     }
 
-    handleSelectStatus(e){
-        const status = e.target.textContent
-
-        if(status === this.state.selectedStatus){
-            this.setState({
-                selectedStatus: '',
-                nameStatus: '',
-                validStatus: undefined
-            })
-        } else {
-            this.setState({
-                selectedStatus: status,
-                nameStatus: status,
-                validStatus: true
-            })
-        }
-    }
-
     render(){
         const {
-            handleSubmitStatus,
-            handleStatus,          
             state: {
+                selectedStatus,
                 nameStatus,
+                warningMessage,
                 validStatus,
                 active,
             }
         } = this;
 
-        
         const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
-
 
         return(
             <div className='content row justify-content-center'>
@@ -162,12 +141,12 @@ export default class AdminStatus extends React.Component{
                                 return <li id={status.id} className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             }
                         }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
-                        </ul>
+                    </ul>
                 </div>
                 <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
-                    <form onSubmit={handleSubmitStatus}>
-                        <div className='row justify-content-center form-inline mb-3'>
-                            <label className={regularLabels}>Add new status:</label>
+                    <form onSubmit={this.handleSubmitStatus}>
+                        <div className='justify-content-center form-inline mb-3'>
+                            <label className={regularLabels}>{ selectedStatus === '' ? 'Name:' : 'Change name:' }</label>
                             <input
                                 type='text'
                                 className={
@@ -177,22 +156,23 @@ export default class AdminStatus extends React.Component{
                                     )
                                 }
                                 name='statusName' 
-                                placeholder='e.g. Ready for Heat'
-                                onChange={handleStatus}
+                                placeholder='e.g. Sample Ready for Heat'
+                                onChange={this.handleStatus}
                                 value={nameStatus}
                             />
-                            <label className={warningLabels}></label>
+                            <label className={warningLabels}>{warningMessage}</label>
                         </div>
                         <div className='row justify-content-center form-inline mb-3'>
-                            <label className='mr-3'>Status:</label>
+                            <label>Status:</label>
                             <input
+                                id='status'
                                 type='checkbox'
-                                className='form-check-input'
+                                className='form-check-input ml-3'
                                 name='status'
                                 checked={active}
                                 onChange={this.handleActive}
                             />
-                            <label className='form-check-label'>Active</label>
+                            <label htmlFor='status'className='form-check-label'>{ active ? 'Active' : 'Inactive' }</label>
                         </div>
                         <SpinnerButton 
                             ref='submitButton'

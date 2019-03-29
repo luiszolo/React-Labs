@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 //Importing components
-import Home from './components/home';
+import Home from './components/Home';
 import Navbar from './containers/Navbar';
 import Report from './containers/Report';
 import Test from './containers/Test';
@@ -11,7 +11,7 @@ import Test from './containers/Test';
 import './index.css';
 
 import Admin from './containers/Admin';
-import Axios from 'axios';
+import axios from 'axios';
 
 
 class App extends React.Component {
@@ -24,12 +24,11 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        Axios.get('http://localhost:4000/api/tests/by/')
+        axios.get('http://10.2.1.94:4000/api/tests/by')
             .then(res => {
                 this.setState({
                     tests: res.data.tests.actived
                 });
-                console.log(this.state.tests)
             })
     }
 
