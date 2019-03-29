@@ -279,7 +279,7 @@ export default class AdminTests extends React.Component{
                 } else {
                     return <li id={test.id} className='selected mt-1 p-1 rounded' name={test.name} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
                 }
-            }) : <li className='selectable mt-1 p-1 rounded'>Nothing</li>}
+            }) : <li className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>}
             </ul>
             </div>
         )
@@ -371,7 +371,7 @@ export default class AdminTests extends React.Component{
                             } else {
                                 return <li className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             }
-                        }) : <li className='selectable'>Nothing</li>}
+                        }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
                         </ul>
                     </div>
                     <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 attributes rounded-right p-1'>
@@ -384,7 +384,7 @@ export default class AdminTests extends React.Component{
                             } else {
                                 return <li className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                             }
-                        }) : <li className='selectable'>Nothing</li>}
+                        }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
                         </ul>
                     </div>
                 </div>
