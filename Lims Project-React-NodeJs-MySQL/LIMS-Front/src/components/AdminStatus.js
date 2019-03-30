@@ -27,7 +27,7 @@ export default class AdminStatus extends React.Component{
 
         axios.get(url)
         .then((res) => {
-            console.log(res)
+            console.log(res.data)
             this.setState({availableStatus: res.data.status})
             }
         )
@@ -45,19 +45,22 @@ export default class AdminStatus extends React.Component{
         this.setState({
             nameStatus: nameStatus
         })
-        if(nameStatus !== ' ' && nameStatus.length > 0){
+        if(nameStatus.trim() !== '' && nameStatus.length > 0){
             this.setState({
-                validStatus: true
+                validStatus: true,
+                warningMessage: ''
             })
         } else {
             this.setState({
-                validStatus: false
+                validStatus: false,
+                warningMessage: 'Name can\'t be blank'
             })
         }
         this.state.availableStatus.forEach((value)=>{
             if(value.name === nameStatus){
                 this.setState({
-                    validStatus: false
+                    validStatus: false,
+                    warningMessage: 'The status already exists'
                 })
             }
         })
@@ -66,7 +69,7 @@ export default class AdminStatus extends React.Component{
     handleSelectStatus(e){
         const status = parseInt(e.target.id)
 
-        if(this.state.selectedStatus === e.target.textContent){
+        if(this.state.selectedStatus.name === e.target.textContent){
             this.setState({
                 selectedStatus: '',
                 nameStatus: '',
@@ -76,7 +79,7 @@ export default class AdminStatus extends React.Component{
             this.state.availableStatus.forEach((value) => {
                 if(value.id === status){
                     this.setState({
-                        selectedStatus: value.name,
+                        selectedStatus: {id: value.id, name: value.name},
                         nameStatus: value.name,
                         active: value.actived === 1 ? true : false,
                         validStatus: true
@@ -88,27 +91,55 @@ export default class AdminStatus extends React.Component{
 
     handleSubmitStatus(event){
         event.preventDefault();
-		axios.post(`http://10.2.1.94:4000/api/status/add`,{
-            name: this.state.nameStatus,
-            requiredPrev: this.state.active,
-		})
-		.then((res) => {
-			if (res.data.message==='Insertion completed') {
-                this.refs.submitButton.setState({
-                    resultMessage: res.data.message,
-                    pass: true
-				});
-				this.setState({
-                    nameStatus:'',
-                    validStatus: false
-
-                })
-                this.componentDidMount()
-			}
-		})
-		.catch( () => {
-			alert('Conection Timed Out');
-		});
+        
+        if(this.state.selectedStatus === '') {
+            axios.post(`http://10.2.1.94:4000/api/status/add`, {
+                name: this.state.nameStatus,
+                requiredPrev: this.state.active,
+            })
+            .then((res) => {
+                if (res.data.message === 'Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        nameStatus: '',
+                        validStatus: false
+    
+                    })
+                    this.componentDidMount()
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
+        } else {
+            axios.put(`http://10.2.1.94:4000/api/status/find/${this.state.selectedStatus.id}`, {
+                name: this.state.nameStatus,
+                actived: this.state.active,
+            })
+            .then((res) => {
+                if (res.data.message==='Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        selectedStatus: '',
+                        nameStatus: '',
+                        validStatus: false
+    
+                    })
+                    this.componentDidMount()
+                } else {
+                    console.log(res.data.message)
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
+        }
     }
 
     render(){
@@ -122,7 +153,7 @@ export default class AdminStatus extends React.Component{
             }
         } = this;
 
-        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-3 col-xl-3 d-block text-right'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
@@ -135,7 +166,7 @@ export default class AdminStatus extends React.Component{
                     <h3 className='header'>Available status</h3>
                     <ul>
                         {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
-                            if(this.state.selectedStatus !== status.name){
+                            if(this.state.selectedStatus.name !== status.name){
                                 return <li id={status.id} className='selectable mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             } else {
                                 return <li id={status.id} className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>

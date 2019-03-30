@@ -11,13 +11,11 @@ export default class AdminAtrributes extends React.Component{
             availableAttributes:[],
             selectedAttribute: '',
             name:'',
+            warningMessage: '',
             validName: undefined,
             unit:'',
-            validUnit: undefined,
-            type:'',
-            validType: undefined,
+            placeholder:'',
             regex:'',
-            validRegex: undefined,
             active: true,
         }
 
@@ -25,7 +23,7 @@ export default class AdminAtrributes extends React.Component{
         this.handleNameAttribute = this.handleNameAttribute.bind(this);
         this.handleUnitAttribute = this.handleUnitAttribute.bind(this);
         this.handleRegexAttribute = this.handleRegexAttribute.bind(this);
-        this.handleTypeAttribute = this.handleTypeAttribute.bind(this);
+        this.handlePlaceholderAttribute = this.handlePlaceholderAttribute.bind(this);
         this.handleSubmitAttribute = this.handleSubmitAttribute.bind(this);
         this.handleActive = this.handleActive.bind(this);
 
@@ -41,23 +39,27 @@ export default class AdminAtrributes extends React.Component{
     }
 
     handleNameAttribute(e){
-        const name = e.target.value
+        const attributeName = e.target.value
+
         this.setState({
-            name: name,
+            name: attributeName
         })
-        if(name.length >= 1) {
+        if(attributeName.trim() !== '' && attributeName.length > 0){
             this.setState({
-                validName: true
+                validName: true,
+                warningMessage: ''
             })
         } else {
             this.setState({
-                validName: false
+                validName: false,
+                warningMessage: 'Name can\'t be blank'
             })
         }
-        this.state.availableAttributes.forEach((value) => {
-            if(value.name === name) {
+        this.state.availableAttributes.forEach((value)=>{
+            if(value.name === attributeName){
                 this.setState({
-                    validName: false
+                    validName: false,
+                    warningMessage: 'The attribute already exists'
                 })
             }
         })
@@ -69,15 +71,14 @@ export default class AdminAtrributes extends React.Component{
         this.setState({
             unit: unit,
         })
-        if(unit.length >= 1) {
-            this.setState({
-                validUnit: true,
-            })
-        } else if(unit === '') {
-            this.setState({
-                validUnit: false,
-            })
-        }
+    }
+
+    handlePlaceholderAttribute(e){
+        const placeholder = e.target.value
+
+        this.setState({
+            placeholder: placeholder,
+        })
     }
 
     handleRegexAttribute(e){
@@ -86,68 +87,6 @@ export default class AdminAtrributes extends React.Component{
         this.setState({
             regex: regex,
         })
-        if(regex.length >= 1) {
-            this.setState({
-                validRegex: true,
-            })
-        } else if(regex === '') {
-            this.setState({
-                validRegex: false,
-            })
-        }
-    }
-
-    handleTypeAttribute(e){
-        const type = e.target.value
-
-        this.setState({
-            type: type,
-        })
-        if(type.length >= 1) {
-            this.setState({
-                validType: true,
-            })
-        } else if(type === '') {
-            this.setState({
-                validType: false,
-            })
-        }
-    }
-
-    handleSubmitAttribute(event){
-        event.preventDefault();
-		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
-            attribute: {
-                name: this.state.name,
-                unit: this.state.unit,
-                placeholder: this.state.type,
-                regex: this.state.regex,
-                actived: this.state.active
-            }
-		})
-		.then( res => {
-            console.log(res)
-			if (res.data.message === 'Insertion completed') {
-                this.refs.submitButton.setState({
-                    resultMessage: res.data.message,
-                    pass: true
-				});
-				this.setState({
-                    name:'',
-                    validName: undefined,
-                    unit:'',
-                    validUnit: undefined,
-                    type:'',
-                    validType: undefined,
-                    regex:'',
-                    validRegex: undefined,
-                })
-                this.componentDidMount()
-			}
-		})
-		.catch( () => {
-			alert('Conection Timed Out');
-		});
     }
 
     handleActive(){
@@ -159,36 +98,95 @@ export default class AdminAtrributes extends React.Component{
     handleSelectAttribute(e){
         const attribute = parseInt(e.target.id)
 
-        if (this.state.selectedAttribute === e.target.textContent){
+        if (this.state.selectedAttribute.name === e.target.textContent){
             this.setState({
                 selectedAttribute: '',
                 name:'',
                 validName: undefined,
                 unit:'',
-                validUnit: undefined,
-                type:'',
-                validType: undefined,
+                placeholder:'',
                 regex:'',
-                validRegex: undefined,
-                
             })
         } else {
             this.state.availableAttributes.forEach((value) => {
                 if (value.id === attribute) {
                     this.setState({
-                        selectedAttribute: value.name,
+                        selectedAttribute: {id:value.id, name: value.name},
                         name: value.name,
                         validName: true,
                         unit: value.unit,
-                        validUnit: true,
-                        type: value.placeholder,
-                        validType: true,
+                        placeholder: value.placeholder,
                         regex: value.regex,
-                        validRegex: true,
                         active: value.actived === 1 ? true : false
                     })
                 }
             })
+        }
+    }
+
+    handleSubmitAttribute(event){
+        event.preventDefault();
+        
+        if(this.state.selectedAttribute === ''){
+            axios.post(`http://10.2.1.94:4000/api/Attributes/add`, {
+                attribute: {
+                    name: this.state.name,
+                    unit: this.state.unit,
+                    placeholder: this.state.placeholder,
+                    regex: this.state.regex,
+                    actived: this.state.active
+                }
+            })
+            .then( res => {
+                console.log(res)
+                if (res.data.message === 'Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        name:'',
+                        validName: undefined,
+                        unit:'',
+                        placeholder:'',
+                        regex:'',
+                    })
+                    this.componentDidMount()
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
+        } else {
+            axios.put(`http://10.2.1.94:4000/api/Attributes/find/${this.state.selectedAttribute.id}`, {
+                attribute: {
+                    name: this.state.name,
+                    unit: this.state.unit,
+                    placeholder: this.state.placeholder,
+                    regex: this.state.regex,
+                    actived: this.state.active
+                }
+            })
+            .then( res => {
+                console.log(res)
+                if (res.data.message === 'Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        name:'',
+                        validName: undefined,
+                        unit:'',
+                        placeholder:'',
+                        regex:'',
+                    })
+                    this.componentDidMount()
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
         }
     }
 
@@ -197,18 +195,16 @@ export default class AdminAtrributes extends React.Component{
             state: {
                 selectedAttribute,
                 name,
+                warningMessage,
                 validName,
                 unit,
-                validUnit,
-                type,
-                validType,
+                placeholder,
                 regex,
-                validRegex,
                 active
             }
         } = this;
     
-        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-3 col-xl-3 d-block text-right'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
@@ -222,7 +218,7 @@ export default class AdminAtrributes extends React.Component{
                     <ul>
                     {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
                         
-                        if(this.state.selectedAttribute !== attribute.name){
+                        if(this.state.selectedAttribute.name !== attribute.name){
                             return <li id={attribute.id} className='selectable mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                         } else {
                             return <li id={attribute.id} className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
@@ -247,18 +243,13 @@ export default class AdminAtrributes extends React.Component{
                                 onChange={this.handleNameAttribute}
                                 value={name}
                             />
-                            <label className={warningLabels}></label>
+                            <label className={warningLabels}>{warningMessage}</label>
                         </div>
                         <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Unit:</label>
                         <input
                             type='text'
-                            className={
-                                validUnit === undefined ? (inputs) : (
-                                    validUnit === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
+                            className={inputs}
                             name='attributeUnit' 
                             placeholder='e.g. C, s'
                             onChange={this.handleUnitAttribute}
@@ -270,16 +261,11 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Placeholder:</label>
                         <input
                             type='text'
-                            className={
-                                validType === undefined ? (inputs) : (
-                                    validType === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
+                            className={inputs}
                             name='attributeType' 
                             placeholder='e.g. SA-##-#####'
                             onChange={this.handleTypeAttribute}
-                            value={type}
+                            value={placeholder}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -287,12 +273,7 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Regex:</label>
                         <input
                             type='text'
-                            className={
-                                validRegex === undefined ? (inputs) : (
-                                    validRegex === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
+                            className={inputs}
                             name='attributeRegex' 
                             placeholder='#####'
                             onChange={this.handleRegexAttribute}
@@ -319,7 +300,7 @@ export default class AdminAtrributes extends React.Component{
                         titleNoPass='Form not ready'
                         type='submit'
                         disabled={
-                            !(validName && validUnit && validType && validRegex)
+                            !(validName)
                         }
                         onClick={ this.handleSubmitAttribute }
                         />

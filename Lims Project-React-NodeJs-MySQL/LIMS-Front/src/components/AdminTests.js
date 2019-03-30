@@ -8,19 +8,19 @@ export default class AdminTests extends React.Component{
         super(props);
         this.state={
             tests: [],
-            selectedTest: '',
-            nameTest: '',
-            samplelenghtTest: '',
-            activeTest: true,
-            preStatus: [],
             availableAttributes: [],
             selectedAttributes: [],
             availableStatus: [],
             selectedStatus: [],
+            selectedTest: '',
+            nameTest: '',
+            samplelenghtTest: '',
+            activeTest: true,
+            requiredStatus: [],
             validNameTest: undefined,
             validNumberSamples: undefined,
-            validPreStatus: undefined,
-            preStatusTest: '',
+            validrequiredStatus: undefined,
+            selectedRequiredStatus: '',
             postStatus: '',
         }
 
@@ -38,20 +38,23 @@ export default class AdminTests extends React.Component{
 
         axios.get(testsURL)
         .then(res => {
-            console.log(res.data.tests.actived)
-            const tests = res.data.tests.actived.concat({id:0, name: 'Add test'})
+            console.log(res.data.tests)
+            const tests = res.data.tests.actived.concat(res.data.tests.inactived)
             this.setState({tests: tests})
         })
         
         axios.get(attributesURL)
         .then(res => {
+            console.log(res.data)
             this.setState({availableAttributes: res.data.attributes})
         })
 
         axios.get(statusURL)
         .then(res => {
-            this.setState({availableStatus: res.data.status,
-                preStatus: res.data.status
+            console.log(res.data)
+            this.setState({
+                availableStatus: res.data.status,
+                requiredStatus: res.data.status
             })
         })
     }
@@ -103,17 +106,17 @@ export default class AdminTests extends React.Component{
         })
     }
 
-    handlePreStatusTest = (e) => {
-        const preStatusTest = e.target.value
+    handleselectedRequiredStatus = (e) => {
+        const selectedRequiredStatus = e.target.value
 
-        if(preStatusTest.length >= 1) {
+        if(selectedRequiredStatus.length >= 1) {
             this.setState({
-                preStatusTest: preStatusTest,
-                validPreStatus: true,
+                selectedRequiredStatus: selectedRequiredStatus,
+                validrequiredStatus: true,
             })
-        } else if(preStatusTest === '') {
+        } else if(selectedRequiredStatus === '') {
             this.setState({
-                validPreStatus: false,
+                validrequiredStatus: false,
             })
         }
     }
@@ -122,12 +125,12 @@ export default class AdminTests extends React.Component{
         event.preventDefault();
         
 		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
-            name:this.state.nameTest,
-            samplesLength:this.state.samplelenghtTest,
-            attributes:this.state.selectedAttributes.map((x, i) => x),
-            status: this.state.validPreStatus,
-            prevStatus: this.state.preStatusTest,
-            postStatus:this.state.selectedStatus.map((x, i) => x)
+            name: this.state.nameTest,
+            samplesLength: this.state.samplelenghtTest,
+            attributes: this.state.selectedAttributes.map((x) => x),
+            actived: this.state.activeTest,
+            requeredState: this.state.selectedRequiredStatus,
+            postState: this.state.selectedStatus.map((x) => x)
 		})
 		.then(res => {
             console.log(res.data.message)
@@ -135,7 +138,7 @@ export default class AdminTests extends React.Component{
                 this.componentDidMount()
                 this.refs.submitButton.setState({
                     resultMessage: res.data.message,
-                    pass: res.data.pass
+                    pass: true
 				});
 				this.setState({
                     nameTest: '',
@@ -144,7 +147,7 @@ export default class AdminTests extends React.Component{
                     samplelenghtTest: '',
                     validNumberSamples: undefined,
                     activeTest: false,
-                    validPreStatus: undefined,
+                    validrequiredStatus: undefined,
                     selectedAttributes: [],
                     selectedStatus: [],
 				})
@@ -215,12 +218,11 @@ export default class AdminTests extends React.Component{
                 nameTest: '',
                 samplelenghtTest: '',
                 activeTest: true,
-                preStatus: [],
                 selectedAttributes: [],
                 selectedStatus: [],
                 validNameTest: undefined,
                 validNumberSamples: undefined,
-                validPreStatus: undefined,
+                validrequiredStatus: undefined,
             })
         } else {
             this.state.tests.forEach((value)=>{
@@ -229,13 +231,12 @@ export default class AdminTests extends React.Component{
                         selectedTest: test,
                         nameTest: value.name,
                         samplelenghtTest: value.samplesLength,
-                        activeTest: value.status === 1 ? true : false,
-                        preStatus: [],
+                        activeTest: value.actived === 1 ? true : false,
                         selectedAttributes: value.attributes !== undefined ? value.attributes.map((att=>{return att.name}) ) : [],
                         selectedStatus: [],
                         validNameTest: true,
                         validNumberSamples: true,
-                        validPreStatus: true,
+                        validrequiredStatus: true,
                     })
                 }
 
@@ -244,23 +245,18 @@ export default class AdminTests extends React.Component{
 
     }
 
-    renderOption(){
-        return this.state.preStatus.map((name) => {
-            return <option key={name.name} value={name.name}>{name.name}</option>
-        })
-    }
-
     renderSelectTest(){
         return(<div className='col-lg-8 col-xl-8 col-md-12 col-sm-12 status rounded p-1'>
             <h3 className='header'>Tests</h3>
             <ul>
+            <li className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>
             {(this.state.tests.length > 0) ? this.state.tests.map((test) => {
                 if(this.state.selectedTest !== test.name){
                     return <li id={test.id} className='selectable mt-1 p-1 rounded' name={test.name} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
                 } else {
                     return <li id={test.id} className='selected mt-1 p-1 rounded' name={test.name} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
                 }
-            }) : <li className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>}
+            }) : ''}
             </ul>
             </div>
         )
@@ -269,15 +265,16 @@ export default class AdminTests extends React.Component{
     renderFormTest(){
         const {
             state: {
+                requiredStatus,
                 messageOp,
                 validNameTest,
                 validNumberSamples,
                 activeTest,
-                validPreStatus,
+                validrequiredStatus,
             }
         } = this;
 
-        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-3 col-xl-3 d-block text-right'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
@@ -326,18 +323,20 @@ export default class AdminTests extends React.Component{
                         checked={activeTest}
                         onChange={this.handleStatusTest}
                     />
-                    <label className='form-check-label'>Active</label>
+                    <label htmlFor='status'className='form-check-label'>{ activeTest ? 'Active' : 'Inactive' }</label>
                 </div>
                 <div className='row justify-content-center form-inline mb-3'>
-                    <label className={regularLabels}>Pre-status:</label>
+                    <label className={regularLabels}>Requiered status:</label>
                         <select
                             className={inputs} 
                             id="Status" 
-                            onBlur={this.handlePreStatusTest} 
-                            defaultValue={this.state.preStatusTest}
+                            onBlur={this.handleselectedRequiredStatus} 
+                            defaultValue={this.state.selectedRequiredStatus}
                             placeholder="availableStatus"
                         >
-                        {this.renderOption()}
+                        {requiredStatus.map((option) => {
+                            return <option key={option.name} value={option.name}>{option.name}</option>
+                        })}
                         </select>
                     <label className={warningLabels}>{messageOp}</label>
                 </div>
@@ -376,7 +375,7 @@ export default class AdminTests extends React.Component{
                     titlePass='Form is ready'
                     titleNoPass='Form not ready'
                     type='submit'
-                    disabled={!(validNameTest && validNumberSamples && validPreStatus && (this.state.selectedStatus.length > 0))}
+                    disabled={!(validNameTest && validNumberSamples && validrequiredStatus && (this.state.selectedStatus.length > 0))}
                     onClick={ this.handleSubmitStatus }
                 />
                 </form>
