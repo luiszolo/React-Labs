@@ -281,7 +281,7 @@ async function getTestList(req, res) {
 }
 
 async function removeTest(req, res) {
-    const id = req.params.id;
+    const id = +req.params.id;
 
     if (id === undefined) {
         res.status(404).send({

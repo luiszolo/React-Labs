@@ -128,7 +128,11 @@ async function removeStatus(req, res) {
         return;
     }
 
-    if (await getStatus(req, res) === false) {
+    if (await getStatus({
+            params: {
+                value: req.params.id
+            }
+        }, res) === false) {
         res.status(404).send({
             message: 'The state doesn\'t exists'
         });
@@ -152,15 +156,19 @@ async function updateStatus(req, res) {
     const id = req.params.id;
     const newStatus = req.body.status;
 
-    if (await getStatus(req, res) !== false) {
+    if (await getStatus({
+            params: {
+                value: req.params.id
+            }
+        }, res) === false) {
         res.status(403).send({
-            message: 'The state is already exists'
+            message: 'The state doesn\'t exists'
         });
         return;
     }
 
     const update = await dbInteract.manipulateData(
-        `UPDATE State SET ?
+        `UPDATE State SET 
         name='${newStatus.name}',
         actived='${newStatus.actived}'
         WHERE id=${id}`

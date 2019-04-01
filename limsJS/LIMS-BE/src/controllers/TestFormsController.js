@@ -36,16 +36,9 @@ async function insertData(req, res) {
 		return;
 	}
 
-	const testResultStates = await require('./TestController')
-		.getTest(req, res);
 	
-	const result_States = await require('./StatusController').getStatus({
-		params: {
-			id: testResultState.test.result_State
-		}
-	}, res);
+	
 
-	console.log()
 	// if (result_State.status === undefined) {
 	// 	res.status(404).send({
 	// 		message: 'The test result state doesn\'t exists'

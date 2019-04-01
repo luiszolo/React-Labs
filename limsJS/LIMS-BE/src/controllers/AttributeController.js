@@ -62,7 +62,7 @@ async function getAttribute(req, res) {
 async function getAttributeById(req, res) {
     const searchMethod = await getAttribute({
         params: {
-            value: req.params.id
+            value: +req.params.id
         }
     }, res);
     if (searchMethod === false) {
@@ -118,7 +118,11 @@ async function removeAttribute(req, res) {
         return;
     }
 
-    if (await getAttribute(req, res) === false) {
+    if (await getAttribute({
+            params: {
+                value: +req.params.id
+            }
+        }, res) === false) {
         res.status(404).send({
             message: 'The attribute doesn\'t exists'
         });
@@ -144,7 +148,7 @@ async function updateAttribute(req, res) {
 
     if (await getAttribute({
         params: {
-            value: newAttribute.name.toUpperCase()
+            value: +id
         }
     }, res) === false) {
         res.status(403).send({
@@ -154,7 +158,7 @@ async function updateAttribute(req, res) {
     }
 
     const update = await dbInteract.manipulateData(
-        `UPDATE Attribute SET ?
+        `UPDATE Attribute SET 
         name='${newAttribute.name}',
         placeholder='${newAttribute.placeholder}',
         unit='${newAttribute.unit}',

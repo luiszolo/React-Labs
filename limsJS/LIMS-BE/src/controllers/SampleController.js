@@ -54,6 +54,13 @@ async function getSample(req, res) {
             )
         }`);
     if (validateExistence === false ) return false;
+
+    if (req.body.testName) {
+        const test = await require('./ValidateController')
+            .SampleValidators(validateExistence.result[0].id, req.body.test)
+
+    }
+
     return validateExistence.result[0];
 }
 
@@ -61,6 +68,9 @@ async function getSampleById(req, res) {
     const searchMethod = await getSample({
         params: {
             value: req.params.id
+        },
+        body: {
+            testName: req.body.testName
         }
     }, res);
     if (searchMethod === false) {
