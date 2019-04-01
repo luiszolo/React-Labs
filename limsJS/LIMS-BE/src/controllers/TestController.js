@@ -148,7 +148,7 @@ async function addTest(req, res) {
 async function getTest(req, res) {
     const testId = req.params.value;
     const validateExistence = await dbInteract
-        .isExists(`SELECT id,  name, samplesLength, actived FROM Test ${(typeof testId === 'number') ? 
+        .isExists(`SELECT * FROM Test ${(typeof testId === 'number') ? 
             (`WHERE id=${testId};`) : 
             ( typeof testId === 'string' ?
                 (`WHERE name='${testId}';`) :
@@ -159,13 +159,37 @@ async function getTest(req, res) {
     let testInterpretation = validateExistence.result[0];
 
     testInterpretation.name = capitalizeWord(testInterpretation.name);
+    testInterpretation.require_State = await require('./StatusController').getStatus({
+        params: {
+            value: +testInterpretation.require_State
+        }
+    });
+    testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+    testInterpretation.initial_State = await require('./StatusController').getStatus({
+        params: {
+            value: +testInterpretation.initial_State
+        }
+    });
+    testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+
+    const testStatus = await dbInteract.isExists(`
+        SELECT State.name, State.actived
+        FROM State, TestStatus
+        WHERE TestStatus.test_Id=${testInterpretation.id} 
+        AND TestStatus.result_State=State.id
+    `);
+
+    testInterpretation['result_States'] = testStatus.result;
+    for await (const stt of testInterpretation['result_States']) {
+        stt.name = capitalizeWord(stt.name)
+    }
+
     const testAttributes = await dbInteract.isExists(`
         SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
         FROM Attribute, TestAttributes 
         WHERE TestAttributes.test_Id=${testInterpretation.id} 
         AND TestAttributes.attribute_Id=Attribute.id
     `);
-
     testInterpretation['attributes'] = testAttributes.result;
     if (testInterpretation['attributes'] !== undefined | null) {
         for await (const attr of testInterpretation['attributes']) {
