@@ -6,38 +6,34 @@ const removeDuplication = require('./../middlewares/miscs').removeDuplications;
 const notNumberField = require('./../middlewares/regex').notNumber;
 const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
-async function SampleValidators (sample, test) {
-    const sample = sample;
+async function SampleValidators (sample, testName) {
 
     const test = await require('./TestController').getTest({
         params : {
-            value: test
+            value: testName
         }
     });
 
     if (test === undefined | null) {
         return false;
     }
-    console.log(test)
 
-	// const id = await dbInteract.isExists(`SELECT id FROM Test WHERE name='ELECTRICITY TEST'`);
-	// if (test.id == id[0].id && sample === undefined) return true;
-	// if (sample === undefined) return { message: 'This sample doesn\'t exist' };
-    // const prevStatus = await pool.query(`SELECT prev_State FROM TestStatus WHERE test_Id=${test.id}`);
-    
+    const firstValidation = await dbInteract.isExists(`
+        SELECT * FROM Sample, Log WHERE Sample.id=${sample} AND Sample.id = Log.sample_Id AND Log.test_Id=${test.id}
+    `);
 
+    if (firstValidation !== false) {
+        return {
+            message: `This sample already passed ${capitalizeWord(test.name)}`
+        }
+    }
 
-	// if (test == false) {
-	// 	return { 
-	// 		message: 'The test didn\'t exist!'
-	// 	}
-	// }
-	// const aux = await GeneralValidator.isExists(`SELECT * FROM Log WHERE sample_Id=${sample.id} AND test_Id=${test.id}`)
-	// if (aux.pass == true){
-	// 	return {
-	// 		message: `This sample already passed ${miscs.capitalizeWord(test.name)}`
-	// 	}
-	// }
+    const secondValidation = await dbInteract(`
+        SELECT * FROM Sample, Status, TestStatus, Test WHERE Sample.state = Status.id
+        AND Status.id = TestStatus.result_State AND TestStatus.test_Id = Test.id
+    `);
+    console.log(secondValidation)
+
 	// for await (const status of prevStatus) {
 	// 	let statusSequence = await GeneralValidator.isExists(`
 	// 		SELECT * FROM Status 

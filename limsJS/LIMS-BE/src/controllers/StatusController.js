@@ -47,6 +47,7 @@ async function addStatus(req, res) {
 
 async function getStatus(req) {
     const statusId = req.params.value;
+    if (statusId === undefined | null | false) return false;
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM State ${typeof statusId === 'number' ? 
             (`WHERE id=${statusId};`) : 

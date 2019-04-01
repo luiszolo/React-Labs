@@ -164,7 +164,9 @@ async function getTest(req, res) {
             value: +testInterpretation.require_State
         }
     });
-    testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+    if (testInterpretation.require_State) {
+        testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+    }
     testInterpretation.initial_State = await require('./StatusController').getStatus({
         params: {
             value: +testInterpretation.initial_State
@@ -222,9 +224,9 @@ async function getTestList(req, res) {
     let query = "";
     if (option != null) {
         if (option === "id") {
-            query = `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=1 ORDER BY id ASC`;
+            query = `SELECT * FROM Test WHERE Test.actived=1 ORDER BY id ASC`;
         } else if (option === "name") {
-            query = `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=1 ORDER BY name ASC`;
+            query = `SELECT * FROM Test WHERE Test.actived=1 ORDER BY name ASC`;
         } else {
             res.status(404).send({
                 message: 'The option doesn\'t exists'
@@ -232,40 +234,65 @@ async function getTestList(req, res) {
             return;
         }
     } else {
-        query =  `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=1 ORDER BY id ASC`;
+        query =  `SELECT * FROM Test WHERE Test.actived=1 ORDER BY id ASC`;
     }
 
     const activedTests = await dbInteract.isExists(query);
-    console.log(activedTests)
     if (activedTests === false) {
         res.status(404).send({
             message: 'Add some tests first!'
         });
         return;
     }
-    for await ( const test of activedTests.result) {
-        test.name = capitalizeWord(test.name);
+    for await ( const testInterpretation of activedTests.result) {
+        testInterpretation.name = capitalizeWord(testInterpretation.name);
+        testInterpretation.require_State = await require('./StatusController').getStatus({
+            params: {
+                value: +testInterpretation.require_State
+            }
+        });
+        if (testInterpretation.require_State) {
+            testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+        }
+        testInterpretation.initial_State = await require('./StatusController').getStatus({
+            params: {
+                value: +testInterpretation.initial_State
+            }
+        });
+        testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+
+        const testStatus = await dbInteract.isExists(`
+            SELECT State.name, State.actived
+            FROM State, TestStatus
+            WHERE TestStatus.test_Id=${testInterpretation.id} 
+            AND TestStatus.result_State=State.id
+        `);
+
+        testInterpretation['result_States'] = testStatus.result;
+        for await (const stt of testInterpretation['result_States']) {
+            stt.name = capitalizeWord(stt.name)
+        }
+
         const testAttributes = await dbInteract.isExists(`
             SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
             FROM Attribute, TestAttributes 
-            WHERE TestAttributes.test_Id=${test.id} 
+            WHERE TestAttributes.test_Id=${testInterpretation.id} 
             AND TestAttributes.attribute_Id=Attribute.id
         `);
-
-        test['attributes'] = testAttributes.result;
-        if (test['attributes'] === undefined | null) continue;
-
-        for await (const attr of test['attributes']) {
-            attr.name = capitalizeWord(attr.name);
+        testInterpretation['attributes'] = testAttributes.result;
+        if (testInterpretation['attributes'] !== undefined | null) {
+            for await (const attr of testInterpretation['attributes']) {
+                attr.name = capitalizeWord(attr.name);
+            }
         }
     }
 
 
     if (option != null) {
         if (option === "id") {
-            query = `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=0 ORDER BY id ASC`;
+            query = `SELECT * FROM Test WHERE Test.actived=0 ORDER BY id ASC`;
         } else if (option === "name") {
-            query = `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=0 ORDER BY name ASC`;
+            query = `SELECT * FROM Test WHERE Test.actived=0 ORDER BY name ASC`;
         } else {
             res.status(404).send({
                 message: 'The option doesn\'t exists'
@@ -273,28 +300,56 @@ async function getTestList(req, res) {
             return;
         }
     } else {
-        query =  `SELECT Test.id, Test.name, Test.samplesLength, Test.actived FROM Test WHERE Test.actived=0 ORDER BY id ASC`;
+        query =  `SELECT * FROM Test WHERE Test.actived=0 ORDER BY id ASC`;
     }
 
     const inactivedTests = await dbInteract.isExists(query);
     if (inactivedTests !== false) {
-        for await ( const test of inactivedTests.result) {
-            test.name = capitalizeWord(test.name);
+        for await ( const testInterpretation of inactivedTests.result) {
+            testInterpretation.name = capitalizeWord(testInterpretation.name);
+            testInterpretation.require_State = await require('./StatusController').getStatus({
+                params: {
+                    value: +testInterpretation.require_State
+                }
+            });
+            if (testInterpretation.require_State) {
+                testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+            }
+            testInterpretation.initial_State = await require('./StatusController').getStatus({
+                params: {
+                    value: +testInterpretation.initial_State
+                }
+            });
+            testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+    
+            const testStatus = await dbInteract.isExists(`
+                SELECT State.name, State.actived
+                FROM State, TestStatus
+                WHERE TestStatus.test_Id=${testInterpretation.id} 
+                AND TestStatus.result_State=State.id
+            `);
+    
+            testInterpretation['result_States'] = testStatus.result;
+            for await (const stt of testInterpretation['result_States']) {
+                stt.name = capitalizeWord(stt.name)
+            }
+    
             const testAttributes = await dbInteract.isExists(`
                 SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
                 FROM Attribute, TestAttributes 
-                WHERE TestAttributes.test_Id=${test.id} 
+                WHERE TestAttributes.test_Id=${testInterpretation.id} 
                 AND TestAttributes.attribute_Id=Attribute.id
             `);
-    
-            test['attributes'] = testAttributes.result;
-            if (test['attributes'] === undefined | null) continue;
-    
-            for await (const attr of test['attributes']) {
-                attr.name = capitalizeWord(attr.name);
+            testInterpretation['attributes'] = testAttributes.result;
+            if (testInterpretation['attributes'] !== undefined | null) {
+                for await (const attr of testInterpretation['attributes']) {
+                    attr.name = capitalizeWord(attr.name);
+                }
             }
         }
     }
+
+
 
     res.status(200).send({
         tests: {

@@ -16,7 +16,7 @@ async function insertData(req, res) {
 				value: bodyForm.operator
 			}
 		}, res);
-	if (operator.operators === undefined) {
+	if (operator === false) {
 		res.status(404).send({
 			message: 'The operator doesn\'t exists'
 		});
@@ -29,14 +29,40 @@ async function insertData(req, res) {
 				value: bodyForm.test
 			}
 		}, res);
-	if (test === undefined) {
+	if (test === false) {
 		res.status(404).send({
 			message: 'The test doesn\'t exists'
 		});
 		return;
 	}
 
-	
+	if (bodyForm.attributes) {
+		for await (const attr of bodyForm.attributes) {
+			const attrDetail = await require('./AttributeController').getAttribute({
+				params: {
+					value: attr.name
+			}});
+			if (attrDetail !== false) {
+				if (test.attributes) {
+					for await (const attrTest of test.attributes) {
+						console.log(attrTest)
+
+						
+
+					}
+				} else {
+					res.status(400).send({
+						message: "This test doesn't have attributes"
+					});
+					return;
+				}
+			}
+		}
+	}
+
+	res.status(200).send({
+        message: "Insertion completed"
+    });
 	
 
 	// if (result_State.status === undefined) {

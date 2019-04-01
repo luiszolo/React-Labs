@@ -45,42 +45,45 @@ async function addSample(req, res) {
 
 async function getSample(req, res) {
     const sampleId = req.params.value;
+    console.log(sampleId)
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Sample ${typeof sampleId === 'number' ? 
             (`WHERE id=${sampleId};`) : 
             ( typeof sampleId === 'string' ?
-                (`WHERE name='${sampleId}';`) :
+                (`WHERE barcode='${sampleId}';`) :
                 (';')
             )
         }`);
     if (validateExistence === false ) return false;
+    let sampleInterpretation = validateExistence.result[0];
+    const lastState = await require('./StatusController').getStatus({
+        params: {
+            value: sampleInterpretation.state
+        }
+    });
 
-    if (req.body.testName) {
-        const test = await require('./ValidateController')
-            .SampleValidators(validateExistence.result[0].id, req.body.test)
+    sampleInterpretation.state = capitalizeWord(lastState.status.name);
 
-    }
-
-    return validateExistence.result[0];
+    return sampleInterpretation;
 }
 
-async function getSampleById(req, res) {
+async function getSampleByBarcode(req, res) {
     const searchMethod = await getSample({
         params: {
             value: req.params.id
-        },
-        body: {
-            testName: req.body.testName
         }
     }, res);
     if (searchMethod === false) {
-        res.status(404).send({
-            message: "The sample doesn't exists"
+        res.status(403).send({
+            sample: {
+                barcode: req.params.id,
+                state: "New Sample"
+            }
         });
         return;
     }
     res.status(200).send({
-        sample: searchMethod.sample
+        sample: searchMethod
     });
     return;
 }
@@ -177,7 +180,7 @@ async function updateSample(req, res) {
 module.exports = {
     addSample: addSample,
     getSample: getSample,
-    getSampleById: getSampleById,
+    getSampleById: getSampleByBarcode,
     getSampleList: getSampleList,
     removeSample: removeSample,
     updateSample: updateSample
