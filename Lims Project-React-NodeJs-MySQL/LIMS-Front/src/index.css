@@ -5,6 +5,11 @@ body{
 	min-height: 100vh;
 }
 
+.inactive{
+	color: #6c757d;
+	text-decoration:line-through
+}
+
 .activeButton{
 	background-color: white;
 }
@@ -73,6 +78,16 @@ html, body{
 
 .header{
 	border-bottom: 2px solid #ced4da ;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  margin: 0; 
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
 }
 
 .selected{

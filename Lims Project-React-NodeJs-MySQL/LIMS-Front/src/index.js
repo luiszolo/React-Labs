@@ -24,7 +24,7 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        axios.get('http://10.2.1.94:4000/api/tests/by')
+        axios.get('http://10.2.1.81:4000/api/tests/by')
             .then(res => {
                 this.setState({
                     tests: res.data.tests.actived

@@ -23,7 +23,7 @@ export default class AdminStatus extends React.Component{
     }
 
     componentDidMount(){
-        const url= 'http://10.2.1.94:4000/api/status/by';
+        const url= 'http://10.2.1.81:4000/api/status/by';
 
         axios.get(url)
         .then((res) => {
@@ -93,11 +93,14 @@ export default class AdminStatus extends React.Component{
         event.preventDefault();
         
         if(this.state.selectedStatus === '') {
-            axios.post(`http://10.2.1.94:4000/api/status/add`, {
-                name: this.state.nameStatus,
-                requiredPrev: this.state.active,
+            axios.post(`http://10.2.1.81:4000/api/status/add`, {
+                status: {
+                    name: this.state.nameStatus,
+                    actived: this.state.active,
+                }
             })
             .then((res) => {
+                console.log(res)
                 if (res.data.message === 'Insertion completed') {
                     this.refs.submitButton.setState({
                         resultMessage: res.data.message,
@@ -106,7 +109,6 @@ export default class AdminStatus extends React.Component{
                     this.setState({
                         nameStatus: '',
                         validStatus: false
-    
                     })
                     this.componentDidMount()
                 }
@@ -115,12 +117,14 @@ export default class AdminStatus extends React.Component{
                 alert('Conection Timed Out');
             });
         } else {
-            axios.put(`http://10.2.1.94:4000/api/status/find/${this.state.selectedStatus.id}`, {
-                name: this.state.nameStatus,
-                actived: this.state.active,
+            axios.put(`http://10.2.1.81:4000/api/status/find/${this.state.selectedStatus.id}`, {
+                status: {
+                    name: this.state.nameStatus,
+                    actived: this.state.active,
+                }
             })
             .then((res) => {
-                if (res.data.message==='Insertion completed') {
+                if (res.status === 200) {
                     this.refs.submitButton.setState({
                         resultMessage: res.data.message,
                         pass: true
@@ -128,16 +132,21 @@ export default class AdminStatus extends React.Component{
                     this.setState({
                         selectedStatus: '',
                         nameStatus: '',
-                        validStatus: false
+                        validStatus: undefined
     
                     })
                     this.componentDidMount()
                 } else {
-                    console.log(res.data.message)
+                    console.log(res)
                 }
             })
-            .catch( () => {
-                alert('Conection Timed Out');
+            .catch( err => {
+                if (err.response.status !== 200) {
+                    this.refs.submitButton.setState({
+                        resultMessage: err.response.data.message,
+                        pass: false
+                    });
+                }
             });
         }
     }
@@ -167,9 +176,9 @@ export default class AdminStatus extends React.Component{
                     <ul>
                         {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
                             if(this.state.selectedStatus.name !== status.name){
-                                return <li id={status.id} className='selectable mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                                return <li id={status.id} className={status.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             } else {
-                                return <li id={status.id} className='selected mt-1 p-1 rounded' name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                                return <li id={status.id} className={status.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             }
                         }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
                     </ul>
