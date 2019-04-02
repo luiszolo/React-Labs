@@ -94,12 +94,12 @@ async function getLogsBySample(req, res) {
     }
 
     const generalLogs = await dbInteract.isExists(`
-		SELECT Operator.id AS 'UserID',Sample.name AS 'Sample', Status.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
-		JOIN Status ON Status.id = Log.status_Id 
+		SELECT Operator.id AS 'UserID',Sample.barcode AS 'Sample', State.name AS 'State', Test.name AS 'Test', Log.onCreated AS 'On Created' FROM Log
+		JOIN State ON State.id = Log.status_Id 
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id 
 		JOIN Sample ON Sample.id = Log.sample_Id 
-		WHERE Log.sample_Id=${sampleId.sample.id}
+		WHERE Log.sample_Id=${sampleId.id}
     `);
 
     if (generalLogs === false) {
@@ -113,7 +113,7 @@ async function getLogsBySample(req, res) {
 		SELECT Test.name AS 'Test', Attribute.name AS 'Attribute', SampleValue.value AS 'Value' FROM SampleValue
 		JOIN Test ON Test.id=SampleValue.test_Id
 		JOIN Attribute ON  Attribute.id=SampleValue.attribute_Id
-		WHERE SampleValue.sample_Id=${sampleId.sample.id} ORDER BY SampleValue.id ASC
+		WHERE SampleValue.sample_Id=${sampleId.id} ORDER BY SampleValue.sample_Id ASC
     `);
     
     for await (const result of generalLogs.result) {
@@ -122,6 +122,7 @@ async function getLogsBySample(req, res) {
             .slice(0,19)
             .replace('T', ' ');
         result['Test'] = capitalizeWord(result['Test']);
+        result["State"] = capitalizeWord(result["State"]);
     }
 
     if (testAttributes !== false) {

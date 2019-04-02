@@ -28,7 +28,6 @@ async function addStatus(req, res) {
         name='${newStatus.name.toUpperCase()}',
         actived=${newStatus.actived}`
     );
-    console.log('reach here')
     if (insertion === false) {
         if (auxValidation) {
             res.status(503).send({
@@ -159,7 +158,7 @@ async function updateStatus(req, res) {
 
     if (await getStatus({
             params: {
-                value: req.params.id
+                value: +req.params.id
             }
         }, res) === false) {
         res.status(403).send({
@@ -171,12 +170,12 @@ async function updateStatus(req, res) {
     const update = await dbInteract.manipulateData(
         `UPDATE State SET 
         name='${newStatus.name}',
-        actived='${newStatus.actived}'
+        actived=${newStatus.actived}
         WHERE id=${id}`
     );
     if (update === false) {
         res.status(503).send({
-            message: 'Something is wrong in INSERT method'
+            message: 'Something is wrong in UPDATE method'
         });
         return;
     }

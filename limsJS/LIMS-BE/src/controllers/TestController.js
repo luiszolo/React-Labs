@@ -175,19 +175,18 @@ async function getTest(req, res) {
     testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
 
     const testStatus = await dbInteract.isExists(`
-        SELECT State.name, State.actived
+        SELECT State.name
         FROM State, TestStatus
         WHERE TestStatus.test_Id=${testInterpretation.id} 
         AND TestStatus.result_State=State.id
     `);
 
-    testInterpretation['result_States'] = testStatus.result;
-    for await (const stt of testInterpretation['result_States']) {
-        stt.name = capitalizeWord(stt.name)
-    }
+    testInterpretation['result_States'] = testStatus.result.map((stt) => {
+        return capitalizeWord(stt.name);
+    });
 
     const testAttributes = await dbInteract.isExists(`
-        SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
+        SELECT * 
         FROM Attribute, TestAttributes 
         WHERE TestAttributes.test_Id=${testInterpretation.id} 
         AND TestAttributes.attribute_Id=Attribute.id
@@ -262,19 +261,18 @@ async function getTestList(req, res) {
         testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
 
         const testStatus = await dbInteract.isExists(`
-            SELECT State.name, State.actived
+            SELECT State.name
             FROM State, TestStatus
             WHERE TestStatus.test_Id=${testInterpretation.id} 
             AND TestStatus.result_State=State.id
         `);
 
-        testInterpretation['result_States'] = testStatus.result;
-        for await (const stt of testInterpretation['result_States']) {
-            stt.name = capitalizeWord(stt.name)
-        }
+        testInterpretation['result_States'] = testStatus.result.map((stt) => {
+            return capitalizeWord(stt.name);
+        });
 
         const testAttributes = await dbInteract.isExists(`
-            SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
+            SELECT * 
             FROM Attribute, TestAttributes 
             WHERE TestAttributes.test_Id=${testInterpretation.id} 
             AND TestAttributes.attribute_Id=Attribute.id
@@ -321,21 +319,20 @@ async function getTestList(req, res) {
                 }
             });
             testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
-    
+
             const testStatus = await dbInteract.isExists(`
-                SELECT State.name, State.actived
+                SELECT State.name
                 FROM State, TestStatus
                 WHERE TestStatus.test_Id=${testInterpretation.id} 
                 AND TestStatus.result_State=State.id
             `);
-    
-            testInterpretation['result_States'] = testStatus.result;
-            for await (const stt of testInterpretation['result_States']) {
-                stt.name = capitalizeWord(stt.name)
-            }
-    
+
+            testInterpretation['result_States'] = testStatus.result.map((stt) => {
+                return capitalizeWord(stt.name);
+            });
+
             const testAttributes = await dbInteract.isExists(`
-                SELECT Attribute.name, Attribute.unit, Attribute.placeholder, Attribute.regex 
+                SELECT * 
                 FROM Attribute, TestAttributes 
                 WHERE TestAttributes.test_Id=${testInterpretation.id} 
                 AND TestAttributes.attribute_Id=Attribute.id
@@ -491,7 +488,7 @@ async function updateTest(req, res) {
 
     if (insertion === false) {
         res.status(503).send({
-            message: 'Something is wrong in INSERT method'
+            message: 'Something is wrong in UPDATE method'
         });
         return;
     }

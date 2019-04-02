@@ -167,7 +167,7 @@ async function updateAttribute(req, res) {
     );
     if (update === false) {
         res.status(503).send({
-            message: 'Something is wrong in INSERT method'
+            message: 'Something is wrong in UPDATE method'
         });
         return;
     }

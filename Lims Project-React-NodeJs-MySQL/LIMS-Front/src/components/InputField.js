@@ -68,12 +68,7 @@ export default class InputField extends React.Component {
 			}
 			else {
 				Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
-					if (res.data.message) {
-						this.setState({
-							passValidation: false,
-							warningText: res.data.message
-						});
-					} else {
+					if (res.status === 200) {
 						this.setState({
 							passValidation: true,
 							warningText: ''
@@ -82,10 +77,12 @@ export default class InputField extends React.Component {
 					}
 				}).catch( err => {
 					console.log(err);
-					this.setState({
-						passValidation: false,
-						warningText: 'Server connection timed out'
-					});
+					if (err.response.status !== 200) {
+						this.setState({
+							passValidation: false,
+							warningText: err.response.data.message
+						});
+					}
 				});
 			}
 		} else return false;

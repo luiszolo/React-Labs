@@ -13,6 +13,7 @@ export default class extends React.Component {
 		const {
 			cols
 		} = this.props;
+		console.log(cols)
 		if(cols === undefined) return '';
 		return (
 			<tr>
@@ -26,11 +27,8 @@ export default class extends React.Component {
 	}
 
 	fecthRows() {
-		const {
-			rows
-		} = this.props;
 		return ( 
-			rows.map(function(row) {
+			this.props.rows.map(function(row) {
 				console.log(row)
 				return (<tr>
 					{
@@ -51,12 +49,12 @@ export default class extends React.Component {
 				<table className={'responsive-table mt-0' + (this.props.className===undefined ? ' ': this.props.className)}>
 					<thead>
 						{
-							this.fecthHeaders()
+							this.props.cols === undefined ? (''): this.fecthHeaders()
 						}
 					</thead>
 					<tbody>
 						{
-							this.fecthRows()
+							this.props.rows === undefined ? ('') : this.fecthRows()
 						}
 					</tbody>
 				</table>

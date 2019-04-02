@@ -128,7 +128,11 @@ async function removeSample(req, res) {
         return;
     }
 
-    if (await getSample(req, res) === false) {
+    if (await getSample({
+        params: {
+            value: req.params.id
+        }
+    }, res) === false) {
         res.status(404).send({
             message: 'The sample doesn\'t exists'
         });
@@ -152,7 +156,11 @@ async function updateSample(req, res) {
     const id = req.params.id;
     const newSample = req.body.sample;
 
-    if (await getSample(req, res) !== false) {
+    if (await getSample({
+        parmas: {
+            value: +id
+        }
+    }, res) !== false) {
         res.status(403).send({
             message: 'The sample is already exists'
         });
@@ -162,7 +170,7 @@ async function updateSample(req, res) {
     const update = await dbInteract.manipulateData(
         `UPDATE Sample SET
         barcode='${newSample.barcode}',
-        status='${newSample.status}'
+        state=${newSample.status}
         WHERE id=${id}`
     );
     if (update === false) {

@@ -32,9 +32,9 @@ export default class AdminTests extends React.Component{
     }
 
     componentDidMount() {
-        const testsURL= "http://10.2.1.94:4000/api/tests/by";
-        const attributesURL= "http://10.2.1.94:4000/api/attributes/by";
-        const statusURL= "http://10.2.1.94:4000/api/status/by";
+        const testsURL= "http://localhost:4000/api/tests/by";
+        const attributesURL= "http://localhost:4000/api/attributes/by";
+        const statusURL= "http://localhost:4000/api/status/by";
 
         axios.get(testsURL)
         .then(res => {
@@ -124,7 +124,7 @@ export default class AdminTests extends React.Component{
     handleSubmitTest = event => {
         event.preventDefault();
         
-		axios.post(`http://10.2.1.94:4000/api/tests/add`,{
+		axios.post(`http://localhost:4000/api/tests/add`,{
             name: this.state.nameTest,
             samplesLength: this.state.samplelenghtTest,
             attributes: this.state.selectedAttributes.map((x) => x),
