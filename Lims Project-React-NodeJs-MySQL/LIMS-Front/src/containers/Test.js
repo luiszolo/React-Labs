@@ -240,7 +240,6 @@ export default class Test extends React.Component {
 			loading: true
 		});
 		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
-<<<<<<< HEAD
 			Axios.post(`http://localhost:4000/api/test-forms/add`, {
 				form: {
 					operator: this.state.operator,
@@ -248,13 +247,6 @@ export default class Test extends React.Component {
 					test: this.props.name,
 					attributes: this.state.attributes
 				}
-=======
-			Axios.post(`http://10.2.1.81:4000/api/test-forms/add`, {
-				operator: this.state.operator,
-				samples: this.state.samples,
-				test: this.props.name,
-				attributes: this.state.attributes
->>>>>>> e046b6bfd33e941264c423fdae6fb56b4badd94f
 			}).then(res => {
 				if (res.status === 200) {
 					this.refs.submitButton.setState({
