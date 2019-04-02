@@ -168,7 +168,6 @@ export default class AdminAtrributes extends React.Component{
                 }
             })
             .then( res => {
-                console.log(res)
                 if (res.data.message === 'Insertion completed') {
                     this.refs.submitButton.setState({
                         resultMessage: res.data.message,
@@ -219,9 +218,9 @@ export default class AdminAtrributes extends React.Component{
                     {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
                         
                         if(this.state.selectedAttribute.name !== attribute.name){
-                            return <li id={attribute.id} className='selectable mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                            return <li id={attribute.id} className={attribute.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                         } else {
-                            return <li id={attribute.id} className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                            return <li id={attribute.id} className={attribute.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                         }
                     }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
                     </ul>
@@ -252,8 +251,8 @@ export default class AdminAtrributes extends React.Component{
                             className={inputs}
                             name='attributeUnit' 
                             placeholder='e.g. C, s'
-                            onChange={this.handleUnitAttribute}
                             value={unit}
+                            onChange={this.handleUnitAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -262,10 +261,10 @@ export default class AdminAtrributes extends React.Component{
                         <input
                             type='text'
                             className={inputs}
-                            name='attributeType' 
+                            name='attributeType'
                             placeholder='e.g. SA-##-#####'
-                            onChange={this.handleTypeAttribute}
                             value={placeholder}
+                            onChange={this.handlePlaceholderAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -276,8 +275,8 @@ export default class AdminAtrributes extends React.Component{
                             className={inputs}
                             name='attributeRegex' 
                             placeholder='#####'
-                            onChange={this.handleRegexAttribute}
                             value={regex}
+                            onChange={this.handleRegexAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>

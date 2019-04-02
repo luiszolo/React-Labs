@@ -43,7 +43,11 @@ export default class Report extends React.Component{
     handleSearch = () => {
         const sample =  this.state.sample
         
+<<<<<<< HEAD
         axios.get(`http://localhost:4000/api/logs/find/${sample}`)
+=======
+        axios.get(`http://10.2.1.81:4000/api/logs/${sample}`)
+>>>>>>> e046b6bfd33e941264c423fdae6fb56b4badd94f
             .then(res => {
                 if(res.status === 200){
                     this.setState({
