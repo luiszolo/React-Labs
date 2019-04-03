@@ -54,21 +54,20 @@ export default class AdminTests extends React.Component{
             } else {
                 this.setState({tests: res.data.tests.actived})
             }
-            
         })
         
         axios.get(attributesURL)
         .then((res) => {
             console.log(res.data)
-            this.setState({availableAttributes: res.data.attributes !== undefined ? res.data.attributes.filter((attribute) => {return attribute.actived === 1}) : []})
+            this.setState({availableAttributes: res.data.attributes !== undefined ? res.data.attributes.map((attribute) => {return attribute}) : []})
         })
 
         axios.get(statusURL)
         .then((res) => {
             console.log(res.data)
             this.setState({
-                availableStatus: res.data.status !== undefined ? res.data.status.filter((status) => {return status.actived === 1}) : [],
-                requiredStatus: res.data.status !== undefined ? res.data.status.filter((status) => {return status.actived === 1}) : []
+                availableStatus: res.data.status !== undefined ? res.data.status.map((status) => {return status}) : [],
+                requiredStatus: res.data.status !== undefined ? res.data.status.map((status) => {return status}) : []
             })
         })
     }
@@ -156,7 +155,10 @@ export default class AdminTests extends React.Component{
                     });
                     this.setState({
                         nameTest: '',
-                        selectedTest: 'Add test',
+                        selectedTest: {
+                            id: '0',
+                            name: 'Add test'
+                        },
                         validNameTest: undefined,
                         sampleLenghtTest: 1,
                         validNumberSamples: undefined,
@@ -399,7 +401,7 @@ export default class AdminTests extends React.Component{
                         {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
                             const exists = this.state.selectedStatus.filter((item)=> {return item === status.name})
                             if(exists.length !== 1){
-                                return <li className={status.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
+                                return <li className={status.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive disabled'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             } else {
                                 return <li className={status.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
                             }
@@ -412,7 +414,7 @@ export default class AdminTests extends React.Component{
                         {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
                             const exists = this.state.selectedAttributes.filter((item)=> {return item === attribute.name})
                             if(exists.length !== 1){
-                                return <li className={attribute.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
+                                return <li className={attribute.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive disabled'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                             } else {
                                 return <li className={attribute.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
                             }

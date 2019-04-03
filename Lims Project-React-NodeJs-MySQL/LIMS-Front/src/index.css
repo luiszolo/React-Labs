@@ -23,6 +23,10 @@ body{
 	padding: .5rem;
 }
 
+.disabled{
+	pointer-events:none
+}
+
 @media only screen and (max-width: 768px) {
 	h1 {
 		font-size: 1.8em;
