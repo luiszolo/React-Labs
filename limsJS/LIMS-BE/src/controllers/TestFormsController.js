@@ -70,15 +70,19 @@ async function insertData(req, res) {
 	}
 
 	if (test.require_State === 'New Sample') {
-		asyncForEach(bodyForm.samples, async s => {
-			await require('./SampleController').addSample({
-				body: {
-					sample: {
-						barcode: s
+		for await  (const s of bodyForm.samples) {
+			if (s !== '') {
+				if ( await require('./SampleController').addSample({
+					body: {
+						sample: {
+							barcode: s
+						}
 					}
+				}, res) !== true) {
+					return;
 				}
-			}, res);
-		});
+			}
+		}
 	}
 
 	let samplesValidationArray = [];
@@ -100,7 +104,7 @@ async function insertData(req, res) {
 	}
 
 	await addSampleValues(test.id, attributeArray, samplesValidationArray);
-	await addLogs(operator.id, test.name, samplesValidationArray, test.require_State, test.result_States);
+	await addLogs(operator.id, test.name, samplesValidationArray, test.require_State, test.initial_State, test.result_States);
 	
 
 	res.status(200).send({
@@ -128,7 +132,8 @@ async function addSampleValues(test, attributes=null, samples) {
 	}
 }
 
-async function addLogs (operator, test, samples, reqState, postState) {
+async function addLogs (operator, test, samples, reqState, procState, postState) {
+	console.log(reqState, postState)
 	for await (const sample of samples) {
 		await require('./LogController').addLog({
 			body: {
@@ -136,6 +141,14 @@ async function addLogs (operator, test, samples, reqState, postState) {
 				operator: operator,
 				sample: sample,
 				status: reqState
+			}
+		});
+		await require('./LogController').addLog({
+			body: {
+				test: test,
+				operator: operator,
+				sample: sample,
+				status: procState
 			}
 		});
 		for await (const status of postState) {

@@ -56,9 +56,7 @@ async function getStatus(req) {
             )
         }`);
     if (validateExistence.pass) {
-        return {
-            status: validateExistence.result[0]
-        };
+        return validateExistence.result[0]
     } else return false;
 }
 

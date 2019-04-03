@@ -165,14 +165,14 @@ async function getTest(req, res) {
         }
     });
     if (testInterpretation.require_State) {
-        testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+        testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.name);
     }
     testInterpretation.initial_State = await require('./StatusController').getStatus({
         params: {
             value: +testInterpretation.initial_State
         }
     });
-    testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+    testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.name);
 
     const testStatus = await dbInteract.isExists(`
         SELECT State.name
@@ -251,14 +251,14 @@ async function getTestList(req, res) {
             }
         });
         if (testInterpretation.require_State) {
-            testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+            testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.name);
         }
         testInterpretation.initial_State = await require('./StatusController').getStatus({
             params: {
                 value: +testInterpretation.initial_State
             }
         });
-        testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+        testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.name);
 
         const testStatus = await dbInteract.isExists(`
             SELECT State.name
@@ -311,14 +311,14 @@ async function getTestList(req, res) {
                 }
             });
             if (testInterpretation.require_State) {
-                testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.status.name);
+                testInterpretation.require_State = capitalizeWord(testInterpretation.require_State.name);
             }
             testInterpretation.initial_State = await require('./StatusController').getStatus({
                 params: {
                     value: +testInterpretation.initial_State
                 }
             });
-            testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.status.name);
+            testInterpretation.initial_State = capitalizeWord(testInterpretation.initial_State.name);
 
             const testStatus = await dbInteract.isExists(`
                 SELECT State.name

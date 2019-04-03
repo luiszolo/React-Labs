@@ -19,12 +19,12 @@ async function addSample(req, res) {
         });
         return;
     }
-    if (validateSampleName(newSample.barcode) === false) {
-        res.status(403).send({
-            message: 'The sample sintax is incorrect (SA-##-#####)'
-        });
-        return;
-    }
+    // if (validateSampleName(newSample.barcode) === false) {
+    //     res.status(403).send({
+    //         message: 'The sample sintax is incorrect (SA-##-#####)'
+    //     });
+    //     return;
+    // }
 
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Sample SET
@@ -51,13 +51,13 @@ async function getSample(req, res) {
         }`);
     if (validateExistence === false ) return false;
     let sampleInterpretation = validateExistence.result[0];
-    const lastState = await require('./StatusController').getStatus({
-        params: {
-            value: sampleInterpretation.state
-        }
-    });
+    // const lastState = await require('./StatusController').getStatus({
+    //     params: {
+    //         value: sampleInterpretation.state
+    //     }
+    // });
 
-    sampleInterpretation.state = capitalizeWord(lastState.status.name);
+    // sampleInterpretation.state = capitalizeWord(lastState.status.name);
 
     return sampleInterpretation;
 }

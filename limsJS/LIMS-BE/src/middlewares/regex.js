@@ -1,5 +1,6 @@
 const validateSampleName = name => {
 	const regex = /SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/;
+	console.log(regex.test(String(name).toUpperCase()), 'algo')
 	return regex.test(String(name).toUpperCase());
 };
 

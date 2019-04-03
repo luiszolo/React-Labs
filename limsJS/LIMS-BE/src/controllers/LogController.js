@@ -59,13 +59,14 @@ async function addLog(req, res) {
         });
         return;
     }
-
+    console.log(status)
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Log SET 
         operator_Id = ${operator.id},
         test_Id = ${test.id},
         sample_Id = ${sample.id},
-        status_Id = ${status.id}`
+        status_Id = ${status.id},
+        onCreated = '${require('moment')().tz("America/Los_Angeles").format().slice(0,19).replace('T', ' ')}'`
     );
 
     if (insertion === false) {
