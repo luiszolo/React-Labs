@@ -390,24 +390,24 @@ async function restoreProcess (testId, hasAttr=false, hasStatus=false) {
 
     if (hasAttr === true) {
         await dbInteract.manipulateData(
-            `DELETE * FROM TestAttributes WHERE test_Id=${testId}`
+            `DELETE FROM TestAttributes WHERE test_Id=${testId}`
         );
     }
     if (hasStatus === true) {
         await dbInteract.manipulateData(
-            `DELETE * FROM TestStatus WHERE test_Id=${testId}`
+            `DELETE FROM TestStatus WHERE test_Id=${testId}`
         );
     }
 
     await dbInteract.manipulateData(
-        `DELETE * FROM Test WHERE id=${testId}`
+        `DELETE FROM Test WHERE id=${testId}`
     );
 }
 
 async function updateTest(req, res) {
     const id = req.params.id;
     const newTest = req.body.test;
-    restoreProcess(+id, hasAttr=true, hasStatus=true);
+    await restoreProcess(+id, hasAttr=true, hasStatus=true);
 
     if (await getTest({
         params: {

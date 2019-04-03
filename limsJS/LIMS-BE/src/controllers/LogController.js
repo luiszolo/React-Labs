@@ -10,7 +10,7 @@ async function addLog(req, res) {
     const operator = await require('./OperatorController')
         .getOperator({
             params: {
-                value: req.body.operator
+                value: +req.body.operator
             }
         }, res);
     const sample = await require('./SampleController')
@@ -32,7 +32,7 @@ async function addLog(req, res) {
             }
         }, res);
 
-    if (operator.operators === undefined) {
+    if (operator === undefined) {
         res.status(404).send({
             message: 'The operator doesn\'t exists'
         });
@@ -53,7 +53,7 @@ async function addLog(req, res) {
         return;
     }
 
-    if (status.status === undefined) {
+    if (status === undefined) {
         res.status(404).send({
             message: 'The status doesn\'t exists'
         });
@@ -62,10 +62,10 @@ async function addLog(req, res) {
 
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Log SET 
-        operator_Id = ${operator.operators.id},
+        operator_Id = ${operator.id},
         test_Id = ${test.id},
         sample_Id = ${sample.id},
-        status_Id = ${status.status.id}`
+        status_Id = ${status.id}`
     );
 
     if (insertion === false) {
@@ -74,9 +74,7 @@ async function addLog(req, res) {
         });
         return;
     }
-    res.status(200).send({
-        message: 'Insertion completed'
-    });
+    return true;
 }
 
 async function getLogsBySample(req, res) {

@@ -10,7 +10,6 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 // Testing
 async function insertData(req, res) {
 	const bodyForm = req.body.form;
-	console.log(bodyForm)
 	const operator = await require('./OperatorController')
         .getOperator({
 			params: {
@@ -48,7 +47,6 @@ async function insertData(req, res) {
 				if (attrDetail !== false) {
 					for await (const testAttribute of test.attributes) {
 						if (testAttribute.name === attr.name) {
-							console.log(attr.name, testAttribute.name)
 							attributeArray = attributeArray.concat([], [{
 								attrId: testAttribute.id,
 								value:  attr.value
@@ -71,7 +69,17 @@ async function insertData(req, res) {
 		}
 	}
 
-
+	if (test.require_State === 'New Sample') {
+		asyncForEach(bodyForm.samples, async s => {
+			// await require('./SampleController').addSample({
+			// 	body: {
+			// 		sample: {
+			// 			barcode: s
+			// 		}
+			// 	}
+			// }, res);
+		});
+	}
 
 	let samplesValidationArray = [];
 	for await (const sample of bodyForm.samples) {
@@ -88,13 +96,11 @@ async function insertData(req, res) {
 			});
 			return;
 		}
-		samplesValidationArray = samplesValidationArray.concat(
-			samplesValidationArray, [sampleDetail.id]
-		);
+		samplesValidationArray = samplesValidationArray.concat([sampleDetail.id]);
 	}
-	console.log(test.id, attributeArray, samplesValidationArray)
-	// await addSampleValues(test.id, attributeArray, samplesValidationArray)
 
+	await addSampleValues(test.id, attributeArray, samplesValidationArray);
+	await addLogs(operator.id, test.name, samplesValidationArray, test.require_State, test.result_States);
 	
 
 	res.status(200).send({
@@ -118,6 +124,29 @@ async function addSampleValues(test, attributes=null, samples) {
 					message: "Something is wrong in POST method"
 				});
 			}
+		}
+	}
+}
+
+async function addLogs (operator, test, samples, reqState, postState) {
+	for await (const sample of samples) {
+		await require('./LogController').addLog({
+			body: {
+				test: test,
+				operator: operator,
+				sample: sample,
+				status: reqState
+			}
+		});
+		for await (const status of postState) {
+			await require('./LogController').addLog({
+				body: {
+					test: test,
+					operator: operator,
+					sample: sample,
+					status: status
+				}
+			});
 		}
 	}
 }

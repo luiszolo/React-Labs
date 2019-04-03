@@ -49,7 +49,7 @@ async function addOperator(req, res) {
 async function getOperatorById(req, res) {
     const searchMethod = await getOperator({
         params: {
-            value: req.params.id
+            value: +req.params.id
         }
     }, res);
     if (searchMethod === false) {
@@ -69,9 +69,7 @@ async function getOperator(req, res) {
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Operator WHERE id=${operatorId}`);
     if (validateExistence.pass) {
-        return {
-            operators: validateExistence.result[0]
-        };
+        return validateExistence.result[0];
     } else return false;
 }
 

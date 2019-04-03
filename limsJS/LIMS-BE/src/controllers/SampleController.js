@@ -11,7 +11,7 @@ async function addSample(req, res) {
 
     if (await getSample({
         params: {
-            value: newSample.name.toUpperCase()
+            value: newSample.barcode.toUpperCase()
         }
     }, res) !== false) {
         res.status(403).send({
@@ -28,8 +28,7 @@ async function addSample(req, res) {
 
     const insertion = await dbInteract.manipulateData(
         `INSERT INTO Sample SET
-        barcode='${newSample.barcode}',
-        status='${newSample.status}'`
+        barcode='${newSample.barcode}'`
     );
     if (insertion === false) {
         res.status(503).send({
@@ -37,15 +36,11 @@ async function addSample(req, res) {
         });
         return;
     }
-    res.status(200).send({
-        message: 'Insertion completed'
-    });
-    return;
+    return true;
 }
 
 async function getSample(req, res) {
     const sampleId = req.params.value;
-    console.log(sampleId)
     const validateExistence = await dbInteract
         .isExists(`SELECT * FROM Sample ${typeof sampleId === 'number' ? 
             (`WHERE id=${sampleId};`) : 
@@ -169,8 +164,7 @@ async function updateSample(req, res) {
 
     const update = await dbInteract.manipulateData(
         `UPDATE Sample SET
-        barcode='${newSample.barcode}',
-        state=${newSample.status}
+        barcode='${newSample.barcode}'
         WHERE id=${id}`
     );
     if (update === false) {
