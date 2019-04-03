@@ -96,8 +96,8 @@ export default class AdminStatus extends React.Component{
             axios.post(`http://localhost:4000/api/status/add`, {
                 status: {
                     name: this.state.nameStatus,
-                    requiredPrev: this.state.active,
-                }
+                    actived: this.state.active,
+                }, aux: true
             })
             .then((res) => {
                 console.log(res)
@@ -108,7 +108,7 @@ export default class AdminStatus extends React.Component{
                     });
                     this.setState({
                         nameStatus: '',
-                        validStatus: false
+                        validStatus: undefined
                     })
                     this.componentDidMount()
                 }

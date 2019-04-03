@@ -8,7 +8,7 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
 async function addStatus(req, res) {
     const newStatus = req.body.status;
-    const auxValidation = req.params.aux;
+    const auxValidation = req.body.aux;
     console.log(newStatus)
 
     const repeatStatus = await getStatus({

@@ -145,6 +145,7 @@ export default class AdminAtrributes extends React.Component{
                         pass: true
                     });
                     this.setState({
+                        selectedAttribute: '',
                         name:'',
                         validName: undefined,
                         unit:'',
@@ -174,6 +175,7 @@ export default class AdminAtrributes extends React.Component{
                         pass: true
                     });
                     this.setState({
+                        selectedAttribute: '',
                         name:'',
                         validName: undefined,
                         unit:'',

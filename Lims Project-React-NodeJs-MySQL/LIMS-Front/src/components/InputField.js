@@ -67,7 +67,8 @@ export default class InputField extends React.Component {
 				this.props.addToForm();
 			}
 			else {
-				Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
+				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
+				.then( res => {
 					if (res.status === 200) {
 						this.setState({
 							passValidation: true,
@@ -76,11 +77,16 @@ export default class InputField extends React.Component {
 						if(this.props.addToForm) this.props.addToForm();
 					}
 				}).catch( err => {
-					console.log(err);
-					if (err.response.status !== 200) {
+					console.log(err.response.data);
+					if (err.response.data.sample.state === 'New Sample') {
+						this.setState({
+							passValidation: true,
+							warningText: ''
+						});
+					}else{
 						this.setState({
 							passValidation: false,
-							warningText: err.response.data.message
+							warningText: 'Sample not ready for this test'
 						});
 					}
 				});
