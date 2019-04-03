@@ -136,7 +136,7 @@ export default class AdminTests extends React.Component{
     handleSubmitTest(event){
         event.preventDefault();
         
-        if(this.state.selectedTest === 'Add test') {
+        if(this.state.selectedTest.id === '0') {
             axios.post(`http://localhost:4000/api/tests/add`, {
                 test: {
                     name: this.state.nameTest,
@@ -172,13 +172,15 @@ export default class AdminTests extends React.Component{
                 alert('Conection Timed Out');
             });
         } else {
-            axios.put(`http://10.2.1.81:4000/api/tests/add`,{
-                name: this.state.nameTest,
-                samplesLength: this.state.sampleLenghtTest,
-                attributes: this.state.selectedAttributes.map((x) => x),
-                actived: this.state.activeTest,
-                requeredState: this.state.selectedRequiredStatus,
-                postState: this.state.selectedStatus.map((x) => x)
+            axios.put(`http://localhost:4000/api/tests/find/${this.state.selectedTest.id}`,{
+                test: {
+                    name: this.state.nameTest,
+                    samplesLength: this.state.sampleLenghtTest,
+                    attributes: this.state.selectedAttributes.map((x) => x),
+                    actived: this.state.activeTest,
+                    requiredState: this.state.selectedRequiredStatus,
+                    postStates: this.state.selectedStatus.map((x) => x)
+                }
             })
             .then((res) => {
                 console.log(res.data.message)
@@ -200,8 +202,8 @@ export default class AdminTests extends React.Component{
                     })
                 }
             })
-            .catch( () => {
-                alert('Conection Timed Out');
+            .catch( err => {
+                alert(err.response.data.message);
             });
         }
     }
@@ -258,11 +260,14 @@ export default class AdminTests extends React.Component{
     }
 
     handleSelectTest(e){
-        const test = e.target.textContent
+        const test = {
+            id: e.target.id,
+            name: e.target.textContent
+        }
 
-        if (test === 'Add test'){
+        if (test.name === 'Add test'){
             this.setState({
-                selectedTest: 'Add test',
+                selectedTest: test,
                 nameTest: '',
                 sampleLenghtTest: 1,
                 activeTest: true,
@@ -273,7 +278,7 @@ export default class AdminTests extends React.Component{
             })
         } else {
             this.state.tests.forEach((value) => {
-                if(test === value.name){
+                if(test.name === value.name){
                     this.setState({
                         selectedTest: test,
                         nameTest: value.name,
@@ -281,7 +286,7 @@ export default class AdminTests extends React.Component{
                         activeTest: value.actived === 1 ? true : false,
                         selectedRequiredStatus: value.require_State,
                         selectedAttributes: value.attributes !== undefined ? value.attributes.map((att=>{return att.name}) ) : [],
-                        selectedStatus: value.result_States.map((status) => {return status.name}),
+                        selectedStatus: value.result_States.map((status) => {return status}),
                         validNameTest: true,
                         validNumberSamples: true,
                     })
@@ -296,7 +301,7 @@ export default class AdminTests extends React.Component{
         return(<div className='col-lg-8 col-xl-8 col-md-12 col-sm-12 status rounded p-1'>
             <h3 className='header'>Tests</h3>
             <ul>
-            <li className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>
+            <li id='0' className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>
             {(this.state.tests.length > 0) ? this.state.tests.map((test) => {
                 if(this.state.selectedTest !== test.name){
                     return <li id={test.id} className={test.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={test.actived} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
@@ -377,7 +382,7 @@ export default class AdminTests extends React.Component{
                         <select
                             className={inputs} 
                             id="Status" 
-                            onChange={this.handleselectedRequiredStatus} 
+                            onChange={this.handleselectedRequiredStatus}
                             defaultValue={this.state.selectedRequiredStatus}
                             placeholder="availableStatus"
                         >

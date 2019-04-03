@@ -94,8 +94,10 @@ export default class AdminStatus extends React.Component{
         
         if(this.state.selectedStatus === '') {
             axios.post(`http://localhost:4000/api/status/add`, {
-                name: this.state.nameStatus,
-                requiredPrev: this.state.active,
+                status: {
+                    name: this.state.nameStatus,
+                    requiredPrev: this.state.active,
+                }
             })
             .then((res) => {
                 console.log(res)
@@ -116,8 +118,10 @@ export default class AdminStatus extends React.Component{
             });
         } else {
             axios.put(`http://localhost:4000/api/status/find/${this.state.selectedStatus.id}`, {
-                name: this.state.nameStatus,
-                actived: this.state.active,
+                status: {
+                    name: this.state.nameStatus,
+                    actived: this.state.active,
+                }
             })
             .then((res) => {
                 if (res.status === 200) {

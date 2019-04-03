@@ -312,7 +312,7 @@ export default class Test extends React.Component {
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' canBlank={false}
-							validationURL={`http://10.2.1.81:4000/api/operators/find/`}
+							validationURL={`http://localhost:4000/api/operators/find/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ event => this.handleValidateOperator(this.refs['operator']) }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
@@ -335,11 +335,7 @@ export default class Test extends React.Component {
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####'
 										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-<<<<<<< HEAD
 										validationURL={`http://localhost:4000/api/samples/find/`}
-=======
-										validationURL={`http://10.2.1.81:4000/api/logs/find/`}
->>>>>>> e046b6bfd33e941264c423fdae6fb56b4badd94f
 										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ event => this.handleValidateSample(this.refs[`sample${idx + 1}`].state, idx) } 
 										prevPassed={ (idx === 0 ? (_) => {

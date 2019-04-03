@@ -162,7 +162,8 @@ async function updateAttribute(req, res) {
         name='${newAttribute.name}',
         placeholder='${newAttribute.placeholder}',
         unit='${newAttribute.unit}',
-        regex='${newAttribute.regex}'
+        regex='${newAttribute.regex}',
+        actived=${newAttribute.actived}
         WHERE id=${id}`
     );
     if (update === false) {
