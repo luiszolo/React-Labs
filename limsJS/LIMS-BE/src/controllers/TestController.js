@@ -407,7 +407,7 @@ async function restoreProcess (testId, hasAttr=false, hasStatus=false) {
 async function updateTest(req, res) {
     const id = req.params.id;
     const newTest = req.body.test;
-    restoreProcess(id, hasAttr=true, hasStatus=true);
+    restoreProcess(+id, hasAttr=true, hasStatus=true);
 
     if (await getTest({
         params: {
