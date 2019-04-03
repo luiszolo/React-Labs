@@ -71,13 +71,13 @@ async function insertData(req, res) {
 
 	if (test.require_State === 'New Sample') {
 		asyncForEach(bodyForm.samples, async s => {
-			// await require('./SampleController').addSample({
-			// 	body: {
-			// 		sample: {
-			// 			barcode: s
-			// 		}
-			// 	}
-			// }, res);
+			await require('./SampleController').addSample({
+				body: {
+					sample: {
+						barcode: s
+					}
+				}
+			}, res);
 		});
 	}
 
