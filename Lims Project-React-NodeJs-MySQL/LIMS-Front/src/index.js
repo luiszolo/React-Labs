@@ -26,7 +26,6 @@ class App extends React.Component {
     componentWillMount() {
         axios.get('http://localhost:4000/api/tests/by')
             .then(res => {
-                console.log(res.data.tests.actived)
                 this.setState({
                     tests: res.data.tests.actived
                 });

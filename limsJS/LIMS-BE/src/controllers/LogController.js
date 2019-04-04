@@ -98,7 +98,7 @@ async function getLogsBySample(req, res) {
 		JOIN Test ON Test.id = Log.test_Id
 		JOIN Operator ON Operator.id = Log.operator_Id 
 		JOIN Sample ON Sample.id = Log.sample_Id 
-		WHERE Log.sample_Id=${sampleId.id} ORDER BY Log.OnCreated ASC
+		WHERE Log.sample_Id=${sampleId.id} ORDER BY Log.id ASC
     `);
 
     if (generalLogs === false) {

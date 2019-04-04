@@ -78,7 +78,6 @@ export default class InputField extends React.Component {
 					}
 				})
 				.catch( err => {
-					console.log(this.props.requiredStatus)
 					if (err.response.data.sample.state === this.props.requiredStatus) {
 						
 						this.setState({

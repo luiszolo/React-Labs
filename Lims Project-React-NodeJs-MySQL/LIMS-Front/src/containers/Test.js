@@ -206,7 +206,6 @@ export default class Test extends React.Component {
 			});
 			if(this.state.passedRepeatedSample === false) return;
 			// Validate Regex samples
-			console.log(sample.passRegex)
 			this.setState({
 				passedSamples: sample.passRegex,
 				passedRepeatedSample: true
