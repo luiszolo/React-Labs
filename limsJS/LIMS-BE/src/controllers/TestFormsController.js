@@ -132,17 +132,19 @@ async function addSampleValues(test, attributes=null, samples) {
 	}
 }
 
-async function addLogs (operator, test, samples, reqState, procState, postState) {
+async function addLogs (operator, test, samples, reqState=null, procState, postState) {
 	console.log(reqState, postState)
 	for await (const sample of samples) {
-		await require('./LogController').addLog({
-			body: {
-				test: test,
-				operator: operator,
-				sample: sample,
-				status: reqState
-			}
-		});
+		if (reqState === 'New Sample') {
+			await require('./LogController').addLog({
+				body: {
+					test: test,
+					operator: operator,
+					sample: sample,
+					status: reqState
+				}
+			});
+		}
 		await require('./LogController').addLog({
 			body: {
 				test: test,
