@@ -266,7 +266,7 @@ async function getTestList(req, res) {
             WHERE TestStatus.test_Id=${testInterpretation.id} 
             AND TestStatus.result_State=State.id
         `);
-
+        console.log(testStatus.result, testInterpretation.name)
         testInterpretation['result_States'] = testStatus.result.map((stt) => {
             return capitalizeWord(stt.name);
         });
