@@ -61,7 +61,7 @@ async function getSample(req, res) {
 }
 
 async function getSampleByBarcode(req, res) {
-    const searchMethod = await getSample({
+    let searchMethod = await getSample({
         params: {
             value: req.params.id
         }
@@ -75,6 +75,9 @@ async function getSampleByBarcode(req, res) {
         });
         return;
     }
+    const lastLog = await dbInteract.isExists(`SELECT State.name FROM Log, State WHERE Log.status_Id=State.id AND Log.sample_Id=${searchMethod.id} ORDER BY Log.id DESC`);
+    searchMethod['state'] = lastLog.result[0].name
+    console.log(searchMethod)
     res.status(200).send({
         sample: searchMethod
     });

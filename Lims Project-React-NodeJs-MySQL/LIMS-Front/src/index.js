@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 //Importing components
-import Home from './components/Home';
+import Home from './components/home';
 import Navbar from './containers/Navbar';
 import Report from './containers/Report';
 import Test from './containers/Test';
