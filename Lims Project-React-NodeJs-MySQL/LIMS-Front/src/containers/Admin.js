@@ -8,8 +8,8 @@ export default class Admin extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            activeWindow: <Status/>,
-            activeTab:0,
+            activeWindow: <Tests/>,
+            activeTab: 2,
         }
 
         this.handleButtonMenu = this.handleButtonMenu.bind(this)
@@ -42,13 +42,13 @@ export default class Admin extends React.Component{
 
         return(<div className='row test-component'>
             <div className='col-12 p-0 adminBar'>
-                <button 
-                    type='button' 
-                    name='status' 
-                    className = {(this.state.activeTab === 0) ? active : unactive}
+                    <button 
+                    type='button'
+                    name='tests'
+                    className = {(this.state.activeTab === 2) ? active : unactive}
                     onClick={this.handleButtonMenu}
                 >
-                Status
+                Tests
                 </button>
                 <button 
                     type='button' 
@@ -59,12 +59,12 @@ export default class Admin extends React.Component{
                 Attributes
                 </button>
                 <button 
-                    type='button'
-                    name='tests'
-                    className = {(this.state.activeTab === 2) ? active : unactive}
+                    type='button' 
+                    name='status' 
+                    className = {(this.state.activeTab === 0) ? active : unactive}
                     onClick={this.handleButtonMenu}
                 >
-                Tests
+                Status
                 </button>
             </div>
             <div className='container-fluid'>

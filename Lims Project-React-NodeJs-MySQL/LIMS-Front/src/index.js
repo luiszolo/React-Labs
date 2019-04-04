@@ -26,6 +26,7 @@ class App extends React.Component {
     componentWillMount() {
         axios.get('http://localhost:4000/api/tests/by')
             .then(res => {
+                console.log(res.data.tests.actived)
                 this.setState({
                     tests: res.data.tests.actived
                 });
@@ -38,9 +39,9 @@ class App extends React.Component {
 		.concat('Generate Report', 'Admin Site');
 
 		let components = [(<Home/>)].concat(this.state.tests.map((e) => (
-			<Test key={e.name}name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
+            
+			<Test key={e.name}name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testRequiredStatus={e.require_State}/>
 		))).concat(<Report/>, <Admin/>);
-
         return(<div>
             <header className='container-fluid bg-info fixed-top'></header>
 			<Navbar>

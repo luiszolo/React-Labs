@@ -21,7 +21,7 @@ export default class AdminTests extends React.Component{
             activeTest: true,
             requiredStatus: [],
             validNameTest: undefined,
-            validNumberSamples: undefined,
+            validNumberSamples: true,
             selectedRequiredStatus: 'New Sample',
             postStatus: '',
         }
@@ -49,11 +49,7 @@ export default class AdminTests extends React.Component{
             console.log(res.data.tests)
             const tests = res.data.tests.actived.concat(res.data.tests.inactived)
 
-            if(res.data.tests.inactived !== undefined) {
-                this.setState({tests: tests})
-            } else {
-                this.setState({tests: res.data.tests.actived})
-            }
+            this.setState({tests: res.data.tests.inactived !== undefined ? tests : res.data.tests.actived})
         })
         
         axios.get(attributesURL)
@@ -89,11 +85,11 @@ export default class AdminTests extends React.Component{
                 messageName: 'Name can\'t be blank'
             })
         }
-        this.state.availableAttributes.forEach((value)=>{
-            if(value.name === testName){
+        this.state.tests.forEach((value)=>{
+            if(testName === value.name){
                 this.setState({
                     validNameTest: false,
-                    messageName: 'The attribute already exists'
+                    messageName: 'The test already exists'
                 })
             }
         })
@@ -161,7 +157,7 @@ export default class AdminTests extends React.Component{
                         },
                         validNameTest: undefined,
                         sampleLenghtTest: 1,
-                        validNumberSamples: undefined,
+                        validNumberSamples: true,
                         activeTest: false,
                         validrequiredStatus: undefined,
                         selectedAttributes: [],
@@ -197,7 +193,7 @@ export default class AdminTests extends React.Component{
                         selectedTest: '',
                         validNameTest: undefined,
                         sampleLenghtTest: 1,
-                        validNumberSamples: undefined,
+                        validNumberSamples: true,
                         activeTest: false,
                         selectedAttributes: [],
                         selectedStatus: [],
@@ -276,7 +272,7 @@ export default class AdminTests extends React.Component{
                 selectedAttributes: [],
                 selectedStatus: [],
                 validNameTest: undefined,
-                validNumberSamples: undefined,
+                validNumberSamples: true,
             })
         } else {
             this.state.tests.forEach((value) => {
@@ -425,7 +421,7 @@ export default class AdminTests extends React.Component{
                 <SpinnerButton
                     ref='submitButton'
                     name='submitButton'
-                    text={(this.state.selectedTest !== 'Add test' ) ? 'Modify test' : 'Save test'}
+                    text={(this.state.selectedTest.id !== '0' ) ? 'Modify test' : 'Save test'}
                     titlePass='Form is ready'
                     titleNoPass='Form not ready'
                     type='submit'

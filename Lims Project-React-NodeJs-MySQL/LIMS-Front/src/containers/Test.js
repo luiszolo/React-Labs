@@ -176,7 +176,6 @@ export default class Test extends React.Component {
 
 	handleValidateSample(sample, idx){
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
-			console.log('here')
 			if(this.state.samples.length > 1){
 				this.handleMoveFormData(idx)
 				this.handleMoveSamplesData(idx)
@@ -207,8 +206,9 @@ export default class Test extends React.Component {
 			});
 			if(this.state.passedRepeatedSample === false) return;
 			// Validate Regex samples
+			console.log(sample.passRegex)
 			this.setState({
-				passedSamples: (sample.passRegex),
+				passedSamples: sample.passRegex,
 				passedRepeatedSample: true
 			});
 		}
@@ -229,8 +229,8 @@ export default class Test extends React.Component {
 		}
 
 		this.setState({
-			passedSamples: (this.state.passedSamples && sample.passValidation && (this.refs[`sample${idx + 1}`].state.warningText === ''))
-		},()=>{console.log(this.state.passedSamples)});
+			passedSamples: (sample.passValidation && (this.refs[`sample${idx + 1}`].state.warningText === ''))
+		});
 	}
 
 	handleSubmit(e) {
@@ -334,7 +334,7 @@ export default class Test extends React.Component {
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####'
-										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
+										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/} requiredStatus={this.props.testRequiredStatus}
 										validationURL={`http://localhost:4000/api/samples/find/`}
 										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ event => this.handleValidateSample(this.refs[`sample${idx + 1}`].state, idx) } 

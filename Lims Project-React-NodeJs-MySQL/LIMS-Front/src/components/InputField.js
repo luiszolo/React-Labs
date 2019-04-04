@@ -29,6 +29,7 @@ export default class InputField extends React.Component {
 
 	handleRegex() {
 		let regex = this.props.regex;
+
 		if (typeof(this.props.regex) == 'string') {
 			regex = new RegExp(this.props.regex, 'i');
 		}
@@ -65,8 +66,7 @@ export default class InputField extends React.Component {
 					passValidation: true
 				});
 				this.props.addToForm();
-			}
-			else {
+			} else {
 				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
 				.then( res => {
 					if (res.status === 200) {
@@ -76,18 +76,23 @@ export default class InputField extends React.Component {
 						});
 						if(this.props.addToForm) this.props.addToForm();
 					}
-				}).catch( err => {
-					console.log(err.response.data);
-					if (err.response.data.sample.state === 'New Sample') {
+				})
+				.catch( err => {
+					console.log(this.props.requiredStatus)
+					if (err.response.data.sample.state === this.props.requiredStatus) {
+						
 						this.setState({
 							passValidation: true,
 							warningText: ''
 						});
-					}else{
+						if(this.props.addToForm) this.props.addToForm();
+					} else {
 						this.setState({
 							passValidation: false,
 							warningText: 'Sample not ready for this test'
 						});
+						if(this.props.addToForm) 
+							this.props.addToForm();
 					}
 				});
 			}
@@ -149,7 +154,7 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
-			warningCssClassName
+			warningCssClassName,
 		} = this.props;
 
 		let validationIcon = <div></div>

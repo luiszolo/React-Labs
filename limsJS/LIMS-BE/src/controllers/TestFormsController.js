@@ -120,7 +120,7 @@ async function addSampleValues(test, attributes=null, samples) {
 				INSERT INTO SampleValue SET
 				sample_Id = ${sample},
 				test_Id = ${test},
-				attribute_Id = ${attr.id},
+				attribute_Id = ${attr.attrId},
 				value='${attr.value}'
 			`);
 			if (insert === false) {
