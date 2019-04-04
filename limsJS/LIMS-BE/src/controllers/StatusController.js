@@ -9,7 +9,6 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 async function addStatus(req, res) {
     const newStatus = req.body.status;
     const auxValidation = req.body.aux;
-    console.log(newStatus)
 
     const repeatStatus = await getStatus({
         params: {
@@ -23,18 +22,20 @@ async function addStatus(req, res) {
         }
         return;
     }
-    const insertion = await dbInteract.manipulateData(
-        `INSERT INTO State SET 
-        name='${newStatus.name.toUpperCase()}',
-        actived=${newStatus.actived}`
-    );
-    if (insertion === false) {
-        if (auxValidation) {
-            res.status(503).send({
-                message: 'Something is wrong in INSERT method'
-            });
+    if (auxValidation !== true) {
+        const insertion = await dbInteract.manipulateData(
+            `INSERT INTO State SET 
+            name='${newStatus.name.toUpperCase()}',
+            actived=${newStatus.actived}`
+        );
+        if (insertion === false) {
+            if (auxValidation) {
+                res.status(503).send({
+                    message: 'Something is wrong in INSERT method'
+                });
+            }
+            return;
         }
-        return;
     }
     if (auxValidation) {
         res.status(200).send({

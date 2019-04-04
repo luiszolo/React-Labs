@@ -50,7 +50,7 @@ async function getSample(req, res) {
             )
         }`);
     if (validateExistence === false ) return false;
-    let sampleInterpretation = validateExistence.result[0];
+    return validateExistence.result[0];
     // const lastState = await require('./StatusController').getStatus({
     //     params: {
     //         value: sampleInterpretation.state
@@ -58,8 +58,6 @@ async function getSample(req, res) {
     // });
 
     // sampleInterpretation.state = capitalizeWord(lastState.status.name);
-
-    return sampleInterpretation;
 }
 
 async function getSampleByBarcode(req, res) {

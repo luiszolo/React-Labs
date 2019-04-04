@@ -8,7 +8,6 @@ const validateSampleName = require('./../middlewares/regex').validateSampleName;
 
 async function addTest(req, res) {
     const newTest = req.body.test;
-    console.log(newTest)
 
     if (await getTest({
         params: {
@@ -76,7 +75,6 @@ async function addTest(req, res) {
         const requiredStateId = await dbInteract.isExists(
             `SELECT id FROM State WHERE name='${newTest.requiredState.toUpperCase()}'`
         );
-        console.log(requiredStateId)
         insertion = await dbInteract.manipulateData(
             `INSERT INTO Test SET
             name='${newTest.name.toUpperCase()}',
@@ -157,7 +155,6 @@ async function getTest(req, res) {
         }`);
     if (validateExistence === false) return false;
     let testInterpretation = validateExistence.result[0];
-
     testInterpretation.name = capitalizeWord(testInterpretation.name);
     testInterpretation.require_State = await require('./StatusController').getStatus({
         params: {
@@ -180,7 +177,6 @@ async function getTest(req, res) {
         WHERE TestStatus.test_Id=${testInterpretation.id} 
         AND TestStatus.result_State=State.id
     `);
-
     testInterpretation['result_States'] = testStatus.result.map((stt) => {
         return capitalizeWord(stt.name);
     });
@@ -266,7 +262,6 @@ async function getTestList(req, res) {
             WHERE TestStatus.test_Id=${testInterpretation.id} 
             AND TestStatus.result_State=State.id
         `);
-        console.log(testStatus.result, testInterpretation.name)
         testInterpretation['result_States'] = testStatus.result.map((stt) => {
             return capitalizeWord(stt.name);
         });
@@ -386,7 +381,7 @@ async function removeTest(req, res) {
     });
 }
 
-async function restoreProcess (testId, hasAttr=false, hasStatus=false) {
+async function restoreProcess (testId, hasAttr=false, hasStatus=false, hasUpdate=false) {
     if (hasAttr === true) {
         await dbInteract.manipulateData(
             `DELETE FROM TestAttributes WHERE test_Id=${testId}`
@@ -398,25 +393,34 @@ async function restoreProcess (testId, hasAttr=false, hasStatus=false) {
         );
     }
 
-    await dbInteract.manipulateData(
-        `DELETE FROM Test WHERE id=${testId}`
-    );
+    if (hasUpdate === false) {
+        await dbInteract.manipulateData(
+            `DELETE FROM Test WHERE id=${testId}`
+        );
+    }
 }
 
 async function updateTest(req, res) {
-    const id = req.params.id;
+    const id = +req.params.id;
     const newTest = req.body.test;
-    await restoreProcess(+id, hasAttr=true, hasStatus=true);
-
-    if (await getTest({
+    console.log(newTest)
+    const oldTest = await getTest({
         params: {
-            value: newTest.name
+            value: +id
         }
-    }, res) !== false) {
-        res.status(403).send({
-            message: 'The test is already exists'
-        });
-        return;
+    }, res);
+    if (oldTest.name !== newTest.name) {
+        const newInput = await getTest({
+            params: {
+                value: newTest.name
+            }
+        }, res);
+        if (newInput === false) {
+            res.status(403).send({
+                message: 'The test is already exists'
+            });
+            return;
+        }
     }
 
     if (newTest.samplesLength <= 0) {
@@ -463,25 +467,26 @@ async function updateTest(req, res) {
 
     if (newTest.requiredState === undefined) {
         insertion = await dbInteract.manipulateData(
-            `INSERT INTO Test SET
+            `UPDATE Test SET
             name='${newTest.name.toUpperCase()}',
             samplesLength=${newTest.samplesLength},
             require_State=${null},
             initial_State=${initialStateId.result[0].id},
-            actived=${newTest.actived}`
+            actived=${newTest.actived}
+            WHERE id = ${id}`
         );
     } else {
         const requiredStateId = await dbInteract.isExists(
             `SELECT id FROM State WHERE name='${newTest.requiredState.toUpperCase()}'`
         );
-        console.log(requiredStateId)
         insertion = await dbInteract.manipulateData(
-            `INSERT INTO Test SET
+            `UPDATE Test SET
             name='${newTest.name.toUpperCase()}',
             samplesLength=${newTest.samplesLength},
             require_State=${requiredStateId.result[0].id},
             initial_State=${initialStateId.result[0].id},
-            actived=${newTest.actived}`
+            actived=${newTest.actived}
+            WHERE id = ${id}`
         );
     }
 
@@ -491,12 +496,7 @@ async function updateTest(req, res) {
         });
         return;
     }
-
-    const testId = await dbInteract.isExists(
-        `SELECT * FROM Test 
-        WHERE name='${newTest.name.toUpperCase()}'`
-    );
-
+    await restoreProcess(+id, hasAttr=true, hasStatus=true, hasUpdate=true);
     if (newTest.attributes !== undefined) {
         for await (const attr of newTest.attributes) {
             const validateExistence =  await dbInteract.isExists(
@@ -524,7 +524,7 @@ async function updateTest(req, res) {
             `SELECT id FROM State WHERE name='${postStatus.toUpperCase()}'`
         );
         if (postStatusId === false) {
-            await restoreProcess(testId, hasAttr=(newTest.attributes !== undefined), hasStatus=true)
+            await restoreProcess(id, hasAttr=(newTest.attributes !== undefined), hasStatus=true)
             res.status(403).send({
                 message: `Error saving the new test: 
                 status ${postStatus.toUpperCase()} doesn't exists`
@@ -532,7 +532,7 @@ async function updateTest(req, res) {
             return;
         }
         await dbInteract.manipulateData(`INSERT INTO TestStatus SET
-            test_Id=${testId.result[0].id},
+            test_Id=${id},
             result_State=${postStatusId.result[0].id}`
         );
     }
