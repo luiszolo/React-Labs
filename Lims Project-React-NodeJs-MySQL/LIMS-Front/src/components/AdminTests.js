@@ -284,7 +284,7 @@ export default class AdminTests extends React.Component{
                         activeTest: value.actived === 1 ? true : false,
                         selectedRequiredStatus: value.require_State,
                         selectedAttributes: value.attributes !== undefined ? value.attributes.map((att=>{return att.name}) ) : [],
-                        selectedStatus: value.result_States.map((status) => {return status}),
+                        selectedStatus: value.result_States !== undefined ? value.result_States.map((status) => {return status}) : [],
                         validNameTest: true,
                         validNumberSamples: true,
                     })
@@ -385,7 +385,9 @@ export default class AdminTests extends React.Component{
                             placeholder="availableStatus"
                         >
                         {requiredStatus.map((option) => {
-                            return <option key={option.name} value={option.name}>{option.name}</option>
+                            if(option.actived === 1){
+                                return <option key={option.name} value={option.name}>{option.name}</option>
+                            }
                         })}
                         </select>
                     <label className={warningLabels}></label>
