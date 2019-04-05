@@ -17,14 +17,13 @@ export default class AdminTests extends React.Component{
             selectedTest: '',
             nameTest: '',
             messageName: '',
+            validNameTest: undefined,
             sampleLenghtTest: 1,
             messageNumberSamples: '',
+            validNumberSamples: true,
             activeTest: true,
             requiredStatus: [],
-            validNameTest: undefined,
-            validNumberSamples: true,
             selectedRequiredStatus: 'New Sample',
-            postStatus: '',
         }
 
         this.handleSelectStatus = this.handleSelectStatus.bind(this);
@@ -36,8 +35,8 @@ export default class AdminTests extends React.Component{
         this.handleselectedRequiredStatus = this.handleselectedRequiredStatus.bind(this);
         this.handleSubmitTest = this.handleSubmitTest.bind(this);
         this.handleNameTest = this.handleNameTest.bind(this);
-        this.renderFormTest = this.renderFormTest.bind(this);
-        this.renderSelectTest = this.renderSelectTest.bind(this);
+        this.renderTestForm = this.renderTestForm.bind(this);
+        this.renderTestList = this.renderTestList.bind(this);
     }
 
     componentDidMount() {
@@ -159,7 +158,7 @@ export default class AdminTests extends React.Component{
                         validNameTest: undefined,
                         sampleLenghtTest: 1,
                         validNumberSamples: true,
-                        activeTest: false,
+                        activeTest: true,
                         validrequiredStatus: undefined,
                         selectedAttributes: [],
                         selectedStatus: [],
@@ -195,7 +194,7 @@ export default class AdminTests extends React.Component{
                         validNameTest: undefined,
                         sampleLenghtTest: 1,
                         validNumberSamples: true,
-                        activeTest: false,
+                        activeTest: true,
                         selectedAttributes: [],
                         selectedStatus: [],
                     })
@@ -209,10 +208,9 @@ export default class AdminTests extends React.Component{
 
     handleSelectStatus(e){
         const status = e.target.textContent
+        const exists = selectedStatus.filter((item)=> {return item === status})
 
         let selectedStatus = this.state.selectedStatus
-
-        const exists = selectedStatus.filter((item)=> {return item === status})
         
         if(exists.length !== 1){
             selectedStatus.push(status)
@@ -235,10 +233,10 @@ export default class AdminTests extends React.Component{
 
     handleSelectAttribute(e){
         const attribute = e.target.textContent
+        const exists = selectedAttributes.filter((item)=> {return item === attribute})
 
         let selectedAttributes = this.state.selectedAttributes
 
-        const exists = selectedAttributes.filter((item)=> {return item === attribute})
         if(exists.length !== 1){
             selectedAttributes.push(attribute)
             this.setState({
@@ -293,10 +291,9 @@ export default class AdminTests extends React.Component{
 
             })
         }
-
     }
 
-    renderSelectTest(){
+    renderTestList(){
         return(
             <SelectableTable
                 cssCLassName={'col-lg-8 col-xl-8 col-md-12 col-sm-12'}
@@ -312,7 +309,7 @@ export default class AdminTests extends React.Component{
         )
     }
 
-    renderFormTest(){
+    renderTestForm(){
         const {
             state: {
                 requiredStatus,
@@ -390,7 +387,6 @@ export default class AdminTests extends React.Component{
                             }
                         })}
                         </select>
-                    <label className={warningLabels}></label>
                 </div>
                 <div className='row'>
                     <SelectableTable
@@ -438,7 +434,7 @@ export default class AdminTests extends React.Component{
             {(this.state.selectedTest !=='') ? <button className='btn btn-info float-left' onClick={()=>this.setState({selectedTest: ''})}>{'<-Back'}</button> : ''}
                 <h1 className='text-center'>Tests</h1>
             </div>
-            {(this.state.selectedTest !== '') ? this.renderFormTest() : this.renderSelectTest()}
+            {(this.state.selectedTest !== '') ? this.renderTestForm() : this.renderTestList()}
         </div>)
     }
 }

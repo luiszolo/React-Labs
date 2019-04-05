@@ -6,6 +6,7 @@ export default class SelectableTable extends React.Component {
         let cssListItem = 'selectable mt-1 p-1 rounded'
         let cssSelectedListItem = 'selected mt-1 p-1 rounded'
         let cssDisabledListItem = this.props.selectDisabled ? cssListItem.concat(' inactive') : cssListItem.concat(' inactive disabled')
+        let cssDisabledSelectedListItem = cssSelectedListItem.concat(' inactive')
 
         return(<div className={cssClassName}>
         <h3 className='header'>{this.props.header}</h3>
@@ -14,7 +15,7 @@ export default class SelectableTable extends React.Component {
             const exists = (this.props.multipleSelect && this.props.selected !== undefined) ? this.props.selected.filter((item)=> {return item === option.name}) : '1'
             
             if(exists[0] === option.name || this.props.selected.name === option.name){
-                return <li id={option.id} className={option.actived === 1 ? cssSelectedListItem : cssDisabledListItem} name={option.actived} key={option.id} onClick={this.props.handleSelectItem} label={option.name}>{option.name}</li>
+                return <li id={option.id} className={option.actived === 1 ? cssSelectedListItem : cssDisabledSelectedListItem} name={option.actived} key={option.id} onClick={this.props.handleSelectItem} label={option.name}>{option.name}</li>
             } else {
                 return <li id={option.id} className={option.actived === 1 ? cssListItem : cssDisabledListItem} name={option.actived} key={option.id} onClick={this.props.handleSelectItem} label={option.name}>{option.name}</li>
             }

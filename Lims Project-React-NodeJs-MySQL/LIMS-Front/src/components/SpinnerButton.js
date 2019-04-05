@@ -19,10 +19,10 @@ export default class SpinnerButton extends React.Component {
 	}
 
 	render(){
-		let cssClasses = 'col-lg-3 col-sm-10 text-center col-md-6 mt-3'
+		let cssClasses = 'col-lg-4 col-sm-10 text-center col-md-6 mt-3'
 		
 		if (this.state.pass) {
-			cssClasses = cssClasses.concat(cssClasses, ' text-success');
+			cssClasses = cssClasses.concat(' text-success');
 		} else {
 			cssClasses = cssClasses.replace(' text-success', '');
 		}
