@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+import SelectableTable from './SelectableTable';
 import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminAtrributes extends React.Component{
@@ -214,19 +215,17 @@ export default class AdminAtrributes extends React.Component{
                 <div className='col-sm-12 m-4'>
                     <h1 className='text-center'>Add attributes</h1>
                 </div>
-                <div className='col-lg-4 col-xl-4 col-md-12 col-sm-12 attributes rounded-right'>
-                    <h3 className='header'>Attributes</h3>
-                    <ul>
-                    {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
-                        
-                        if(this.state.selectedAttribute.name !== attribute.name){
-                            return <li id={attribute.id} className={attribute.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                        } else {
-                            return <li id={attribute.id} className={attribute.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                        }
-                    }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
-                    </ul>
-                </div>
+                <SelectableTable
+                    cssCLassName={'col-lg-4 col-xl-4 col-md-12 col-sm-12'}
+                    selectDisabled={true}
+                    header={'Available attributes'}
+                    type={'attribute'}
+                    addNew={false}
+                    content={this.state.availableAttributes}
+                    multipleSelect={false}
+                    selected={this.state.selectedAttribute}
+                    handleSelectItem={this.handleSelectAttribute}
+                />
                 <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
                     <form onSubmit={this.handleSubmitAttribute}>
                         <div className='row justify-content-center form-inline mb-3'>

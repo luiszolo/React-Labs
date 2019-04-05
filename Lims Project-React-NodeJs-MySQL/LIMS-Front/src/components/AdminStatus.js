@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+import SelectableTable from './SelectableTable';
 import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminStatus extends React.Component{
@@ -171,18 +172,17 @@ export default class AdminStatus extends React.Component{
                 <div className='col-sm-12 m-4'>
                     <h1 className='text-center'>Status</h1>
                 </div>
-                <div className='col-lg-4 col-xl-4 col-md-12 col-sm-12 status rounded-right'>
-                    <h3 className='header'>Available status</h3>
-                    <ul>
-                        {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
-                            if(this.state.selectedStatus.name !== status.name){
-                                return <li id={status.id} className={status.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
-                            } else {
-                                return <li id={status.id} className={status.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
-                            }
-                        }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
-                    </ul>
-                </div>
+                <SelectableTable
+                    cssCLassName={'col-lg-4 col-xl-4 col-md-12 col-sm-12'}
+                    selectDisabled={true}
+                    header={'Available status'}
+                    type={'status'}
+                    addNew={false}
+                    content={this.state.availableStatus}
+                    multipleSelect={false}
+                    selected={this.state.selectedStatus}
+                    handleSelectItem={this.handleSelectStatus}
+                />
                 <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
                     <form onSubmit={this.handleSubmitStatus}>
                         <div className='justify-content-center form-inline mb-3'>

@@ -298,11 +298,14 @@ export default class AdminTests extends React.Component{
 
     renderSelectTest(){
         return(
-            <SelectableTable 
-                selectDisable={false}
+            <SelectableTable
+                cssCLassName={'col-lg-8 col-xl-8 col-md-12 col-sm-12'}
+                selectDisabled={true}
                 header={'Tests'}
-                type={'tests'}
+                type={'test'}
+                addNew={true}
                 content={this.state.tests}
+                multipleSelect={false}
                 selected={this.state.selectedTest}
                 handleSelectItem={this.handleSelectTest}
             />
@@ -390,33 +393,29 @@ export default class AdminTests extends React.Component{
                     <label className={warningLabels}></label>
                 </div>
                 <div className='row'>
-                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 status rounded-left p-1'>
-                        <h3 className='header'>Post-status</h3>
-                        <ul>
-                        {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
-                            const exists = this.state.selectedStatus.filter((item)=> {return item === status.name})
-                            if(exists.length !== 1){
-                                return <li className={status.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive disabled'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
-                            } else {
-                                return <li className={status.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={status.name} key={status.id} onClick={this.handleSelectStatus} label={status.name}>{status.name}</li>
-                            }
-                        }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
-                        </ul>
-                    </div>
+                    <SelectableTable
+                        cssCLassName={'col-md-12 col-sm-12 col-lg-5 col-xl-5'}
+                        selectDisabled={false}
+                        header={'Post-status'}
+                        type={'status'}
+                        addNew={false}
+                        multipleSelect={true}
+                        content={this.state.availableStatus}
+                        selected={this.state.selectedStatus}
+                        handleSelectItem={this.handleSelectStatus}
+                    />
                     <div className='col-md-12 col-sm-12 col-lg-2 col-xl-2'></div>
-                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 attributes rounded-right p-1'>
-                        <h3 className='header'>Attributes</h3>
-                        <ul>
-                        {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
-                            const exists = this.state.selectedAttributes.filter((item)=> {return item === attribute.name})
-                            if(exists.length !== 1){
-                                return <li className={attribute.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive disabled'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                            } else {
-                                return <li className={attribute.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                            }
-                        }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
-                        </ul>
-                    </div>
+                    <SelectableTable
+                        cssCLassName={'col-md-12 col-sm-12 col-lg-5 col-xl-5'}
+                        selectDisabled={false}
+                        header={'Attributes'}
+                        type={'attribute'}
+                        addNew={false}
+                        multipleSelect={true}
+                        content={this.state.availableAttributes}
+                        selected={this.state.selectedAttributes}
+                        handleSelectItem={this.handleSelectAttribute}
+                    />
                 </div>
                 <SpinnerButton
                     ref='submitButton'
