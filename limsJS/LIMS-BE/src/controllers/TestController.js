@@ -177,10 +177,11 @@ async function getTest(req, res) {
         WHERE TestStatus.test_Id=${testInterpretation.id} 
         AND TestStatus.result_State=State.id
     `);
-    testInterpretation['result_States'] = testStatus.result.map((stt) => {
-        return capitalizeWord(stt.name);
-    });
-
+    if (testStatus !== false) {
+        testInterpretation['result_States'] = testStatus.result.map((stt) => {
+            return capitalizeWord(stt.name);
+        });
+    }
     const testAttributes = await dbInteract.isExists(`
         SELECT * 
         FROM Attribute, TestAttributes 
@@ -262,9 +263,11 @@ async function getTestList(req, res) {
             WHERE TestStatus.test_Id=${testInterpretation.id} 
             AND TestStatus.result_State=State.id
         `);
-        testInterpretation['result_States'] = testStatus.result.map((stt) => {
-            return capitalizeWord(stt.name);
-        });
+        if (testStatus !== false) {
+            testInterpretation['result_States'] = testStatus.result.map((stt) => {
+                return capitalizeWord(stt.name);
+            });
+        }
 
         const testAttributes = await dbInteract.isExists(`
             SELECT * 
@@ -340,8 +343,6 @@ async function getTestList(req, res) {
             }
         }
     }
-
-
 
     res.status(200).send({
         tests: {

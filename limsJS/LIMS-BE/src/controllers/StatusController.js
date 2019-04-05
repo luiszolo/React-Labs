@@ -22,21 +22,20 @@ async function addStatus(req, res) {
         }
         return;
     }
-    if (auxValidation !== true) {
-        const insertion = await dbInteract.manipulateData(
-            `INSERT INTO State SET 
-            name='${newStatus.name.toUpperCase()}',
-            actived=${newStatus.actived}`
-        );
-        if (insertion === false) {
-            if (auxValidation) {
-                res.status(503).send({
-                    message: 'Something is wrong in INSERT method'
-                });
-            }
-            return;
+    const insertion = await dbInteract.manipulateData(
+        `INSERT INTO State SET 
+        name='${newStatus.name.toUpperCase()}',
+        actived=${newStatus.actived}`
+    );
+    if (insertion === false) {
+        if (auxValidation) {
+            res.status(503).send({
+                message: 'Something is wrong in INSERT method'
+            });
         }
+        return;
     }
+    
     if (auxValidation) {
         res.status(200).send({
             message: 'Insertion completed'
