@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+import SelectableTable from './SelectableTable';
 import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminTests extends React.Component{
@@ -263,7 +264,7 @@ export default class AdminTests extends React.Component{
             name: e.target.textContent
         }
 
-        if (test.name === 'Add test'){
+        if (test.id === '0'){
             this.setState({
                 selectedTest: test,
                 nameTest: '',
@@ -296,19 +297,15 @@ export default class AdminTests extends React.Component{
     }
 
     renderSelectTest(){
-        return(<div className='col-lg-8 col-xl-8 col-md-12 col-sm-12 status rounded p-1'>
-            <h3 className='header'>Tests</h3>
-            <ul>
-            <li id='0' className='selectable mt-1 p-1 rounded' onClick={this.handleSelectTest}>Add test</li>
-            {(this.state.tests.length > 0) ? this.state.tests.map((test) => {
-                if(this.state.selectedTest !== test.name){
-                    return <li id={test.id} className={test.actived === 1 ? 'selectable mt-1 p-1 rounded' : 'selectable mt-1 p-1 rounded inactive'} name={test.actived} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
-                } else {
-                    return <li id={test.id} className={test.actived === 1 ? 'selected mt-1 p-1 rounded' : 'selected mt-1 p-1 rounded inactive'} name={test.actived} key={test.id} onClick={this.handleSelectTest} label={test.name}>{test.name}</li>
-                }
-            }) : ''}
-            </ul>
-            </div>
+        return(
+            <SelectableTable 
+                selectDisable={false}
+                header={'Tests'}
+                type={'tests'}
+                content={this.state.tests}
+                selected={this.state.selectedTest}
+                handleSelectItem={this.handleSelectTest}
+            />
         )
     }
 
@@ -328,7 +325,7 @@ export default class AdminTests extends React.Component{
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
-        return(<div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
+        return(<div className='col-lg-12 col-xl-12 col-md-12 col-sm-12'>
                 <form onSubmit={this.handleSubmitTest}>
                     <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Name:</label>
@@ -393,7 +390,7 @@ export default class AdminTests extends React.Component{
                     <label className={warningLabels}></label>
                 </div>
                 <div className='row'>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 status rounded-left p-1'>
+                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 status rounded-left p-1'>
                         <h3 className='header'>Post-status</h3>
                         <ul>
                         {(this.state.availableStatus.length > 0) ? this.state.availableStatus.map((status) => {
@@ -406,7 +403,8 @@ export default class AdminTests extends React.Component{
                         }) : <li className='selectable mt-1 p-1 rounded'>No available status</li>}
                         </ul>
                     </div>
-                    <div className='col-md-12 col-sm-12 col-lg-6 col-xl-6 attributes rounded-right p-1'>
+                    <div className='col-md-12 col-sm-12 col-lg-2 col-xl-2'></div>
+                    <div className='col-md-12 col-sm-12 col-lg-5 col-xl-5 attributes rounded-right p-1'>
                         <h3 className='header'>Attributes</h3>
                         <ul>
                         {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
@@ -436,7 +434,7 @@ export default class AdminTests extends React.Component{
     }
     
     render(){
-        return(<div className='content row justify-content-center m-0'>
+        return(<div className='row content justify-content-center m-0'>
             <div className='col-sm-12 mt-4 mb-4'>
             {(this.state.selectedTest !=='') ? <button className='btn btn-info float-left' onClick={()=>this.setState({selectedTest: ''})}>{'<-Back'}</button> : ''}
                 <h1 className='text-center'>Tests</h1>

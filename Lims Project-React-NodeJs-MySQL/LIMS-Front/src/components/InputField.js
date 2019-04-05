@@ -70,7 +70,7 @@ export default class InputField extends React.Component {
 				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
 				.then( res => {
 					console.log(res)
-					const requiredStatus = this.props.requiredStatus !== undefined ? res.data.sample.state == this.props.requiredStatus.toUpperCase() : true
+					const requiredStatus = this.props.requiredStatus !== undefined ? res.data.sample.state === this.props.requiredStatus.toUpperCase() : true
 					if (res.status === 200 && requiredStatus) {
 						this.setState({
 							passValidation: true,

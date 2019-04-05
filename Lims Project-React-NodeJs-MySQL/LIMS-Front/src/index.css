@@ -64,7 +64,7 @@ button[disabled] {
 	padding: 0 !important;
 }
 
-.status, .attributes{
+.status, .attributes, .selectableList{
 	border: 2px solid #ced4da ;
 }
 
