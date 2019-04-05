@@ -416,7 +416,9 @@ async function updateTest(req, res) {
                 value: newTest.name
             }
         }, res);
-        if (newInput === false) {
+
+        console.log(`Old: ${oldTest.name}`, `New: ${newInput}`)
+        if (newInput !== false) {
             res.status(403).send({
                 message: 'The test is already exists'
             });
