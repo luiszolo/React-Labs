@@ -516,7 +516,7 @@ async function updateTest(req, res) {
                 return;
             }
             await dbInteract.manipulateData(`INSERT INTO TestAttributes SET 
-                test_Id=${testId.result[0].id},
+                test_Id=${id},
                 attribute_Id=${validateExistence.result[0].id}`
             );
         }
