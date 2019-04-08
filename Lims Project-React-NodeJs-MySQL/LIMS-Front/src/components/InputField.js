@@ -69,8 +69,8 @@ export default class InputField extends React.Component {
 			} else {
 				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
 				.then( res => {
-					console.log(res)
-					const requiredStatus = this.props.requiredStatus !== undefined ? res.data.sample.state === this.props.requiredStatus.toUpperCase() : true
+					
+					const requiredStatus = this.props.requiredStatus !== undefined ? res.data.sample.state.toUpperCase() === this.props.requiredStatus.toUpperCase() : true
 
 					if (res.status === 200 && requiredStatus) {
 						this.setState({
@@ -87,19 +87,22 @@ export default class InputField extends React.Component {
 					if(this.props.addToForm) this.props.addToForm();
 				})
 				.catch( err => {
-					console.log(err)
-					if (err.response.data.sample.state === this.props.requiredStatus) {
-						this.setState({
-							passValidation: true,
-							warningText: ''
-						});
-						if(this.props.addToForm) this.props.addToForm();
+					if(err.response.data.sample.state !== undefined){
+						if (err.response.data.sample.state === this.props.requiredStatus) {
+							this.setState({
+								passValidation: true,
+								warningText: ''
+							});
+							if(this.props.addToForm) this.props.addToForm();
+						} else {
+							this.setState({
+								passValidation: false,
+								warningText: 'Sample not ready for this test'
+							});
+							if(this.props.addToForm) this.props.addToForm();
+						}
 					} else {
-						this.setState({
-							passValidation: false,
-							warningText: 'Sample not ready for this test'
-						});
-						if(this.props.addToForm) this.props.addToForm();
+						console.log(err)
 					}
 				});
 			}
