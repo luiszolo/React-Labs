@@ -208,10 +208,10 @@ export default class AdminTests extends React.Component{
 
     handleSelectStatus(e){
         const status = e.target.textContent
-        const exists = selectedStatus.filter((item)=> {return item === status})
 
         let selectedStatus = this.state.selectedStatus
-        
+        const exists = selectedStatus.filter((item)=> {return item === status})
+
         if(exists.length !== 1){
             selectedStatus.push(status)
             this.setState({
@@ -233,9 +233,9 @@ export default class AdminTests extends React.Component{
 
     handleSelectAttribute(e){
         const attribute = e.target.textContent
-        const exists = selectedAttributes.filter((item)=> {return item === attribute})
 
         let selectedAttributes = this.state.selectedAttributes
+        const exists = selectedAttributes.filter((item)=> {return item === attribute})
 
         if(exists.length !== 1){
             selectedAttributes.push(attribute)
@@ -384,6 +384,8 @@ export default class AdminTests extends React.Component{
                         {requiredStatus.map((option) => {
                             if(option.actived === 1){
                                 return <option key={option.name} value={option.name}>{option.name}</option>
+                            } else {
+                                return ''
                             }
                         })}
                         </select>

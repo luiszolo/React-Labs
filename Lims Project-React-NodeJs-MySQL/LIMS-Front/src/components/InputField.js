@@ -71,6 +71,7 @@ export default class InputField extends React.Component {
 				.then( res => {
 					console.log(res)
 					const requiredStatus = this.props.requiredStatus !== undefined ? res.data.sample.state === this.props.requiredStatus.toUpperCase() : true
+
 					if (res.status === 200 && requiredStatus) {
 						this.setState({
 							passValidation: true,
@@ -83,6 +84,7 @@ export default class InputField extends React.Component {
 							warningText: 'Sample not ready for this test'
 						});
 					}
+					if(this.props.addToForm) this.props.addToForm();
 				})
 				.catch( err => {
 					console.log(err)
@@ -97,12 +99,11 @@ export default class InputField extends React.Component {
 							passValidation: false,
 							warningText: 'Sample not ready for this test'
 						});
-						if(this.props.addToForm) 
-							this.props.addToForm();
+						if(this.props.addToForm) this.props.addToForm();
 					}
 				});
 			}
-		} else return false;
+		} else return false
 	}
 
 	handleUserInput(e) {
@@ -117,8 +118,7 @@ export default class InputField extends React.Component {
 			this.setState({
 				focused: true
 			});
-		}
-		else {
+		} else {
 			this.setState({
 				focused: !this.state.focused
 			});
