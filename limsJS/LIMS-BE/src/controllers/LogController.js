@@ -127,6 +127,7 @@ async function getLogsBySample(req, res) {
     if (testAttributes !== false) {
         for await (const result of testAttributes.result) {
             result['Test'] = capitalizeWord(result['Test']);
+            result['Attribute'] = capitalizeWord(result['Attribute']);
         }
     }
 
@@ -135,8 +136,6 @@ async function getLogsBySample(req, res) {
         Attributes: testAttributes.result
     });
 }
-
-
 
 module.exports = {
     addLog: addLog,
