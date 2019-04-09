@@ -343,7 +343,6 @@ export default class Test extends React.Component {
 											});
 											return this.refs[`sample${ idx + 1}`].state.prevPassed;
 										} : false) }
-										
 									/>
 									
 								))
