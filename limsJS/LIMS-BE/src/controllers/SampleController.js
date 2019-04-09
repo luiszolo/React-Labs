@@ -76,10 +76,10 @@ async function getSampleByBarcode(req, res) {
         return;
     }
     const lastLog = await dbInteract.isExists(
-        `SELECT State.name 
+        `SELECT State.name AS 'State'
         FROM Log, State 
         WHERE Log.status_Id=State.id AND 
-        Log.sample_Id=${searchMethod.id} GROUP BY Log.onCreated ORDER BY Log.id DESC`);
+        Log.sample_Id=${searchMethod.id} ORDER BY Log.id DESC`);
     searchMethod['state'] = lastLog.result
     console.log(searchMethod)
     res.status(200).send({

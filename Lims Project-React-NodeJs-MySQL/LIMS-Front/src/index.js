@@ -37,10 +37,14 @@ class App extends React.Component {
 		let app = ['Home'].concat(this.state.tests.map((e) => e['name']))
 		.concat('Generate Report', 'Admin Site');
 
-		let components = [(<Home key={'Home'}/>)].concat(this.state.tests.map((e) => (
+		let components = [(<Home key={'Home'}/>)].concat(this.state.tests.map((e) => {
+            const status = {
+                current: e.initial_State,
+                required: e.require_State
+            }
             
-			<Test key={e.name} name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testRequiredStatus={e.require_State}/>
-		))).concat(<Report key={'Report'}/>, <Admin key={'Admin'}/>);
+			return (<Test key={e.name} name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testStatus={status}/>)
+		})).concat(<Report key={'Report'}/>, <Admin key={'Admin'}/>);
         return(<div>
             <header className='container-fluid bg-info fixed-top'></header>
 			<Navbar>
