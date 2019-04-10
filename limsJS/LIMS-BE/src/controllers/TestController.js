@@ -325,9 +325,11 @@ async function getTestList(req, res) {
                 AND TestStatus.result_State=State.id
             `);
 
-            testInterpretation['result_States'] = testStatus.result.map((stt) => {
-                return capitalizeWord(stt.name);
-            });
+            if (testStatus !== false) {
+                testInterpretation['result_States'] = testStatus.result.map((stt) => {
+                    return capitalizeWord(stt.name);
+                });
+            }
 
             const testAttributes = await dbInteract.isExists(`
                 SELECT * 
@@ -508,7 +510,7 @@ async function updateTest(req, res) {
                 AND actived=1`
             );
             if (validateExistence === false) {
-                await restoreProcess(testId, hasAttr=true)
+                await restoreProcess(+id, hasAttr=false, hasStatus=false, hasUpdate=true)
                 res.status(403).send({
                     message: `Error saving the new test: ${attr.toUpperCase()} 
                     doesn't exists`
@@ -527,7 +529,7 @@ async function updateTest(req, res) {
             `SELECT id FROM State WHERE name='${postStatus.toUpperCase()}'`
         );
         if (postStatusId === false) {
-            await restoreProcess(id, hasAttr=(newTest.attributes !== undefined), hasStatus=true)
+            await restoreProcess(id, hasAttr=(newTest.attributes !== undefined), hasStatus=true, hasUpdate=true)
             res.status(403).send({
                 message: `Error saving the new test: 
                 status ${postStatus.toUpperCase()} doesn't exists`

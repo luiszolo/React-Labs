@@ -69,12 +69,19 @@ export default class InputField extends React.Component {
 			} else {
 				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
 				.then( res => {
-					const sampleStates = res.data.sample !== undefined ? res.data.sample.state.filter((state) => {return state.State.toUpperCase() !== 'new sample'.toUpperCase()}) : true
-					const passedTest = this.props.testStatus !== undefined ? sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.current.toUpperCase()}) : true
-					const requiredTest = this.props.testStatus !== undefined ? sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.required.toUpperCase()}) : true
-					const passedValidation = (!(passedTest.length > 0) && requiredTest.length > 0) || this.props.testStatus === undefined ? true : false
+					const passedValidation = ()=> {
+						if (this.props.testStatus !== undefined){
+							const sampleStates = res.data.sample.state.filter((state) => {return state.State.toUpperCase() !== 'new sample'.toUpperCase()})
+							const passedTest = sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.current.toUpperCase()})
+							const requiredTest = sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.required.toUpperCase()})
 
-					if (res.status === 200 && passedValidation) {
+							return !(passedTest.length > 0) && requiredTest.length > 0 ? true : false
+						} else {
+							return true
+						}
+					}
+
+					if (res.status === 200 && passedValidation()) {
 						this.setState({
 							passValidation: true,
 							warningText: ''
