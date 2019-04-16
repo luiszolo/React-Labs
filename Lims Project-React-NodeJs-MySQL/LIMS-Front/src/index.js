@@ -11,6 +11,7 @@ import Test from './containers/Test';
 import './index.css';
 
 import Admin from './containers/Admin';
+import axios from 'axios';
 
 
 class App extends React.Component {
@@ -23,12 +24,12 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        fetch('http://10.2.1.94:4000/api/tests/?actived=true')
-            .then(res => res.json()) 
-            .then(data=> this.setState({ //Saving the tests in 'tests' state
-                tests: data.Tests
+        axios.get('http://localhost:4000/api/tests/by')
+            .then(res => {
+                this.setState({
+                    tests: res.data.tests.actived
+                });
             })
-        );
     }
 
     //Render function for the app
@@ -36,17 +37,21 @@ class App extends React.Component {
 		let app = ['Home'].concat(this.state.tests.map((e) => e['name']))
 		.concat('Generate Report', 'Admin Site');
 
-		let components = [(<Home/>)].concat(this.state.tests.map((e) => (
-			<Test key={e.name}name={e.name} samplesLength={e.samplesLength} attributes={e.attributes}/>
-		))).concat(<Report/>, <Admin/>);
-
+		let components = [(<Home key={'Home'}/>)].concat(this.state.tests.map((e) => {
+            const status = {
+                current: e.initial_State,
+                required: e.require_State
+            }
+            
+			return (<Test key={e.name} name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testStatus={status}/>)
+		})).concat(<Report key={'Report'}/>, <Admin key={'Admin'}/>);
         return(<div>
             <header className='container-fluid bg-info fixed-top'></header>
 			<Navbar>
 			{
 				app.map((test, i) => {
 					return (
-						<div label={test}>
+						<div key={i} label={test}>
 							{
 								components.map((comp, j) => i === j ? comp : null)
 							}

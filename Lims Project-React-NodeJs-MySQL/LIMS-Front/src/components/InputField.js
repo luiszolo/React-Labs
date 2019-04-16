@@ -29,6 +29,7 @@ export default class InputField extends React.Component {
 
 	handleRegex() {
 		let regex = this.props.regex;
+
 		if (typeof(this.props.regex) == 'string') {
 			regex = new RegExp(this.props.regex, 'i');
 		}
@@ -65,30 +66,56 @@ export default class InputField extends React.Component {
 					passValidation: true
 				});
 				this.props.addToForm();
-			}
-			else {
-				Axios.get(this.props.validationURL.concat(`${this.state.input}`)).then( res => {
-					if (res.data.message) {
-						this.setState({
-							passValidation: false,
-							warningText: res.data.message
-						});
-					} else {
+			} else {
+				Axios.get(this.props.validationURL.concat(`${this.state.input}`))
+				.then( res => {
+					const passedValidation = ()=> {
+						if (this.props.testStatus !== undefined){
+							const sampleStates = res.data.sample.state.filter((state) => {return state.State.toUpperCase() !== 'new sample'.toUpperCase()})
+							const passedTest = sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.current.toUpperCase()})
+							const requiredTest = sampleStates.filter((state) => {return state.State.toUpperCase() === this.props.testStatus.required.toUpperCase()})
+
+							return !(passedTest.length > 0) && requiredTest.length > 0 ? true : false
+						} else {
+							return true
+						}
+					}
+
+					if (res.status === 200 && passedValidation()) {
 						this.setState({
 							passValidation: true,
 							warningText: ''
 						});
 						if(this.props.addToForm) this.props.addToForm();
+					} else {
+						this.setState({
+							passValidation: false,
+							warningText: 'Sample not ready for this test'
+						});
 					}
-				}).catch( err => {
-					console.log(err);
-					this.setState({
-						passValidation: false,
-						warningText: 'Server connection timed out'
-					});
+					if(this.props.addToForm) this.props.addToForm();
+				})
+				.catch( err => {
+					if(err.response.data.sample.state !== undefined){
+						if (err.response.data.sample.state.toUpperCase() === this.props.testStatus.required.toUpperCase()) {
+							this.setState({
+								passValidation: true,
+								warningText: ''
+							});
+							if(this.props.addToForm) this.props.addToForm();
+						} else {
+							this.setState({
+								passValidation: false,
+								warningText: 'Sample not ready for this test'
+							});
+							if(this.props.addToForm) this.props.addToForm();
+						}
+					} else {
+						console.log(err)
+					}
 				});
 			}
-		} else return false;
+		} else return false
 	}
 
 	handleUserInput(e) {
@@ -103,8 +130,7 @@ export default class InputField extends React.Component {
 			this.setState({
 				focused: true
 			});
-		}
-		else {
+		} else {
 			this.setState({
 				focused: !this.state.focused
 			});
@@ -146,7 +172,7 @@ export default class InputField extends React.Component {
 			name,
 			placeholder,
 			required,
-			warningCssClassName
+			warningCssClassName,
 		} = this.props;
 
 		let validationIcon = <div></div>

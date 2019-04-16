@@ -5,6 +5,11 @@ body{
 	min-height: 100vh;
 }
 
+.inactive{
+	color: #6c757d;
+	text-decoration:line-through
+}
+
 .activeButton{
 	background-color: white;
 }
@@ -16,6 +21,11 @@ body{
 .correctIcon{
 	height: 2.5rem;
 	padding: .5rem;
+	width: 2.5rem;
+}
+
+.disabled{
+	pointer-events:none
 }
 
 @media only screen and (max-width: 768px) {
@@ -55,7 +65,7 @@ button[disabled] {
 	padding: 0 !important;
 }
 
-.status, .attributes{
+.status, .attributes, .selectableList{
 	border: 2px solid #ced4da ;
 }
 
@@ -73,6 +83,21 @@ html, body{
 
 .header{
 	border-bottom: 2px solid #ced4da ;
+}
+
+.homeLogo{
+
+	min-height: 100vh;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  margin: 0; 
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
 }
 
 .selected{
@@ -100,8 +125,8 @@ html, body{
 }
 
 .logo{
-	padding-top: 10rem;
-	width: 100%;
+	margin-top: 15rem;
+	width: 80%;
 }
 
 nav{

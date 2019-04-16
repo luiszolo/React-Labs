@@ -1,22 +1,22 @@
 import React from 'react';
 import axios from 'axios';
 
+import SelectableTable from './SelectableTable';
 import SpinnerButton from './../components/SpinnerButton';
 
 export default class AdminAtrributes extends React.Component{
     constructor(props){
         super(props);
+
         this.state={
             availableAttributes:[],
             selectedAttribute: '',
             name:'',
+            warningMessage: '',
             validName: undefined,
             unit:'',
-            validUnit: undefined,
-            type:'',
-            validType: undefined,
+            placeholder:'',
             regex:'',
-            validRegex: undefined,
             active: true,
         }
 
@@ -24,45 +24,46 @@ export default class AdminAtrributes extends React.Component{
         this.handleNameAttribute = this.handleNameAttribute.bind(this);
         this.handleUnitAttribute = this.handleUnitAttribute.bind(this);
         this.handleRegexAttribute = this.handleRegexAttribute.bind(this);
-        this.handleTypeAttribute = this.handleTypeAttribute.bind(this);
+        this.handlePlaceholderAttribute = this.handlePlaceholderAttribute.bind(this);
         this.handleSubmitAttribute = this.handleSubmitAttribute.bind(this);
         this.handleActive = this.handleActive.bind(this);
 
     }
 
     componentDidMount(){
-        const url= "http://10.2.1.94:4000/api/attributes/";
-        fetch(url,{
-            method : "GET"
-        }).then((response) => response.json())
-        .then((res) =>{
-            this.setState({availableAttributes: res.Attributes})
+        const url= "http://localhost:4000/api/attributes/by";
+
+        axios.get(url).then((res) =>{
+            console.log(res.data)
+            this.setState({availableAttributes: res.data.attributes})
         })
     }
 
     handleNameAttribute(e){
-        const name = e.target.value
+        const attributeName = e.target.value
+
         this.setState({
-            name: name,
-            messageAPI:""
+            name: attributeName
         })
-        if(name.length >= 1) {
+        if(attributeName.trim() !== '' && attributeName.length > 0){
             this.setState({
-                validName: true
+                validName: true,
+                warningMessage: ''
             })
         } else {
             this.setState({
-                validName: false
+                validName: false,
+                warningMessage: 'Name can\'t be blank'
             })
         }
-        this.state.availableAttributes.forEach((value) => {
-            if(value.name === name) {
+        this.state.availableAttributes.forEach((value)=>{
+            if(value.name === attributeName){
                 this.setState({
-                    validName: false
+                    validName: false,
+                    warningMessage: 'The attribute already exists'
                 })
             }
         })
-
     }
 
     handleUnitAttribute(e){
@@ -70,17 +71,15 @@ export default class AdminAtrributes extends React.Component{
 
         this.setState({
             unit: unit,
-            messageAPI:""
         })
-        if(unit.length >= 1) {
-            this.setState({
-                validUnit: true,
-            })
-        } else if(unit === '') {
-            this.setState({
-                validUnit: false,
-            })
-        }
+    }
+
+    handlePlaceholderAttribute(e){
+        const placeholder = e.target.value
+
+        this.setState({
+            placeholder: placeholder,
+        })
     }
 
     handleRegexAttribute(e){
@@ -88,72 +87,7 @@ export default class AdminAtrributes extends React.Component{
 
         this.setState({
             regex: regex,
-            messageAPI:""
         })
-        if(regex.length >= 1) {
-            this.setState({
-                validRegex: true,
-            })
-        } else if(regex === '') {
-            this.setState({
-                validRegex: false,
-            })
-        }
-    }
-
-    handleTypeAttribute(e){
-        const type = e.target.value
-
-        this.setState({
-            type: type,
-            messageAPI:""
-        })
-        if(type.length >= 1) {
-            this.setState({
-                validType: true,
-            })
-        } else if(type === '') {
-            this.setState({
-                validType: false,
-            })
-        }
-    }
-
-    handleSubmitAttribute(event){
-        event.preventDefault();
-        console.log(this.state.name)
-		axios.post(`http://10.2.1.94:4000/api/Attributes/add`,{
-            attribute: {
-                name: this.state.name,
-                unit: this.state.unit,
-                placeholder: this.state.type,
-                regex: this.state.regex,
-                actived: this.state.active
-            }
-		})
-		.then( res => {
-            
-			if (res.data.message === 'Insertion successful') {
-                this.refs.submitButton.setState({
-                    resultMessage: res.data.message,
-                    pass: res.data.pass
-				});
-				this.setState({
-                    name:'',
-                    validName: undefined,
-                    unit:'',
-                    validUnit: undefined,
-                    type:'',
-                    validType: undefined,
-                    regex:'',
-                    validRegex: undefined,
-                })
-                this.componentDidMount()
-			}
-			})
-		.catch( () => {
-			alert('Conection Timed Out');
-		});
     }
 
     handleActive(){
@@ -165,38 +99,97 @@ export default class AdminAtrributes extends React.Component{
     handleSelectAttribute(e){
         const attribute = parseInt(e.target.id)
 
-        if (this.state.selectedAttribute === e.target.textContent){
+        if (this.state.selectedAttribute.name === e.target.textContent){
             this.setState({
                 selectedAttribute: '',
                 name:'',
                 validName: undefined,
                 unit:'',
-                validUnit: undefined,
-                type:'',
-                validType: undefined,
+                placeholder:'',
                 regex:'',
-                validRegex: undefined,
-                
             })
         } else {
             this.state.availableAttributes.forEach((value) => {
                 if (value.id === attribute) {
                     this.setState({
-                        selectedAttribute: value.name,
+                        selectedAttribute: {id:value.id, name: value.name},
                         name: value.name,
                         validName: true,
                         unit: value.unit,
-                        validUnit: true,
-                        type: value.type,
-                        validType: true,
-                        regex: value.structure,
-                        validRegex: true,
+                        placeholder: value.placeholder,
+                        regex: value.regex,
+                        active: value.actived === 1 ? true : false
                     })
                 }
             })
         }
+    }
 
-
+    handleSubmitAttribute(event){
+        event.preventDefault();
+        
+        if(this.state.selectedAttribute === ''){
+            axios.post(`http://localhost:4000/api/Attributes/add`, {
+                attribute: {
+                    name: this.state.name,
+                    unit: this.state.unit,
+                    placeholder: this.state.placeholder,
+                    regex: this.state.regex,
+                    actived: this.state.active
+                }
+            })
+            .then( res => {
+                console.log(res)
+                if (res.data.message === 'Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        selectedAttribute: '',
+                        name:'',
+                        validName: undefined,
+                        unit:'',
+                        placeholder:'',
+                        regex:'',
+                    })
+                    this.componentDidMount()
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
+        } else {
+            axios.put(`http://localhost:4000/api/Attributes/find/${this.state.selectedAttribute.id}`, {
+                attribute: {
+                    name: this.state.name,
+                    unit: this.state.unit,
+                    placeholder: this.state.placeholder,
+                    regex: this.state.regex,
+                    actived: this.state.active
+                }
+            })
+            .then( res => {
+                if (res.data.message === 'Insertion completed') {
+                    this.refs.submitButton.setState({
+                        resultMessage: res.data.message,
+                        pass: true
+                    });
+                    this.setState({
+                        selectedAttribute: '',
+                        name:'',
+                        validName: undefined,
+                        unit:'',
+                        placeholder:'',
+                        regex:'',
+                    })
+                    this.componentDidMount()
+                }
+            })
+            .catch( () => {
+                alert('Conection Timed Out');
+            });
+        }
     }
 
     render(){
@@ -204,18 +197,16 @@ export default class AdminAtrributes extends React.Component{
             state: {
                 selectedAttribute,
                 name,
+                warningMessage,
                 validName,
                 unit,
-                validUnit,
-                type,
-                validType,
+                placeholder,
                 regex,
-                validRegex,
                 active
             }
         } = this;
     
-        const regularLabels = 'col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
+        const regularLabels = 'col-md-12 col-sm-12 col-lg-3 col-xl-3 d-block text-right'
         const inputs = 'col-md-12 col-sm-12 col-lg-5 col-xl-5 form-control'
         const warningLabels = 'col-md-12 col-sm-12 col-lg-10 col-xl-10 text-danger text-center'
 
@@ -224,19 +215,17 @@ export default class AdminAtrributes extends React.Component{
                 <div className='col-sm-12 m-4'>
                     <h1 className='text-center'>Add attributes</h1>
                 </div>
-                <div className='col-lg-4 col-xl-4 col-md-12 col-sm-12 attributes rounded-right'>
-                    <h3 className='header'>Attributes</h3>
-                    <ul>
-                    {(this.state.availableAttributes.length > 0) ? this.state.availableAttributes.map((attribute) => {
-                        
-                        if(this.state.selectedAttribute !== attribute.name){
-                            return <li id={attribute.id} className='selectable mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                        } else {
-                            return <li id={attribute.id} className='selected mt-1 p-1 rounded' name={attribute.name} key={attribute.id} onClick={this.handleSelectAttribute} label={attribute.name}>{attribute.name}</li>
-                        }
-                    }) : <li className='selectable mt-1 p-1 rounded'>No available attributes</li>}
-                    </ul>
-                </div>
+                <SelectableTable
+                    cssCLassName={'col-lg-4 col-xl-4 col-md-12 col-sm-12'}
+                    selectDisabled={true}
+                    header={'Available attributes'}
+                    type={'attribute'}
+                    addNew={false}
+                    content={this.state.availableAttributes}
+                    multipleSelect={false}
+                    selected={this.state.selectedAttribute}
+                    handleSelectItem={this.handleSelectAttribute}
+                />
                 <div className='col-lg-8 col-xl-8 col-md-12 col-sm-12'>
                     <form onSubmit={this.handleSubmitAttribute}>
                         <div className='row justify-content-center form-inline mb-3'>
@@ -254,22 +243,17 @@ export default class AdminAtrributes extends React.Component{
                                 onChange={this.handleNameAttribute}
                                 value={name}
                             />
-                            <label className={warningLabels}></label>
+                            <label className={warningLabels}>{warningMessage}</label>
                         </div>
                         <div className='row justify-content-center form-inline mb-3'>
                         <label className={regularLabels}>Unit:</label>
                         <input
                             type='text'
-                            className={
-                                validUnit === undefined ? (inputs) : (
-                                    validUnit === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
+                            className={inputs}
                             name='attributeUnit' 
                             placeholder='e.g. C, s'
-                            onChange={this.handleUnitAttribute}
                             value={unit}
+                            onChange={this.handleUnitAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -277,16 +261,11 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Placeholder:</label>
                         <input
                             type='text'
-                            className={
-                                validType === undefined ? (inputs) : (
-                                    validType === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
-                            name='attributeType' 
+                            className={inputs}
+                            name='attributeType'
                             placeholder='e.g. SA-##-#####'
-                            onChange={this.handleTypeAttribute}
-                            value={type}
+                            value={placeholder}
+                            onChange={this.handlePlaceholderAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -294,16 +273,11 @@ export default class AdminAtrributes extends React.Component{
                         <label className={regularLabels}>Regex:</label>
                         <input
                             type='text'
-                            className={
-                                validRegex === undefined ? (inputs) : (
-                                    validRegex === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
-                                )
-                            }
+                            className={inputs}
                             name='attributeRegex' 
                             placeholder='#####'
-                            onChange={this.handleRegexAttribute}
                             value={regex}
+                            onChange={this.handleRegexAttribute}
                         />
                         <label className={warningLabels}></label>
                     </div>
@@ -326,7 +300,7 @@ export default class AdminAtrributes extends React.Component{
                         titleNoPass='Form not ready'
                         type='submit'
                         disabled={
-                            !(validName && validUnit && validType && validRegex)
+                            !(validName)
                         }
                         onClick={ this.handleSubmitAttribute }
                         />

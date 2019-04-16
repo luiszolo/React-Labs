@@ -32,7 +32,7 @@ export default class Test extends React.Component {
 	}
 
 	componentWillMount(){
-		if (this.props.attributes.length > 0) {
+		if (this.props.attributes !== undefined || null) {
 			this.setState({
 				attributes: Array(this.props.attributes.length).fill({}),
 				samples: Array(this.props.samplesLength).fill(''),
@@ -176,7 +176,6 @@ export default class Test extends React.Component {
 
 	handleValidateSample(sample, idx){
 		if(sample.input === '' && this.refs[`sample${idx + 1}`].state.focused === true) {
-			console.log('here')
 			if(this.state.samples.length > 1){
 				this.handleMoveFormData(idx)
 				this.handleMoveSamplesData(idx)
@@ -208,7 +207,7 @@ export default class Test extends React.Component {
 			if(this.state.passedRepeatedSample === false) return;
 			// Validate Regex samples
 			this.setState({
-				passedSamples: (sample.passRegex),
+				passedSamples: sample.passRegex && sample.passValidation,
 				passedRepeatedSample: true
 			});
 		}
@@ -229,8 +228,8 @@ export default class Test extends React.Component {
 		}
 
 		this.setState({
-			passedSamples: (this.state.passedSamples && sample.passValidation && (this.refs[`sample${idx + 1}`].state.warningText === ''))
-		},()=>{console.log(this.state.passedSamples)});
+			passedSamples: (sample.passValidation && (this.refs[`sample${idx + 1}`].state.warningText === ''))
+		});
 	}
 
 	handleSubmit(e) {
@@ -240,25 +239,33 @@ export default class Test extends React.Component {
 			loading: true
 		});
 		if( this.state.passedAttributes && this.state.passedOperator && this.state.passedSamples) {
-			Axios.post(`http://10.2.1.94:4000/api/test-forms/add`, {
-				operator: this.state.operator,
-				samples: this.state.samples,
-				test: this.props.name,
-				attributes: this.state.attributes
+			Axios.post(`http://localhost:4000/api/test-forms/add`, {
+				form: {
+					operator: this.state.operator,
+					samples: this.state.samples,
+					test: this.props.name,
+					attributes: this.state.attributes
+				}
 			}).then(res => {
-				this.refs.submitButton.setState({
-					resultMessage: res.data.message,
-					pass: res.data.pass
-				});
-				if (res.data.pass) {
+				if (res.status === 200) {
+					this.refs.submitButton.setState({
+						resultMessage: res.data.message,
+						pass: true
+					});
 					this.setState({
 						passedSamples: false,
 						samples: Array(this.props.samplesLength).fill('')
 					});
 					this.handleClearFormData(0, true);
 				}
-			}).catch( _ => {
-				alert('Connection Timed Out');
+			}).catch( err => {
+				console.log(err)
+				if (err.response.status !== 200) {
+					this.refs.submitButton.setState({
+						resultMessage: err.response.data.message,
+						pass: false
+					});
+				}
 			});
 			ReactDOM.findDOMNode(this.refs[`sample${1}`]).focus();
 		}
@@ -273,7 +280,7 @@ export default class Test extends React.Component {
 			name,
 		} = this.props;
 		let attributeDisplay = undefined;
-		if (this.props.attributes.length > 0 ){
+		if (this.props.attributes !== undefined | null ){
 			attributeDisplay = this.props.attributes.map((attr, idx )=> {
 				return(
 					<InputField 
@@ -281,8 +288,8 @@ export default class Test extends React.Component {
 						displayCssClassName='justify-content-center form-inline mb-3'
 						inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 						labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
-						name={ attr.name } placeholder={ attr.type } canBlank={false}
-						regex={ attr.structure } ref = { `attribute${idx + 1}` }  prevPassed={ true }
+						name={ attr.name } placeholder={ attr.placeholder } canBlank={false}
+						regex={ attr.regex } ref = { `attribute${idx + 1}` }  prevPassed={ true }
 						warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 						addToForm = { event => this.handleValidateAttribute(this.refs[`attribute${idx + 1}`], idx)}
 					/>
@@ -304,7 +311,7 @@ export default class Test extends React.Component {
 							type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 							labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 							name='operator' placeholder='#####' canBlank={false}
-							validationURL={`http://10.2.1.94:4000/api/operators/`}
+							validationURL={`http://localhost:4000/api/operators/find/`}
 							regex={new RegExp('^[0-9]{1,5}$', 'i')}
 							ref='operator' addToForm={ event => this.handleValidateOperator(this.refs['operator']) }
 							warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
@@ -326,8 +333,8 @@ export default class Test extends React.Component {
 										type='text' inputCssClassName='col-md-12 col-sm-12 col-lg-5 col-xl-5'
 										labelCssClassName='col-md-12 col-sm-12 col-lg-2 col-xl-2 d-block'
 										name={`sample${ idx + 1}`} placeholder='SA-##-#####'
-										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/}
-										validationURL={`http://10.2.1.94:4000/api/samples/${this.props.name}/`}
+										regex={/SA-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9]/} testStatus={this.props.testStatus}
+										validationURL={`http://localhost:4000/api/samples/find/`}
 										ref= {`sample${ idx + 1 }`} warningCssClassName='col-md-12 col-sm-12 col-lg-10 col-xl-10 text-center'
 										addToForm={ event => this.handleValidateSample(this.refs[`sample${idx + 1}`].state, idx) } 
 										prevPassed={ (idx === 0 ? (_) => {
@@ -336,7 +343,6 @@ export default class Test extends React.Component {
 											});
 											return this.refs[`sample${ idx + 1}`].state.prevPassed;
 										} : false) }
-										
 									/>
 									
 								))
