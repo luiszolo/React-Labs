@@ -1,12 +1,11 @@
 const router = require('express').Router();
 
-const OperatorController = require('../controllers/OperatorController');
+const Controller = require('../controllers/OperatorController');
 
-router.delete('/:id', OperatorController.deleteOperator);
-router.get('/', OperatorController.getOperators);
-router.get('/:id', OperatorController.getOperatorById);
-router.post('/add', OperatorController.addOperator);
-router.put('/:id', OperatorController.updateOperator);
-
+router.delete('/find/:id',   Controller.removeOperator);
+router.get('/by/:option?', Controller.getOperatorList);
+router.get('/find/:id', Controller.getOperatorById);
+router.post('/add', Controller.addOperator);
+router.put('/find/:id', Controller.updateOperator);
 
 module.exports = router;

@@ -19,8 +19,12 @@ pool.getConnection((err, connection) => {
 		}
 	}
 
-	if (connection) connection.release();
-	console.log('Database is connected.');
+	if (connection) {
+		console.log('Database is connected.');
+		connection.release();
+	} else {
+		console.log('Database is not connected.');
+	}
 
 	return;
 });

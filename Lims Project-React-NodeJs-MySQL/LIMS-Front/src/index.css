@@ -1,5 +1,31 @@
+@import './spinner.css';
+@import './responsive-table.css';
+
 body{
 	min-height: 100vh;
+}
+
+.inactive{
+	color: #6c757d;
+	text-decoration:line-through
+}
+
+.activeButton{
+	background-color: white;
+}
+
+.adminBar{
+	background-color: #e3f2fd;
+}
+
+.correctIcon{
+	height: 2.5rem;
+	padding: .5rem;
+	width: 2.5rem;
+}
+
+.disabled{
+	pointer-events:none
 }
 
 @media only screen and (max-width: 768px) {
@@ -11,16 +37,20 @@ body{
 	}
 }
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1200px){
 
 	label {
 		padding-left: 0 !important;
 	}
 }
 
-button[disabled]:hover {
-    border-color: #dc3545;
-    background: #dc3545;
+.test-component {
+	margin: 3rem 0 0 0 !important;
+}
+
+button[disabled] {
+    border-color: #6c757d !important;
+    background: #6c757d !important;
 }
 
 .buttonImage{
@@ -35,6 +65,10 @@ button[disabled]:hover {
 	padding: 0 !important;
 }
 
+.status, .attributes, .selectableList{
+	border: 2px solid #ced4da ;
+}
+
 h1,h2,h3 {
     margin: 0;
 }
@@ -47,9 +81,52 @@ html, body{
     height: 100%;
 }
 
+.header{
+	border-bottom: 2px solid #ced4da ;
+}
+
+.homeLogo{
+
+	min-height: 100vh;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  margin: 0; 
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
+.selected{
+	background-color: #007bff;
+	color: #ffffff;
+	cursor: pointer;
+	list-style-image: url('/images/check.png');
+	/* list-style-position: inside; */
+	list-style-type: none;
+	padding-top: .25rem;
+	user-select: none;
+}
+
+.selectable{
+	list-style-image: url('/images/probe.png');
+	list-style-type: none;
+	padding-top: .25rem;
+	user-select: none;
+}
+
+.selectable:hover{
+	background-color: #007bff;
+	color: #ffffff;
+	cursor: pointer;
+}
+
 .logo{
-	padding-top: 10rem;
-	width: 100%;
+	margin-top: 15rem;
+	width: 80%;
 }
 
 nav{
@@ -70,11 +147,20 @@ nav ul{
 	padding: 0 !important;
 }
 
+.row {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.tables{
+	margin: 0 2rem;
+}
+
 .text-danger {
 	font-size: 0.80rem
 }
 
-#succes{
+#success{
     color: #28a745;
 }
 
