@@ -1,3 +1,15 @@
+//     Source Name        	Admin.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Manage the tabs of the admin site.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 
 import Status from '../components/AdminStatus';

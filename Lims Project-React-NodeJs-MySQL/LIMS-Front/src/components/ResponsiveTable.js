@@ -1,3 +1,15 @@
+//     Source Name        	ResponsiveTable.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the data of a sample in a table in the report component.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 
 export default class extends React.Component {

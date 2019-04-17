@@ -1,3 +1,15 @@
+//     Source Name        	SpinnerButton.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the button, loading icon and message in the forms.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 
 export default class SpinnerButton extends React.Component {

@@ -1,9 +1,19 @@
+//     Source Name        	Report.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the tables for the report of the sample.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 import axios from 'axios';
 
-
 import ResponsiveTable from './../components/ResponsiveTable';
-
 
 export default class Report extends React.Component{
     state = {

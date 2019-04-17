@@ -1,3 +1,15 @@
+//     Source Name        	Navbar.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the Navigation bar and controls the active tab.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 
 import NavItem from './../components/NavItem';
