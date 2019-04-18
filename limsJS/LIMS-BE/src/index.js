@@ -1,5 +1,3 @@
-const myIp = require('./config/ip');
-
 const bodyParser = require('body-parser');
 const concatFiles = require('concat-files');
 const express = require('express');
@@ -54,6 +52,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Starting Server
 app.listen(app.get('port'), _ => {
-	console.log(myIp)
 	console.log(`Server started on port ${app.get('port')}`);
 });

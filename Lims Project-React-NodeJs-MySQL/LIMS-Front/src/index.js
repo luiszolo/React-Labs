@@ -2,17 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 //Importing components
-import Home from './components/Home';
-import Navbar from './containers/Navbar';
-import Report from './containers/Report';
-import Test from './containers/Test';
+import ElectricityTest from './components/electricity-test.js';
+import HeatTest from './components/heat-test.js';
+import ChemistryTest from './components/chemistry-test.js';
+import SpinnerTest from './components/spinner-test.js';
+import GenerateReport from './components/report.js';
+import Home from './components/home.js';
+import Tests from './components/tests.js';
 
 //Importing CSS file
 import './index.css';
-
-import Admin from './containers/Admin';
-import axios from 'axios';
-
 
 class App extends React.Component {
     constructor(props){
@@ -24,42 +23,39 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        axios.get('http://localhost:4000/api/tests/by')
-            .then(res => {
-                this.setState({
-                    tests: res.data.tests.actived
-                });
+        fetch('http://10.2.1.94:4000/api/tests/?actived=true')
+            .then(res => res.json()) 
+            .then(data=> this.setState({ //Saving the tests in 'tests' state
+                tests: data.Tests
             })
+            );
     }
 
     //Render function for the app
     render() {
-		let app = ['Home'].concat(this.state.tests.map((e) => e['name']))
-		.concat('Generate Report', 'Admin Site');
+        const app =['Home']
+        
+        //Moving state to a constant
+        const tests = this.state.tests.map((e)=>{
+            return e['name']
+        }).concat('Generate Report')
+        
+        const menu = app.concat(tests) //Adding 'Home' to the menu ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
+        const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
 
-		let components = [(<Home key={'Home'}/>)].concat(this.state.tests.map((e) => {
-            const status = {
-                current: e.initial_State,
-                required: e.require_State
-            }
-            
-			return (<Test key={e.name} name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testStatus={status}/>)
-		})).concat(<Report key={'Report'}/>, <Admin key={'Admin'}/>);
         return(<div>
-            <header className='container-fluid bg-info fixed-top'></header>
-			<Navbar>
-			{
-				app.map((test, i) => {
-					return (
-						<div key={i} label={test}>
-							{
-								components.map((comp, j) => i === j ? comp : null)
-							}
-						</div>
-					);
-				})
-			}
-			</Navbar>
+            <header className='container-fluid bg-info'></header>
+            <Tests>
+                {menu.map((t, keyT)=>{
+                    return(<div label={t}>
+                        {comp.map((c,keyC)=>{
+                            if(keyT===keyC){
+                                return(c)
+                            }
+                        })}
+                    </div>)}
+                )}
+            </Tests>
         </div>)
     }
 }
