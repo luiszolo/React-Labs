@@ -1,14 +1,25 @@
+//     Source Name        	index.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the navbar and passes the data of the tests to the test component.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 //Importing components
-import ElectricityTest from './components/electricity-test.js';
-import HeatTest from './components/heat-test.js';
-import ChemistryTest from './components/chemistry-test.js';
-import SpinnerTest from './components/spinner-test.js';
-import GenerateReport from './components/report.js';
-import Home from './components/home.js';
-import Tests from './components/tests.js';
+import Home from './components/home';
+import Navbar from './containers/Navbar';
+import Report from './containers/Report';
+import Test from './containers/Test';
+import Admin from './containers/Admin';
 
 //Importing CSS file
 import './index.css';

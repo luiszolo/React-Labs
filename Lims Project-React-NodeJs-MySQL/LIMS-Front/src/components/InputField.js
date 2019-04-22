@@ -1,3 +1,15 @@
+//     Source Name        	InputField.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Contains the labels and input field format and does the validation of the data in it.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
+
 import React from 'react';
 
 export default class extends React.Component {

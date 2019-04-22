@@ -1,5 +1,16 @@
-import React from 'react';
+//     Source Name        	Home.js
+//     Author            	Josue Montaño    
+//     Date            		04/17/19
+//     Description        	Render the image of biosoft.
+// 
+//     Execution        	
+// 
+// 	   Modifications
+//     Date            Author           Description
+//     =========       =============    ===========================================
+//     04/17/19        Josue Montaño    Adding the header to the file
 
+import React from 'react';
 
 export default class Home extends React.Component{
     render(){
