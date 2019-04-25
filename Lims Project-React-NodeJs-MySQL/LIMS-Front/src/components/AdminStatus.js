@@ -86,6 +86,7 @@ export default class AdminStatus extends React.Component{
             this.setState({
                 selectedStatus: '',
                 nameStatus: '',
+                warningMessage: '',
                 validStatus: undefined
             })
         } else {
@@ -94,6 +95,7 @@ export default class AdminStatus extends React.Component{
                     this.setState({
                         selectedStatus: {id: value.id, name: value.name},
                         nameStatus: value.name,
+                        warningMessage: '',
                         active: value.actived === 1 ? true : false,
                         validStatus: true
                     })
@@ -203,8 +205,8 @@ export default class AdminStatus extends React.Component{
                                 type='text'
                                 className={
                                     validStatus === undefined ? (inputs) : (
-                                        validStatus === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                        inputs.concat(inputs, " ", "border border-danger")
+                                        validStatus === true ? inputs.concat(inputs, ' ', 'border border-success') : 
+                                        inputs.concat(inputs, ' ', 'border border-danger')
                                     )
                                 }
                                 name='statusName' 

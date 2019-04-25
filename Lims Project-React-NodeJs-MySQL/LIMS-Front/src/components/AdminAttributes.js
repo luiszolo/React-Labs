@@ -43,7 +43,7 @@ export default class AdminAtrributes extends React.Component{
     }
 
     componentDidMount(){
-        const url= "http://localhost:4000/api/attributes/by";
+        const url= 'http://localhost:4000/api/attributes/by';
 
         axios.get(url).then((res) =>{
             console.log(res.data)
@@ -116,6 +116,7 @@ export default class AdminAtrributes extends React.Component{
                 selectedAttribute: '',
                 name:'',
                 validName: undefined,
+                warningMessage: '',
                 unit:'',
                 placeholder:'',
                 regex:'',
@@ -127,6 +128,7 @@ export default class AdminAtrributes extends React.Component{
                         selectedAttribute: {id:value.id, name: value.name},
                         name: value.name,
                         validName: true,
+                        warningMessage: '',
                         unit: value.unit,
                         placeholder: value.placeholder,
                         regex: value.regex,
@@ -225,7 +227,7 @@ export default class AdminAtrributes extends React.Component{
         return(
             <div className='content row justify-content-center'>
                 <div className='col-sm-12 m-4'>
-                    <h1 className='text-center'>Add attributes</h1>
+                    <h1 className='text-center'>Attributes</h1>
                 </div>
                 <SelectableTable
                     cssCLassName={'col-lg-4 col-xl-4 col-md-12 col-sm-12'}
@@ -246,8 +248,8 @@ export default class AdminAtrributes extends React.Component{
                                 type='text'
                                 className={
                                     validName === undefined ? (inputs) : (
-                                        validName === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                        inputs.concat(inputs, " ", "border border-danger")
+                                        validName === true ? inputs.concat(inputs, ' ', 'border border-success') : 
+                                        inputs.concat(inputs, ' ', 'border border-danger')
                                     )
                                 }
                                 name='attributeName' 

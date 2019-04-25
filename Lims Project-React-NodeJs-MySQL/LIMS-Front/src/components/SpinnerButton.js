@@ -55,7 +55,7 @@ export default class SpinnerButton extends React.Component {
 						title={ this.props.disabled ? this.props.titleNoPass : this.props.titlePass }
 						className='btn btn-primary col-md-12 col-sm-6 col-lg-3' onClick={ this.props.onClick }>
 						{ 
-							this.state.loading ? (<div className="lds-spinner">
+							this.state.loading ? (<div className='lds-spinner'>
 										<div></div><div></div>
 										<div></div><div></div>
 										<div></div><div></div>

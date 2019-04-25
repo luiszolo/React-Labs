@@ -34,39 +34,42 @@ class App extends React.Component {
 
     //Getting tests on load
     componentWillMount() {
-        fetch('http://10.2.1.94:4000/api/tests/?actived=true')
-            .then(res => res.json()) 
-            .then(data=> this.setState({ //Saving the tests in 'tests' state
-                tests: data.Tests
+        axios.get('http://localhost:4000/api/tests/by')
+            .then(res => {
+                this.setState({
+                    tests: res.data.tests.actived
+                });
             })
-            );
     }
 
     //Render function for the app
     render() {
-        const app =['Home']
-        
-        //Moving state to a constant
-        const tests = this.state.tests.map((e)=>{
-            return e['name']
-        }).concat('Generate Report')
-        
-        const menu = app.concat(tests) //Adding 'Home' to the menu ['Home','ElectricityTest','HeatTest','ChemistryTest','SpinnerTest','GenerateReport'] 
-        const comp = [<Home/>,<ElectricityTest/>,<HeatTest/>,<ChemistryTest/>,<SpinnerTest/>,<GenerateReport/>] //Array of the test components
+		let app = ['Home'].concat(this.state.tests.map((e) => e['name']))
+		.concat('Generate Report', 'Admin Site');
 
+		let components = [(<Home key={'Home'}/>)].concat(this.state.tests.map((e) => {
+            const status = {
+                current: e.initial_State,
+                required: e.require_State
+            }
+            
+			return (<Test key={e.name} name={e.name} samplesLength={e.samplesLength} attributes={e.attributes} testStatus={status}/>)
+		})).concat(<Report key={'Report'}/>, <Admin key={'Admin'}/>);
         return(<div>
-            <header className='container-fluid bg-info'></header>
-            <Tests>
-                {menu.map((t, keyT)=>{
-                    return(<div label={t}>
-                        {comp.map((c,keyC)=>{
-                            if(keyT===keyC){
-                                return(c)
-                            }
-                        })}
-                    </div>)}
-                )}
-            </Tests>
+            <header className='container-fluid bg-info fixed-top'></header>
+			<Navbar>
+			{
+				app.map((test, i) => {
+					return (
+						<div key={i} label={test}>
+							{
+								components.map((comp, j) => i === j ? comp : null)
+							}
+						</div>
+					);
+				})
+			}
+			</Navbar>
         </div>)
     }
 }

@@ -17,12 +17,12 @@ import ResponsiveTable from './../components/ResponsiveTable';
 
 export default class Report extends React.Component{
     state = {
-        sample:'',
+        title: undefined,
+        sample: undefined,
         validSample: false,
-        messageAPI: '',
-        sampleSearched: '',
-        tests: [],
-        attributes: [],
+        messageAPI: undefined,
+        logs: undefined,
+        attributes: undefined,
       }
 
     addSample = (e) => {
@@ -38,12 +38,12 @@ export default class Report extends React.Component{
             })
         }else if(sample===''){
             this.setState({
-                messageAPI: '',
+                messageAPI: undefined,
                 validSample: false,
             })
         }else{
             this.setState({
-                messageAPI: '',
+                messageAPI: undefined,
                 validSample: true,
             })
         }
@@ -53,49 +53,49 @@ export default class Report extends React.Component{
     handleSearch = () => {
         const sample =  this.state.sample
         
-        axios.get(`http:///10.2.1.94:4000/api/logs/${sample}`)
+        axios.get(`http://localhost:4000/api/logs/find/${sample}`)
             .then(res => {
-                if(res.data.message){
-                    this.setState({
-                        tests: [],
-                        attributes: [],
-                        sampleSearched: '',
-                    });
-                    this.setState({
-                        messageAPI: res.data.message
-                    });
-                }else{
-                    const tests = res.data.Logs;
-                    const attributes = res.data.Attributes;
+                if(res.status === 200){
                     this.setState({
                         sampleSearched: this.state.sample,
-                        sample: '',
-                        tests,
-                        attributes,
-                        messageAPI: '',
+                        title: sample,
+                        logs: res.data.Logs,
+                        attributes: res.data.Attributes,
+                        messageAPI: undefined,
                         validSample: false
                     })
                 }
-            }).catch( () => alert('Conection Timed Out'));
+            }).catch( err =>{
+                if (err.response.status !== 200) {
+                    this.setState({
+                        sample: undefined,
+                        logs: undefined,
+                        attributes: undefined,
+                        messageAPI: err.response.data.message
+                    });
+                }
+            });
 	}
 	
     render() {
         const {
             addSample,
+          
             validateSample,
             handleSearch,
             state: {
                 sample,
                 validSample,
                 messageAPI,
-                sampleSearched,
+                title,
             }
         } = this;
 
         const regularLabels = 'col-md-6 col-sm-12 col-lg-3 col-xl-3 d-block text-center'
 
         
-        return(<div className='content'>
+        return(
+        <div className='test-component p-4'>
                     <div className='row justify-content-center form-inline m-4'>
                        <div className='col-12 row justify-content-center form-inline mb-2'>
                         <label className={regularLabels}>Sample Search: </label>
@@ -121,24 +121,25 @@ export default class Report extends React.Component{
                     </button>
                 </div>
                 <div className='row justify-content-center'>
-                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p class='Danger'>{messageAPI}</p></label>
+                    <label className={'col-lg-12 col-sm-12 col-md-12 text-center text-danger mt-3'}><p className='Danger'>{messageAPI}</p></label>
 					</div>
             </div>
-            <h3 className='col-12 text-center pb-2'>{sampleSearched}</h3>
+            <h3 className='col-12 text-center pb-2'>{title}</h3>
             <div>
 				{
-					this.state.tests && this.state.tests.length === 0 ? ('') : (
+					this.state.logs === undefined ? ('') : (
 						<ResponsiveTable title='Sample logs' cols={{
 							userID: 'User ID',
-							sample: 'Sample',
+							sample: 'Sample' ,
 							state: 'State',
 							test: 'Test',
 							onCreated: 'On Created'
-						}} rows={this.state.tests}/>
+						}} rows={this.state.logs}
+                        onClick={this.handletesting}/>
 					)
 				}
 				{
-					this.state.attributes && this.state.attributes.length === 0 ? ('') : (
+					this.state.attributes === undefined ? ('') : (
 						<ResponsiveTable title='Sample attributes' cols={{
 							test: 'Test',
 							attribute: 'Attribute',

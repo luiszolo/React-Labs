@@ -52,9 +52,9 @@ export default class AdminTests extends React.Component{
     }
 
     componentDidMount() {
-        const testsURL= "http://localhost:4000/api/tests/by";
-        const attributesURL= "http://localhost:4000/api/attributes/by";
-        const statusURL= "http://localhost:4000/api/status/by";
+        const testsURL= 'http://localhost:4000/api/tests/by';
+        const attributesURL= 'http://localhost:4000/api/attributes/by';
+        const statusURL= 'http://localhost:4000/api/status/by';
 
         axios.get(testsURL)
         .then((res) => {
@@ -278,6 +278,7 @@ export default class AdminTests extends React.Component{
             this.setState({
                 selectedTest: test,
                 nameTest: '',
+                messageName: '',
                 sampleLenghtTest: 1,
                 activeTest: true,
                 selectedAttributes: [],
@@ -291,6 +292,7 @@ export default class AdminTests extends React.Component{
                     this.setState({
                         selectedTest: test,
                         nameTest: value.name,
+                        messageName: '',
                         sampleLenghtTest: value.samplesLength,
                         activeTest: value.actived === 1 ? true : false,
                         selectedRequiredStatus: value.require_State,
@@ -345,8 +347,8 @@ export default class AdminTests extends React.Component{
                             type='text'
                             className={
                                 validNameTest === undefined ? (inputs) : (
-                                    validNameTest === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                    inputs.concat(inputs, " ", "border border-danger")
+                                    validNameTest === true ? inputs.concat(inputs, ' ', 'border border-success') : 
+                                    inputs.concat(inputs, ' ', 'border border-danger')
                                 )
                             }
                             name='testName'
@@ -362,8 +364,8 @@ export default class AdminTests extends React.Component{
                         type='number'
                         className={
                             validNumberSamples === undefined ? (inputs) : (
-                                validNumberSamples === true ? inputs.concat(inputs, " ", "border border-success") : 
-                                inputs.concat(inputs, " ", "border border-danger")
+                                validNumberSamples === true ? inputs.concat(inputs, ' ', 'border border-success') : 
+                                inputs.concat(inputs, ' ', 'border border-danger')
                             )
                         }
                         name='numberSamples' 
@@ -388,10 +390,10 @@ export default class AdminTests extends React.Component{
                     <label className={regularLabels}>Requiered status:</label>
                         <select
                             className={inputs} 
-                            id="Status" 
+                            id='Status' 
                             onChange={this.handleselectedRequiredStatus}
                             defaultValue={this.state.selectedRequiredStatus}
-                            placeholder="availableStatus"
+                            placeholder='availableStatus'
                         >
                         {requiredStatus.map((option) => {
                             if(option.actived === 1){
