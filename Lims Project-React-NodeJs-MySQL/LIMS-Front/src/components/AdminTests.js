@@ -144,7 +144,7 @@ export default class AdminTests extends React.Component{
         event.preventDefault();
         
         if(this.state.selectedTest.id === '0') {
-            axios.post(`http://localhost:4000/api/tests/add`, {
+            axios.post('http://localhost:4000/api/tests/add', {
                 test: {
                     name: this.state.nameTest,
                     samplesLength: this.state.sampleLenghtTest,
@@ -182,7 +182,7 @@ export default class AdminTests extends React.Component{
                 alert('Conection Timed Out');
             });
         } else {
-            axios.put(`http://localhost:4000/api/tests/find/${this.state.selectedTest.id}`,{
+            axios.put('http://localhost:4000/api/tests/find/' + this.state.selectedTest.id,{
                 test: {
                     name: this.state.nameTest,
                     samplesLength: this.state.sampleLenghtTest,

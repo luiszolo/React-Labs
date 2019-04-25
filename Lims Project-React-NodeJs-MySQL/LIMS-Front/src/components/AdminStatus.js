@@ -108,7 +108,7 @@ export default class AdminStatus extends React.Component{
         event.preventDefault();
         
         if(this.state.selectedStatus === '') {
-            axios.post(`http://localhost:4000/api/status/add`, {
+            axios.post('http://localhost:4000/api/status/add', {
                 status: {
                     name: this.state.nameStatus,
                     actived: this.state.active,
@@ -132,7 +132,7 @@ export default class AdminStatus extends React.Component{
                 alert('Conection Timed Out');
             });
         } else {
-            axios.put(`http://localhost:4000/api/status/find/${this.state.selectedStatus.id}`, {
+            axios.put('http://localhost:4000/api/status/find/' + this.state.selectedStatus.id, {
                 status: {
                     name: this.state.nameStatus,
                     actived: this.state.active,

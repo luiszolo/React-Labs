@@ -143,7 +143,7 @@ export default class AdminAtrributes extends React.Component{
         event.preventDefault();
         
         if(this.state.selectedAttribute === ''){
-            axios.post(`http://localhost:4000/api/Attributes/add`, {
+            axios.post('http://localhost:4000/api/Attributes/add', {
                 attribute: {
                     name: this.state.name,
                     unit: this.state.unit,
@@ -174,7 +174,7 @@ export default class AdminAtrributes extends React.Component{
                 alert('Conection Timed Out');
             });
         } else {
-            axios.put(`http://localhost:4000/api/Attributes/find/${this.state.selectedAttribute.id}`, {
+            axios.put('http://localhost:4000/api/Attributes/find/' + this.state.selectedAttribute.id, {
                 attribute: {
                     name: this.state.name,
                     unit: this.state.unit,

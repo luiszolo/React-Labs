@@ -203,7 +203,6 @@ export default class Test extends React.Component {
 			this.setState({
 				passedRepeatedSample: true
 			});
-			// Repeated samples!
 			this.state.samples.forEach((value, i)=>{
 				if(sample.input === value && sample.input !== ''  && idx >= i && idx !== i){
 					this.refs[`sample${idx + 1}`].setState({
@@ -216,14 +215,12 @@ export default class Test extends React.Component {
 				}
 			});
 			if(this.state.passedRepeatedSample === false) return;
-			// Validate Regex samples
 			this.setState({
 				passedSamples: sample.passRegex && sample.passValidation,
 				passedRepeatedSample: true
 			});
 		}
 		
-		// Activate next sample
 		if(this.state.passedSamples && this.refs[`sample${idx + 1}`].state.warningText === '') {
 			if (this.refs[`sample${idx + 2}`]) {
 				this.refs[`sample${idx + 2}`].setState({
@@ -315,7 +312,6 @@ export default class Test extends React.Component {
 				</div>
 				<div className='col-sm-12 col-xl-10 mb-4'>
 					<form>
-						{/* Operator field */}
 						<InputField
 							label='Operator' 
 							displayCssClassName='justify-content-center form-inline mb-3'
@@ -329,7 +325,6 @@ export default class Test extends React.Component {
 							prevPassed={ true }
 						/>
 						<div>
-							{/* Attributes Fields */}
 							{ attributeDisplay }
 						</div>
 						<div>
