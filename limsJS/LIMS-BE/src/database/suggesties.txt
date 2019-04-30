@@ -1,4 +1,4 @@
-Run this Script to get basic data to start a DEMO
+--Run this Script to get basic data to start a DEMO
 
 -- phpMyAdmin SQL Dump
 -- version 3.5.1
