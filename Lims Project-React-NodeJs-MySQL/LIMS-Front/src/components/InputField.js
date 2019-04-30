@@ -108,7 +108,14 @@ export default class InputField extends React.Component {
 					if(this.props.addToForm) this.props.addToForm();
 				})
 				.catch( err => {
-					if(err.response.data.sample.state !== undefined){
+					if (err.response.data.message) {
+						this.setState({
+							passValidation: false,
+							warningText: err.response.data.message
+						});
+						if(this.props.addToForm) this.props.addToForm();
+					}
+					else if(err.response.data.sample.state !== undefined){
 						if (err.response.data.sample.state.toUpperCase() === this.props.testStatus.required.toUpperCase()) {
 							this.setState({
 								passValidation: true,
