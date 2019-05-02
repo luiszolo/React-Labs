@@ -16,7 +16,7 @@ async function addAttribute(req, res) {
         }
     }, res) !== false) {
         res.status(403).send({
-            message: 'The attribute already exists'
+            message: 'The attribute is already exists'
         });
         return;
     }
