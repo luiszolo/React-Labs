@@ -36,7 +36,7 @@ export default class Navbar extends React.Component {
 			<div className='row m-0'>
 				<nav className='col-lg-2 col-xl-2 col-md-12 col-sm-12 fixed-top bg-info' id='mobileMenu'>
 					<div className='breadcrumb'>
-						<h1 className='text-center bg-info text-white w-100'>LIMS</h1>
+						<h1 className='text-center bg-info text-white w-100'>LAB</h1>
 						<ul className='m-0'>
 							{
 								this.props.children.map(child => {
