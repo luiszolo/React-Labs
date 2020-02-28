@@ -47,7 +47,7 @@ Please make sure to update tests as appropriate.
 Three student developers created an application for the use in internal laboratories as a project for the internship, the purpose of the app is to give control to the scientist in charge of testing samples, with the condition to create custom task from the client perspective, this gives a whole new depth to the project since every component its dynamic in a way the scientist can create new test from an admin panel assigning number of samples, queues to give, and attributes to add with their custom validation and regex.
 
 ## User Manual
-For more content related to the use of the application here's the [User Manual](https://www.apachefriends.org/index.html)
+For more content related to the use of the application here's the [User Manual](https://docs.google.com/document/d/1_Mq1o93mdXsM9V6GGJZDLTfToseqihWT-dWKmvvwcF0/edit?usp=sharing)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
